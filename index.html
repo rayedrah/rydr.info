@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rayed — Cybersecurity @ Purdue</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --border: #1e1e1e;
+      --accent: #00ff88;
+      --accent2: #0af;
+      --text: #e8e8e8;
+      --muted: #666;
+    }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .hero {
+      padding: 5rem 2rem 4rem;
+      max-width: 900px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 3px 10px;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 span {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--muted);
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 2rem;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: all 0.15s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 2rem;
+    }
+
+    .section {
+      padding: 3.5rem 2rem;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .card {
+      background: var(--bg);
+      padding: 1.5rem;
+      transition: background 0.2s;
+    }
+
+    .card:hover { background: var(--surface); }
+
+    .card-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .skills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2rem;
+    }
+
+    .skill-pill {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .skill-pill.hot {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .terminal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      overflow: hidden;
+      max-width: 520px;
+      margin-top: 2rem;
+    }
+
+    .term-bar {
+      background: var(--border);
+      padding: 8px 12px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #28c840; }
+
+    .term-body {
+      padding: 1rem 1.2rem;
+      color: #aaa;
+      line-height: 2;
+    }
+
+    .term-body .prompt { color: var(--accent); }
+    .term-body .out { color: var(--text); }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--accent);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem; }
+      .hero { padding: 3rem 1rem 2.5rem; }
+      .section { padding: 2.5rem 1rem; }
+      .divider { margin: 0 1rem; }
+      footer { padding: 1.2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">~/rayed</div>
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero" id="about">
+    <div class="tag">available for internships</div>
+    <h1>Security.<br><span>Systems.</span><br>Builder.</h1>
+    <p class="hero-desc">Cybersecurity student at Purdue. I break things to understand them, then build them better. Focused on offensive security, threat detection, and real-world impact.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#projects">view projects</a>
+      <a class="btn btn-ghost" href="#">resume.pdf</a>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section" id="projects">
+    <div class="section-label">// selected work</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">01</div>
+        <h3>DeadRay Network</h3>
+        <p>Raspberry Pi home server with Pi-hole, Tailscale VPN, and Syncthing. Private by design.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">02</div>
+        <h3>PDID Pipeline</h3>
+        <p>Deepfake detection research. Selenium scraping + ResNext classifier integrated into Airtable.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">03</div>
+        <h3>Inbox Sorter</h3>
+        <p>Outlook extension using Microsoft Graph API and Purdue Directory to auto-sort mail.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">04</div>
+        <h3>b01lers CTF</h3>
+        <p>Active member. Competing in pwn, web, and crypto challenges across national competitions.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <div class="section-label">// skills & tools</div>
+    <div class="skills-row">
+      <span class="skill-pill hot">offensive security</span>
+      <span class="skill-pill hot">threat hunting</span>
+      <span class="skill-pill hot">python</span>
+      <span class="skill-pill hot">java</span>
+      <span class="skill-pill">linux</span>
+      <span class="skill-pill">wireshark</span>
+      <span class="skill-pill">selenium</span>
+      <span class="skill-pill">tailscale</span>
+      <span class="skill-pill">git</span>
+      <span class="skill-pill">bash</span>
+      <span class="skill-pill">hyprland</span>
+      <span class="skill-pill">ctf</span>
+    </div>
+
+    <div class="terminal">
+      <div class="term-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+      </div>
+      <div class="term-body">
+        <div><span class="prompt">~/rayed $</span> whoami</div>
+        <div class="out">rayed — cybersecurity @ purdue honors</div>
+        <div><span class="prompt">~/rayed $</span> cat interests.txt</div>
+        <div class="out">offensive sec, IR leadership, deepfakes</div>
+        <div><span class="prompt">~/rayed $</span> <span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="contact">
+    <div class="footer-name">rayed © 2026</div>
+    <div class="footer-links">
+      <a href="https://github.com/rayedrah" target="_blank">github</a>
+      <a href="https://linkedin.com/in/YOUR_LINKEDIN" target="_blank">linkedin</a>
+      <a href="mailto:YOUR_EMAIL@purdue.edu">email</a>
+    </div>
+  </footer>
+
+</body>
+</html>
