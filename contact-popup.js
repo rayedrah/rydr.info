@@ -1,5 +1,6 @@
 // ~/rayed contact popup overlay
 // triggered by clicking "contact" in nav on ANY page, scatters branded windows + centered resume
+// on mobile (<=600px wide), shows a bottom sheet with the 4 contact channels instead of draggable windows
 
 (function () {
   'use strict';
@@ -48,6 +49,10 @@
     }
   ];
 
+  function isMobile() {
+    return window.innerWidth <= 600;
+  }
+
   function init() {
     var trigger = document.getElementById('contactTrigger');
     if (!trigger) return;
@@ -74,11 +79,11 @@
 
     function getCardSize() {
       var w = window.innerWidth;
-      if (w >= 1400) return 440;   // large desktop
-      if (w >= 1024) return 400;   // laptop
-      if (w >= 768)  return 360;   // tablet
-      if (w > 480)   return 320;   // small tablet / large phone
-      return w - 32;               // phone, fill width minus margin
+      if (w >= 1400) return 440;
+      if (w >= 1024) return 400;
+      if (w >= 768)  return 360;
+      if (w > 480)   return 320;
+      return w - 32;
     }
 
     function getFocusSize() {
@@ -106,13 +111,11 @@
       var usableH = winH - navClearance - bottomClearance;
       var usableW = winW;
 
-      // four corner slots as fractions of viewport, matching the approved layout:
-      // top-left, top-right, bottom-left, bottom-right
       var slots = [
-        { x: 0.06, y: 0.0 },                              // top-left
-        { x: 1 - 0.06 - (cardW / usableW), y: 0.0 },       // top-right
-        { x: 0.06, y: 1 - (cardH / usableH) },             // bottom-left
-        { x: 1 - 0.06 - (cardW / usableW), y: 1 - (cardH / usableH) } // bottom-right
+        { x: 0.06, y: 0.0 },
+        { x: 1 - 0.06 - (cardW / usableW), y: 0.0 },
+        { x: 0.06, y: 1 - (cardH / usableH) },
+        { x: 1 - 0.06 - (cardW / usableW), y: 1 - (cardH / usableH) }
       ];
 
       var s = slots[slot % slots.length];
@@ -134,7 +137,7 @@
 
     function randomScatter(index, total) {
       var cardW = getCardSize();
-      var cardH = cardW; // square
+      var cardH = cardW;
       return cornerPosition(index, cardW, cardH);
     }
 
@@ -198,20 +201,6 @@
         document.removeEventListener('mouseup', stopDrag);
       }
 
-      titlebar.addEventListener('touchstart', function (e) {
-        if (e.target.classList.contains('cw-dot')) return;
-        var t = e.touches[0];
-        var rect = win.getBoundingClientRect();
-        offsetX = t.clientX - rect.left;
-        offsetY = t.clientY - rect.top;
-        win.style.zIndex = ++zCounter;
-      }, { passive: true });
-      titlebar.addEventListener('touchmove', function (e) {
-        var t = e.touches[0];
-        win.style.left = (t.clientX - offsetX) + 'px';
-        win.style.top = (t.clientY - offsetY) + 'px';
-      }, { passive: true });
-
       function removeWindow() {
         win.classList.add('closing');
         win.classList.remove('open');
@@ -237,6 +226,54 @@
       });
     }
 
+    function openMobileStack() {
+      var sheet = document.createElement('div');
+      sheet.className = 'cw-sheet';
+      sheet.id = 'cwSheet';
+
+      var others = CHANNELS.filter(function (c) { return !c.focus; });
+
+      var othersHtml = others.map(function (data) {
+        return (
+          '<div class="cw-sheet-item">' +
+            '<div class="cw-sheet-icon" style="background:' + data.titleBg + ';">' + data.icon + '</div>' +
+            '<div class="cw-sheet-text">' +
+              '<div class="cw-sheet-hook">' + data.hook + '</div>' +
+            '</div>' +
+            '<a class="cw-sheet-claim" style="background:' + data.titleBg + '; color:' + data.titleText + ';" href="' + data.href + '" target="_blank" rel="noopener">claim</a>' +
+          '</div>'
+        );
+      }).join('');
+
+      sheet.innerHTML =
+        '<div class="cw-sheet-backdrop" id="cwSheetBackdrop"></div>' +
+        '<div class="cw-sheet-panel">' +
+          '<div class="cw-sheet-handle"></div>' +
+          '<div class="cw-sheet-title">SAY HI</div>' +
+          '<div class="cw-sheet-list">' + othersHtml + '</div>' +
+        '</div>';
+
+      document.body.appendChild(sheet);
+      openWindows.push(sheet);
+
+      requestAnimationFrame(function () { sheet.classList.add('open'); });
+      showStopButton();
+
+      function closeSheet() {
+        sheet.classList.add('closing');
+        sheet.classList.remove('open');
+        setTimeout(function () {
+          sheet.remove();
+          openWindows = openWindows.filter(function (w) { return w !== sheet; });
+          checkAllClosed();
+        }, 220);
+      }
+
+      sheet.querySelector('#cwSheetBackdrop').addEventListener('click', closeSheet);
+
+      sheet._closeFn = closeSheet;
+    }
+
     function checkAllClosed() {
       if (openWindows.length === 0) hideStopButton();
     }
@@ -255,6 +292,12 @@
 
     function openAll() {
       if (openWindows.length > 0) return;
+
+      if (isMobile()) {
+        openMobileStack();
+        return;
+      }
+
       var nonFocus = CHANNELS.filter(function (c) { return !c.focus; });
       var focus = CHANNELS.filter(function (c) { return c.focus; });
 
@@ -272,12 +315,18 @@
 
     function closeAll() {
       openWindows.slice().forEach(function (win) {
+        if (win.classList.contains('cw-sheet')) {
+          if (win._closeFn) win._closeFn();
+          return;
+        }
         win.classList.add('closing');
         win.classList.remove('open');
       });
       setTimeout(function () {
-        openWindows.forEach(function (win) { win.remove(); });
-        openWindows = [];
+        openWindows.forEach(function (win) {
+          if (!win.classList.contains('cw-sheet')) win.remove();
+        });
+        openWindows = openWindows.filter(function (w) { return w.classList.contains('cw-sheet'); });
       }, 220);
       hideStopButton();
     }
@@ -294,6 +343,8 @@
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () {
         if (openWindows.length === 0) return;
+        if (isMobile()) return;
+
         var nonFocusWindows = openWindows.filter(function (w) { return !w.classList.contains('cw-focus'); });
         var focusWindows = openWindows.filter(function (w) { return w.classList.contains('cw-focus'); });
 
