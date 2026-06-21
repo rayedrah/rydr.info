@@ -32,7 +32,7 @@
     },
     {
       label: 'instagram', title: 'instagram.com/rayed_rn', value: 'instagram.com/rayed_rn',
-      href: 'https://instagram.com/rayedrah',
+      href: 'https://instagram.com/rayed_rn',
       hook: 'NEW FOLLOWER ALERT', sub: 'it could be you',
       titleBg: 'linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)', titleText: '#ffffff',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="#fff" stroke="none"/></svg>',
