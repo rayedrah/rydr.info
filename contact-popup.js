@@ -74,72 +74,76 @@
 
     function getCardSize() {
       var w = window.innerWidth;
-      if (w >= 1400) return 380;   // large desktop
-      if (w >= 1024) return 340;   // laptop
-      if (w >= 768)  return 310;   // tablet
-      if (w > 480)   return 290;   // small tablet / large phone
+      if (w >= 1400) return 440;   // large desktop
+      if (w >= 1024) return 400;   // laptop
+      if (w >= 768)  return 360;   // tablet
+      if (w > 480)   return 320;   // small tablet / large phone
       return w - 32;               // phone, fill width minus margin
     }
 
     function getFocusSize() {
-      return getCardSize() + 50;
+      return getCardSize() + 30;
     }
 
-    function centerPosition(focusWidth) {
+    function centerPosition(focusSize) {
       var winW = window.innerWidth;
       var winH = window.innerHeight;
-      var w = winW > 480 ? focusWidth : winW - 32;
-      var h = 300;
-      var navClearance = 90;
+      var size = winW > 480 ? focusSize : winW - 32;
+      var navClearance = 95;
       return {
-        left: Math.max(8, (winW - w) / 2),
-        top: Math.max(navClearance, (winH - h) / 2),
+        left: Math.max(8, (winW - size) / 2),
+        top: Math.max(navClearance, (winH - size) / 2),
         rot: 0
       };
     }
 
-    function randomScatter(index, total) {
+    function cornerPosition(slot, cardW, cardH) {
       var winW = window.innerWidth;
       var winH = window.innerHeight;
-      var navClearance = 90;
-      var bottomClearance = 120; // room for the NO SPAM button
-      var sideMargin = winW > 1024 ? 40 : 16;
+      var navClearance = 95;
+      var bottomClearance = 140;
 
-      var cardW = getCardSize();
-      var cardH = winW > 1024 ? 330 : 280;
-
-      var usableW = winW - sideMargin * 2;
       var usableH = winH - navClearance - bottomClearance;
+      var usableW = winW;
 
-      var cols = Math.max(2, Math.min(total, Math.floor(usableW / (cardW + 20))));
-      var rows = Math.max(1, Math.ceil(total / cols));
+      // four corner slots as fractions of viewport, matching the approved layout:
+      // top-left, top-right, bottom-left, bottom-right
+      var slots = [
+        { x: 0.06, y: 0.0 },                              // top-left
+        { x: 1 - 0.06 - (cardW / usableW), y: 0.0 },       // top-right
+        { x: 0.06, y: 1 - (cardH / usableH) },             // bottom-left
+        { x: 1 - 0.06 - (cardW / usableW), y: 1 - (cardH / usableH) } // bottom-right
+      ];
 
-      var cellW = usableW / cols;
-      var cellH = usableH / rows;
+      var s = slots[slot % slots.length];
+      var jitter = winW > 1024 ? 14 : 6;
+      var jx = (Math.random() * jitter * 2) - jitter;
+      var jy = (Math.random() * jitter * 2) - jitter;
 
-      var col = index % cols;
-      var row = Math.floor(index / cols);
+      var left = s.x * usableW + jx;
+      var top = navClearance + s.y * usableH + jy;
 
-      var cellX = sideMargin + col * cellW;
-      var cellY = navClearance + row * cellH;
-
-      var jitterX = Math.random() * Math.max(0, cellW - cardW);
-      var jitterY = Math.random() * Math.max(0, cellH - cardH);
-
-      var left = cellX + jitterX;
-      var top = cellY + jitterY;
-
-      // hard clamp so nothing can ever clip off any edge of the viewport
-      left = Math.min(Math.max(sideMargin, left), winW - cardW - sideMargin);
+      left = Math.min(Math.max(8, left), winW - cardW - 8);
       top = Math.min(Math.max(navClearance, top), winH - cardH - bottomClearance);
 
-      return { left: left, top: top, rot: (Math.random() * 6 - 3).toFixed(1) };
+      var rotSign = (slot === 1 || slot === 2) ? -1 : 1;
+      var rot = (rotSign * (Math.random() * 4 + 1)).toFixed(1);
+
+      return { left: left, top: top, rot: rot };
+    }
+
+    function randomScatter(index, total) {
+      var cardW = getCardSize();
+      var cardH = cardW; // square
+      return cornerPosition(index, cardW, cardH);
     }
 
     function createWindow(data, index, total) {
       var win = document.createElement('div');
       win.className = 'cw-window' + (data.focus ? ' cw-focus' : '');
-      win.style.width = (data.focus ? getFocusSize() : getCardSize()) + 'px';
+      var size = data.focus ? getFocusSize() : getCardSize();
+      win.style.width = size + 'px';
+      win.style.height = size + 'px';
 
       var pos = data.focus ? centerPosition(getFocusSize()) : randomScatter(index, total);
       win.style.left = pos.left + 'px';
@@ -294,15 +298,19 @@
         var focusWindows = openWindows.filter(function (w) { return w.classList.contains('cw-focus'); });
 
         nonFocusWindows.forEach(function (win, i) {
-          win.style.width = getCardSize() + 'px';
+          var size = getCardSize();
+          win.style.width = size + 'px';
+          win.style.height = size + 'px';
           var pos = randomScatter(i, nonFocusWindows.length);
           win.style.left = pos.left + 'px';
           win.style.top = pos.top + 'px';
         });
 
         focusWindows.forEach(function (win) {
-          win.style.width = getFocusSize() + 'px';
-          var pos = centerPosition(getFocusSize());
+          var size = getFocusSize();
+          win.style.width = size + 'px';
+          win.style.height = size + 'px';
+          var pos = centerPosition(size);
           win.style.left = pos.left + 'px';
           win.style.top = pos.top + 'px';
         });
