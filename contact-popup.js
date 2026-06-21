@@ -72,14 +72,28 @@
     var openWindows = [];
     var zCounter = 500;
 
+    function getCardSize() {
+      var w = window.innerWidth;
+      if (w >= 1400) return 380;   // large desktop
+      if (w >= 1024) return 340;   // laptop
+      if (w >= 768)  return 310;   // tablet
+      if (w > 480)   return 290;   // small tablet / large phone
+      return w - 32;               // phone, fill width minus margin
+    }
+
+    function getFocusSize() {
+      return getCardSize() + 50;
+    }
+
     function centerPosition(focusWidth) {
       var winW = window.innerWidth;
       var winH = window.innerHeight;
       var w = winW > 480 ? focusWidth : winW - 32;
-      var h = 260;
+      var h = 300;
+      var navClearance = 90;
       return {
         left: Math.max(8, (winW - w) / 2),
-        top: Math.max(70, (winH - h) / 2),
+        top: Math.max(navClearance, (winH - h) / 2),
         rot: 0
       };
     }
@@ -87,35 +101,47 @@
     function randomScatter(index, total) {
       var winW = window.innerWidth;
       var winH = window.innerHeight;
-      var margin = 50;
-      var cardW = winW > 480 ? 300 : winW - 32;
-      var cardH = 230;
+      var navClearance = 90;
+      var bottomClearance = 120; // room for the NO SPAM button
+      var sideMargin = winW > 1024 ? 40 : 16;
 
-      var cols = Math.max(2, Math.floor(winW / 360));
+      var cardW = getCardSize();
+      var cardH = winW > 1024 ? 330 : 280;
+
+      var usableW = winW - sideMargin * 2;
+      var usableH = winH - navClearance - bottomClearance;
+
+      var cols = Math.max(2, Math.min(total, Math.floor(usableW / (cardW + 20))));
       var rows = Math.max(1, Math.ceil(total / cols));
-      var cellW = (winW - margin * 2) / cols;
-      var cellH = Math.min(260, (winH - margin * 2 - 80) / rows);
+
+      var cellW = usableW / cols;
+      var cellH = usableH / rows;
 
       var col = index % cols;
       var row = Math.floor(index / cols);
 
-      var cellX = margin + col * cellW;
-      var cellY = margin + 50 + row * cellH;
+      var cellX = sideMargin + col * cellW;
+      var cellY = navClearance + row * cellH;
 
       var jitterX = Math.random() * Math.max(0, cellW - cardW);
-      var jitterY = Math.random() * Math.max(0, cellH - cardH * 0.6);
+      var jitterY = Math.random() * Math.max(0, cellH - cardH);
 
-      var left = Math.min(winW - cardW - 12, cellX + jitterX);
-      var top = Math.min(winH - 160, cellY + jitterY);
+      var left = cellX + jitterX;
+      var top = cellY + jitterY;
 
-      return { left: Math.max(8, left), top: Math.max(70, top), rot: (Math.random() * 6 - 3).toFixed(1) };
+      // hard clamp so nothing can ever clip off any edge of the viewport
+      left = Math.min(Math.max(sideMargin, left), winW - cardW - sideMargin);
+      top = Math.min(Math.max(navClearance, top), winH - cardH - bottomClearance);
+
+      return { left: left, top: top, rot: (Math.random() * 6 - 3).toFixed(1) };
     }
 
     function createWindow(data, index, total) {
       var win = document.createElement('div');
       win.className = 'cw-window' + (data.focus ? ' cw-focus' : '');
+      win.style.width = (data.focus ? getFocusSize() : getCardSize()) + 'px';
 
-      var pos = data.focus ? centerPosition(340) : randomScatter(index, total);
+      var pos = data.focus ? centerPosition(getFocusSize()) : randomScatter(index, total);
       win.style.left = pos.left + 'px';
       win.style.top = pos.top + 'px';
       win.style.setProperty('--rot', pos.rot + 'deg');
@@ -258,6 +284,30 @@
     });
 
     stopBtn.addEventListener('click', closeAll);
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        if (openWindows.length === 0) return;
+        var nonFocusWindows = openWindows.filter(function (w) { return !w.classList.contains('cw-focus'); });
+        var focusWindows = openWindows.filter(function (w) { return w.classList.contains('cw-focus'); });
+
+        nonFocusWindows.forEach(function (win, i) {
+          win.style.width = getCardSize() + 'px';
+          var pos = randomScatter(i, nonFocusWindows.length);
+          win.style.left = pos.left + 'px';
+          win.style.top = pos.top + 'px';
+        });
+
+        focusWindows.forEach(function (win) {
+          win.style.width = getFocusSize() + 'px';
+          var pos = centerPosition(getFocusSize());
+          win.style.left = pos.left + 'px';
+          win.style.top = pos.top + 'px';
+        });
+      }, 150);
+    });
   }
 
   if (document.readyState === 'loading') {
