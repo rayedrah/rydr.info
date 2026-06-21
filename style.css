@@ -452,10 +452,10 @@ h1 {
 .timeline-item:not([open]) .timeline-marker::before { content: '+'; }
 
 .timeline-role {
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  font-size: 0.92rem;
-  letter-spacing: 0.02em;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.005em;
   color: var(--text);
   grid-column: 2;
 }
