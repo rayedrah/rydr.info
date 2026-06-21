@@ -257,7 +257,6 @@
       openWindows.push(sheet);
 
       requestAnimationFrame(function () { sheet.classList.add('open'); });
-      showStopButton();
 
       function closeSheet() {
         sheet.classList.add('closing');
