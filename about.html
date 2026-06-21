@@ -1,255 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>About | Rayed Rahman — preview v3</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
-<style>
-/* ===== your actual tokens, unchanged ===== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --bg: #0a0a0a;
-  --surface: #111;
-  --border: #1e1e1e;
-  --accent: #00ff88;
-  --accent2: #0af;
-  --text: #e8e8e8;
-  --muted: #666;
-  --content-max: 1180px;
-}
-
-html { scroll-behavior: smooth; }
-body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-a { color: inherit; }
-
-.page-header { padding: 4rem 2rem 1.5rem; max-width: var(--content-max); margin: 0 auto; }
-.page-header h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.9rem; font-weight: 800; letter-spacing: -0.02em; }
-.page-header p { color: var(--muted); line-height: 1.7; max-width: 560px; }
-
-.tag {
-  display: inline-block;
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  padding: 3px 10px;
-  border-radius: 2px;
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.1em;
-}
-
-.divider { border: none; border-top: 1px solid var(--border); max-width: calc(var(--content-max) - 4rem); margin: 0 auto; }
-.section { padding: 3.5rem 2rem; max-width: var(--content-max); margin: 0 auto; }
-.section-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.12em;
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-}
-.card { background: var(--bg); padding: 1.5rem; transition: background 0.2s; }
-.card:hover { background: var(--surface); }
-.card-num { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 1rem; }
-.card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
-.card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
-.skills-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2rem; }
-.skill-pill {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  padding: 5px 12px;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  color: var(--muted);
-  letter-spacing: 0.05em;
-}
-.skill-pill.hot { border-color: var(--accent); color: var(--accent); }
-.skill-pill.cert::before { content: '\2713\0020'; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
-}
-@media (max-width: 600px) {
-  .page-header { padding: 3rem 1rem 1rem; }
-  .section { padding: 2.5rem 1rem; }
-  .divider { margin: 0 1rem; max-width: none; }
-}
-
-/* ===================================================== */
-/* ===== SIGNATURE: boot sequence / identity readout ==== */
-/* ===================================================== */
-
-.boot {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  font-family: 'Space Mono', monospace;
-  overflow: hidden;
-}
-
-.boot-bar {
-  background: var(--border);
-  padding: 8px 12px;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-.boot .dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot-r { background: #ff5f57; }
-.dot-y { background: #ffbd2e; }
-.dot-g { background: #28c840; }
-.boot-title { margin-left: 6px; color: var(--muted); font-size: 11px; }
-.boot-status {
-  margin-left: auto;
-  font-size: 10px;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  opacity: 0;
-  animation: fadeIn 0.4s ease forwards;
-  animation-delay: 3.6s;
-}
-
-.boot-body {
-  padding: 2.2rem 2rem 2.6rem;
-  position: relative;
-}
-
-/* scanline texture, extremely subtle, reinforces "terminal" without being a gimmick */
-.boot-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(255,255,255,0.012) 0px,
-    rgba(255,255,255,0.012) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  pointer-events: none;
-}
-
-.boot-line {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.8;
-  opacity: 0;
-  transform: translateY(4px);
-  animation: lineIn 0.35s ease forwards;
-}
-.boot-line .ok { color: var(--accent); }
-.boot-line .check { color: var(--accent); }
-
-.boot-line:nth-child(1) { animation-delay: 0.1s; }
-.boot-line:nth-child(2) { animation-delay: 0.45s; }
-.boot-line:nth-child(3) { animation-delay: 0.8s; }
-.boot-line:nth-child(4) { animation-delay: 1.15s; }
-
-@keyframes lineIn {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.boot-rule {
-  border: none;
-  border-top: 1px dashed var(--border);
-  margin: 1.4rem 0 1.6rem;
-  opacity: 0;
-  animation: fadeIn 0.4s ease forwards;
-  animation-delay: 1.4s;
-}
-
-@keyframes fadeIn { to { opacity: 1; } }
-
-.identity-name {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.7rem, 4vw, 2.6rem);
-  letter-spacing: -0.01em;
-  margin-bottom: 1.4rem;
-  opacity: 0;
-  animation: nameFlicker 0.9s ease forwards;
-  animation-delay: 1.6s;
-}
-
-@keyframes nameFlicker {
-  0% { opacity: 0; text-shadow: none; }
-  8% { opacity: 0.7; text-shadow: 0 0 18px var(--accent); }
-  12% { opacity: 0.2; text-shadow: none; }
-  20% { opacity: 0.9; text-shadow: 0 0 22px var(--accent); }
-  26% { opacity: 0.3; }
-  35% { opacity: 1; text-shadow: 0 0 28px rgba(0,255,136,0.55), 0 0 60px rgba(0,255,136,0.25); }
-  100% { opacity: 1; text-shadow: 0 0 6px rgba(0,255,136,0.25); }
-}
-
-.identity-statement {
-  font-size: 1rem;
-  line-height: 1.85;
-  color: var(--text);
-  max-width: 760px;
-  opacity: 0;
-  animation: fadeIn 0.6s ease forwards;
-  animation-delay: 2.5s;
-}
-
-.identity-statement .id-key {
-  color: var(--accent);
-  font-weight: 700;
-}
-.identity-statement .id-key2 {
-  color: var(--accent2);
-  font-weight: 700;
-}
-
-.id-cursor {
-  display: inline-block;
-  width: 8px;
-  height: 1.05em;
-  background: var(--accent);
-  vertical-align: text-bottom;
-  margin-left: 2px;
-  opacity: 0;
-  animation: cursorIn 1s step-end infinite;
-  animation-delay: 3.6s;
-}
-@keyframes cursorIn {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-/* corner ticks — small structural flourish, echoes the bordered-grid language already on the site */
-.boot::after,
-.boot::before {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 1px solid var(--accent);
-  opacity: 0.5;
-  pointer-events: none;
-}
-.boot::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-.boot::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-
-@media (max-width: 600px) {
-  .boot-body { padding: 1.6rem 1.2rem 2rem; }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon-16x16.png">
+  <link rel="icon" type="image/x-icon" href="icon/favicon.ico">
+  <title>About | Rayed Rahman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <nav>
+  <div class="nav-inner">
+      <a class="logo" href="index.html">~/rayed</a>
+      <button class="nav-toggle" id="navToggle" aria-label="toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">home</a></li>
+        <li><a href="about.html" class="active">about</a></li>
+        <li><a href="experience.html">experience</a></li>
+        <li><a href="projects.html">projects</a></li>
+        <li><a href="contact.html">contact</a></li>
+      </ul>
+  </div>
+  </nav>
 
   <div class="page-header">
     <div class="tag">// who i am</div>
@@ -258,14 +38,13 @@ a { color: inherit; }
   </div>
 
   <div class="section" style="padding-top: 0;">
-
     <div class="boot">
       <div class="boot-bar">
         <div class="dot dot-r"></div>
         <div class="dot dot-y"></div>
         <div class="dot dot-g"></div>
         <div class="boot-title">~/rayed/identity.sh</div>
-        <div class="boot-status">● VERIFIED</div>
+        <div class="boot-status">&#9679; VERIFIED</div>
       </div>
 
       <div class="boot-body">
@@ -283,17 +62,16 @@ a { color: inherit; }
         </div>
       </div>
     </div>
-
   </div>
 
   <hr class="divider" />
 
   <div class="section">
     <div class="section-label">// summary</div>
-    <div class="about-summary" style="max-width:760px; color: var(--muted); line-height: 1.8; font-size: 0.95rem;">
-      <p style="margin-bottom:1.1rem; color: var(--text);">I'm a Cybersecurity major at Purdue University, drawn to this field because I want to be the person who understands why a system fails before it actually does. As an active CTF player with b01lers, Purdue's competitive cybersecurity team, I look for that understanding through real problems and real teammates, not just theory.</p>
-      <p style="margin-bottom:1.1rem;">That instinct started early. In Bangladesh, I founded CGSEncrypted, the country's first high school CTF team, and took on leadership roles as Vice President of the CGS Programming Club and Head of Academics for the MUN Club, training members and running large scale events long before I had a formal title in security.</p>
-      <p style="margin-bottom:1.1rem;">Outside of security, I cofounded SYNQ, a sportswear brand that has delivered thousands of customized products and supported tournaments like the All Stars League Chattogram. Different domain, same pattern: find what's broken or missing, build the system to fix it, and stay stubborn enough to see it through.</p>
+    <div class="about-summary">
+      <p>I'm a Cybersecurity major at Purdue University, drawn to this field because I want to be the person who understands why a system fails before it actually does. As an active CTF player with b01lers, Purdue's competitive cybersecurity team, I look for that understanding through real problems and real teammates, not just theory.</p>
+      <p>That instinct started early. In Bangladesh, I founded CGSEncrypted, the country's first high school CTF team, and took on leadership roles as Vice President of the CGS Programming Club and Head of Academics for the MUN Club, training members and running large scale events long before I had a formal title in security.</p>
+      <p>Outside of security, I cofounded SYNQ, a sportswear brand that has delivered thousands of customized products and supported tournaments like the All Stars League Chattogram. Different domain, same pattern: find what's broken or missing, build the system to fix it, and stay stubborn enough to see it through.</p>
     </div>
 
     <div class="skills-row" aria-label="top skills">
@@ -337,5 +115,17 @@ a { color: inherit; }
     </div>
   </div>
 
+  <footer>
+  <div class="footer-inner">
+      <div class="footer-name">rayed © 2026</div>
+      <div class="footer-links">
+        <a href="https://github.com/rayedrah" target="_blank" rel="noopener">github</a>
+        <a href="https://linkedin.com/in/rayedrah" target="_blank" rel="noopener">linkedin</a>
+        <a href="mailto:rahrayed@gmail.com">email</a>
+      </div>
+  </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
