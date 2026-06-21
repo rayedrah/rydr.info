@@ -34,37 +34,20 @@
   <div class="page-header">
     <div class="tag">// hands on</div>
     <h1>Projects</h1>
-    <p>Things I have built, broken, and occasionally both at once.</p>
+    <p>Things I have built, broken, and occasionally both at once. Click any project to expand it.</p>
   </div>
 
-  <div class="section">
-    <div class="section-label">// selected work</div>
-    <div class="cards">
-      <div class="card">
-        <div class="card-num">01</div>
-        <h3>DeadRay Network</h3>
-        <p>Raspberry Pi home server with Pi-hole, Tailscale VPN, and Syncthing. Private by design.</p>
+  <div class="section" style="padding-top: 0;">
+
+    <div class="skillmap-layout">
+
+      <div class="proj-list" id="projList"></div>
+
+      <div class="radar-card">
+        <svg viewBox="0 0 380 360" id="radarSvg"></svg>
+        <div class="radar-caption"><span class="key">skill map</span> — open a project on the left to highlight its shape here.</div>
       </div>
-      <div class="card">
-        <div class="card-num">02</div>
-        <h3>PDID Pipeline</h3>
-        <p>Deepfake detection research. Selenium scraping and a ResNext classifier integrated into Airtable.</p>
-      </div>
-      <div class="card">
-        <div class="card-num">03</div>
-        <h3>Inbox Sorter</h3>
-        <p>Outlook extension using Microsoft Graph API and Purdue Directory to auto-sort mail.</p>
-      </div>
-      <div class="card">
-        <div class="card-num">04</div>
-        <h3>b01lers CTF</h3>
-        <p>Active member. Competing in pwn, web, and crypto challenges across national competitions.</p>
-      </div>
-      <div class="card">
-        <div class="card-num">05</div>
-        <h3>Corporate CTF Build</h3>
-        <p>Designed and deployed a large scale CTFd platform for a corporate cybersecurity capacity building event, spanning reverse engineering, web, OSINT, and trivia categories.</p>
-      </div>
+
     </div>
   </div>
 
@@ -96,13 +79,197 @@
       <div class="footer-links">
         <a href="https://github.com/rayedrah" target="_blank" rel="noopener">github</a>
         <a href="https://linkedin.com/in/rayedrah" target="_blank" rel="noopener">linkedin</a>
-        <a href="mailto:rahrayed@gmail.com">email</a>
+        <a href="mailto:rayedrah@gmail.com">email</a>
       </div>
   </div>
   </footer>
 
   <script src="script.js"></script>
   <script src="contact-popup.js"></script>
+  <script>
+  (function () {
+
+    /* =====================================================
+       HOW TO ADD A NEW PROJECT
+       =====================================================
+       Add a new object to the PROJECTS array below. Each project needs:
+
+       id      - unique short string, no spaces (used internally)
+       title   - project name, shown bold
+       sub     - one-line description, shown under the title
+       color   - hex color, used for the dot, radar shape, and dots
+       scores  - rate 1-10 on each of the 5 axes:
+                   systems  = infrastructure / engineering depth
+                   security = how security-focused the work is
+                   research = how exploratory / research-driven
+                   scale    = size of impact, users, or scope
+                   polish   = how finished / production-ready
+       desc    - full paragraph shown when expanded
+       stack   - array of strings, shown as small tags
+
+       Just copy one of the existing objects below, change the
+       values, and add a comma. No other code needs to change,
+       both the list on the left and the radar on the right
+       update automatically.
+
+       Suggested colors already in use: #00ff88 #0af #ffcc00 #ff6b6b #c77dff
+       Good next colors to try: #ff9f43 (orange), #4ade80 (lighter green),
+       #f472b6 (pink), #38bdf8 (sky blue)
+       ===================================================== */
+
+    var AXES = ['systems', 'security', 'research', 'scale', 'polish'];
+
+    var PROJECTS = [
+      {
+        id: 'deadray', title: 'DeadRay Network', sub: 'Raspberry Pi home server infrastructure',
+        color: '#00ff88',
+        scores: { systems: 9, security: 7, research: 2, scale: 3, polish: 6 },
+        desc: 'A self-hosted home server infrastructure running network-wide ad blocking, a private mesh VPN, and file sync across devices. Private by design, no third party cloud dependency for daily use.',
+        stack: ['Raspberry Pi', 'Pi-hole', 'Tailscale', 'Syncthing', 'Linux']
+      },
+      {
+        id: 'pdid', title: 'PDID Pipeline', sub: 'Deepfake detection research, GRAIL Lab',
+        color: '#0af',
+        scores: { systems: 4, security: 3, research: 9, scale: 6, polish: 5 },
+        desc: 'Research pipeline supporting the Political Deepfakes Incident Database. Selenium-based scraping across social platforms feeds a ResNext classifier, with results synced to Airtable for the research team to review and annotate.',
+        stack: ['Python', 'Selenium', 'ResNext', 'Airtable API']
+      },
+      {
+        id: 'inbox', title: 'Inbox Sorter', sub: 'Outlook add-in, Microsoft Graph API',
+        color: '#ffcc00',
+        scores: { systems: 5, security: 2, research: 1, scale: 4, polish: 7 },
+        desc: 'An Outlook extension that auto-organizes incoming mail using Microsoft Graph API combined with Purdue Directory lookups, reducing manual triage in a high-volume inbox.',
+        stack: ['Microsoft Graph API', 'JavaScript', 'Outlook Add-ins']
+      },
+      {
+        id: 'boilers', title: 'b01lers CTF', sub: "Purdue's competitive cybersecurity team",
+        color: '#ff6b6b',
+        scores: { systems: 5, security: 9, research: 3, scale: 2, polish: 3 },
+        desc: 'Active member competing in national CTF competitions across pwn, web exploitation, and cryptography categories. Ongoing, ranked competition rather than a single shipped artifact.',
+        stack: ['Reverse Engineering', 'Binary Exploitation', 'Web Security', 'Cryptography']
+      },
+      {
+        id: 'corpctf', title: 'Corporate CTF Build', sub: 'Large scale CTFd deployment for AGS QA',
+        color: '#c77dff',
+        scores: { systems: 7, security: 8, research: 2, scale: 8, polish: 7 },
+        desc: 'Designed and deployed a 50-challenge CTFd platform for a corporate cybersecurity capacity building event, spanning reverse engineering, web, OSINT, and trivia categories. Hosted via a custom Flask backend behind a Cloudflare Tunnel.',
+        stack: ['CTFd', 'Flask', 'Cloudflare Tunnel', 'Docker']
+      }
+    ];
+
+    var ns = 'http://www.w3.org/2000/svg';
+    var cx = 190, cy = 165, maxR = 115;
+
+    function elx(tag, attrs) {
+      var e = document.createElementNS(ns, tag);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+
+    function pointFor(axisIndex, value) {
+      var angle = (Math.PI * 2 * axisIndex / AXES.length) - Math.PI / 2;
+      var r = (value / 10) * maxR;
+      return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+    }
+
+    var svg = document.getElementById('radarSvg');
+
+    [0.25, 0.5, 0.75, 1].forEach(function (frac) {
+      var pts = AXES.map(function (a, i) { return pointFor(i, frac * 10); });
+      var d = pts.map(function (p, i) { return (i === 0 ? 'M' : 'L') + p.x + ',' + p.y; }).join(' ') + ' Z';
+      svg.appendChild(elx('path', { d: d, class: 'radar-grid-line' }));
+    });
+
+    AXES.forEach(function (axis, i) {
+      var outer = pointFor(i, 10);
+      svg.appendChild(elx('line', { x1: cx, y1: cy, x2: outer.x, y2: outer.y, class: 'radar-axis-line' }));
+      var labelPt = pointFor(i, 12);
+      var label = elx('text', { x: labelPt.x, y: labelPt.y, class: 'radar-axis-label' });
+      label.textContent = axis;
+      svg.appendChild(label);
+    });
+
+    var shapeRefs = {};
+
+    PROJECTS.forEach(function (p) {
+      var pts = AXES.map(function (a, i) { return pointFor(i, p.scores[a]); });
+      var d = pts.map(function (pt, i) { return (i === 0 ? 'M' : 'L') + pt.x + ',' + pt.y; }).join(' ') + ' Z';
+      var path = elx('path', { d: d, class: 'radar-shape', fill: p.color, stroke: p.color, 'data-id': p.id });
+      svg.appendChild(path);
+
+      var dots = pts.map(function (pt) {
+        var dot = elx('circle', { cx: pt.x, cy: pt.y, r: 2.6, fill: p.color, class: 'radar-dot', 'data-id': p.id });
+        svg.appendChild(dot);
+        return dot;
+      });
+
+      shapeRefs[p.id] = { path: path, dots: dots };
+    });
+
+    var listEl = document.getElementById('projList');
+
+    function maxAxis(scores) {
+      var best = AXES[0];
+      AXES.forEach(function (a) { if (scores[a] > scores[best]) best = a; });
+      return best;
+    }
+
+    PROJECTS.forEach(function (p) {
+      var peak = maxAxis(p.scores);
+
+      var details = document.createElement('details');
+      details.className = 'proj-file';
+      details.dataset.id = p.id;
+
+      var summary = document.createElement('summary');
+      summary.className = 'proj-summary';
+      summary.innerHTML =
+        '<span class="proj-swatch" style="background:' + p.color + ';"></span>' +
+        '<span class="proj-title-wrap">' +
+          '<span class="proj-title">' + p.title + '</span>' +
+          '<span class="proj-sub">' + p.sub + '</span>' +
+        '</span>' +
+        '<span class="proj-peak"><strong>' + p.scores[peak] + '/10</strong>' + peak + '</span>' +
+        '<span class="proj-chevron">&#9656;</span>';
+
+      var body = document.createElement('div');
+      body.className = 'proj-body';
+      body.innerHTML =
+        '<p class="proj-desc">' + p.desc + '</p>' +
+        '<div class="proj-stack">' + p.stack.map(function (s) { return '<span>' + s + '</span>'; }).join('') + '</div>';
+
+      details.appendChild(summary);
+      details.appendChild(body);
+      listEl.appendChild(details);
+
+      summary.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        var wasOpen = details.hasAttribute('open');
+
+        document.querySelectorAll('.proj-file').forEach(function (d) {
+          d.removeAttribute('open');
+        });
+
+        if (wasOpen) {
+          highlight(null);
+        } else {
+          details.setAttribute('open', '');
+          highlight(p.id);
+        }
+      });
+    });
+
+    function highlight(id) {
+      Object.keys(shapeRefs).forEach(function (key) {
+        var ref = shapeRefs[key];
+        ref.path.classList.toggle('dim', id !== null && key !== id);
+        ref.path.classList.toggle('lit', id !== null && key === id);
+        ref.dots.forEach(function (d) { d.classList.toggle('dim', id !== null && key !== id); });
+      });
+    }
+  })();
+  </script>
 
 </body>
 </html>
