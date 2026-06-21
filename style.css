@@ -1122,7 +1122,7 @@ footer {
 
 @media (max-width: 600px) {
   .cw-sheet { display: block; }
-  .cw-stop { bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+  .cw-stop { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
