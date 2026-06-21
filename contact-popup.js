@@ -6,8 +6,8 @@
 
   var CHANNELS = [
     {
-      label: 'email', title: 'rahrayed@gmail.com', value: 'rahrayed@gmail.com',
-      href: 'mailto:rahrayed@gmail.com',
+      label: 'email', title: 'rayedrah@gmail.com', value: 'rayedrah@gmail.com',
+      href: 'mailto:rayedrah@gmail.com',
       hook: 'YOU\'VE GOT MAIL!', sub: '1 new way to reach me',
       titleBg: 'var(--accent)', titleText: '#06120c',
       icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18v12H3V6z" stroke="#06120c" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="#06120c" stroke-width="1.8" stroke-linejoin="round"/></svg>',
@@ -30,7 +30,7 @@
       bigicon: '<svg viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>'
     },
     {
-      label: 'instagram', title: 'instagram.com/rayedrah', value: 'instagram.com/rayedrah',
+      label: 'instagram', title: 'instagram.com/rayed_rn', value: 'instagram.com/rayed_rn',
       href: 'https://instagram.com/rayedrah',
       hook: 'NEW FOLLOWER ALERT', sub: 'it could be you',
       titleBg: 'linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)', titleText: '#ffffff',
@@ -40,7 +40,7 @@
     {
       label: 'resume', title: 'CLASSIFIED: resume.pdf', value: 'resume.pdf',
       href: 'resume.pdf',
-      hook: 'YOU WON\'T BELIEVE #4', sub: 'hiring managers hate him',
+      hook: 'STILL HIRING? CLICK NOW', sub: 'hiring managers love him',
       titleBg: '#ffcc00', titleText: '#1a1a1a',
       focus: true,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M7 3h7l5 5v13H7V3z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 16.5h6" /></svg>',
