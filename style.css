@@ -839,16 +839,19 @@ footer {
 .cw-window {
   position: fixed;
   width: 300px; /* fallback only, JS sets actual width responsively */
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: 0 24px 60px -18px rgba(0,0,0,0.8);
   font-family: 'Space Mono', monospace;
   overflow: hidden;
   opacity: 0;
   transform: scale(0.85) rotate(var(--rot, 0deg));
   pointer-events: none;
-  transition: opacity 0.28s cubic-bezier(.2,.9,.3,1.3), transform 0.32s cubic-bezier(.2,.9,.3,1.3), width 0.2s ease;
+  transition: opacity 0.28s cubic-bezier(.2,.9,.3,1.3), transform 0.32s cubic-bezier(.2,.9,.3,1.3), width 0.2s ease, height 0.2s ease;
 }
 
 .cw-window.open {
@@ -885,41 +888,45 @@ footer {
 .cw-window.minimized .cw-body { display: none; }
 
 .cw-body {
-  padding: 1.5rem 1.4rem 1.5rem;
+  flex: 1;
+  padding: 1.6rem 1.5rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .cw-bigicon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 0.85rem;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: rgba(255,255,255,0.06);
 }
-.cw-bigicon svg { width: 32px; height: 32px; }
+.cw-bigicon svg { width: 38px; height: 38px; }
 
 .cw-hook {
   font-family: 'Syne', sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--text);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
   letter-spacing: -0.01em;
   line-height: 1.15;
 }
 
 .cw-sub {
   font-family: 'Space Mono', monospace;
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--muted);
-  margin-bottom: 1.3rem;
+  margin-bottom: 1.6rem;
 }
 
-.cw-actions { display: flex; gap: 0.6rem; }
-.cw-actions .btn { flex: 1; text-align: center; font-size: 12px; padding: 10px 12px; }
+.cw-actions { display: flex; gap: 0.7rem; }
+.cw-actions .btn { flex: 1; text-align: center; font-size: 13px; padding: 12px 14px; }
 .cw-actions .btn-copy { background: transparent; border: 1px solid var(--border); color: var(--muted); }
 .cw-actions .btn-copy:hover { color: var(--text); border-color: var(--muted); }
 .cw-actions .btn-open { font-weight: 800; }
