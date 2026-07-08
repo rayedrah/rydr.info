@@ -121,6 +121,13 @@
 
     var PROJECTS = [
       {
+        id: 'trkt', title: 'TRKT', sub: 'QR event ticketing & live check-in',
+        color: '#ff9f43',
+        scores: { systems: 8, security: 6, research: 3, scale: 5, polish: 7 },
+        desc: 'A reusable QR-code event ticketing and live check-in system running entirely on Cloudflare Workers + KV, built to sit dormant between events for months and spin up instantly for the next one. Everything is dashboard-driven — create an event by uploading a CSV, auto-generate per-guest QR tickets, and check people in live from any phone. Includes fully editable ticket templates (HTML/CSS with placeholders), custom fields, event-scoped password protection, and undo-check-in. See it live at <a href="https://trkt.rydr.info" target="_blank" rel="noopener">trkt.rydr.info</a>.',
+        stack: ['Cloudflare Workers', 'Cloudflare KV', 'JavaScript']
+      },
+      {
         id: 'deadray', title: 'DeadRay Network', sub: 'Raspberry Pi home server infrastructure',
         color: '#00ff88',
         scores: { systems: 9, security: 7, research: 2, scale: 3, polish: 6 },
