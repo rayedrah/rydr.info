@@ -24,9 +24,9 @@
 <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/projects/">Projects</a><i>/</i><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></nav>
 <main class="wrap note">
   <header class="note-head">
-    <div class="lcd lcd-strip">
-      <div class="lcd-row"><a href="/blog/folders/projects/">Tape: Projects</a><span>Track 02/03</span></div>
-      <div class="lcd-row"><span>Jul 7, 2026</span><span>05 min</span></div>
+    <div class="crt crt-strip">
+      <div class="crt-row"><a href="/blog/folders/projects/">Dir: Projects</a><span>Entry 02/03</span></div>
+      <div class="crt-row"><span>Jul 7, 2026</span><span>05 min</span></div>
     </div>
     <h1>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</h1>
     <p class="lede">A reusable QR ticketing system I run my events on. One Worker file, one KV namespace, no monthly bill, and a check-in race condition I had to design around.</p>
@@ -164,9 +164,9 @@ wrangler<span class="w"> </span>deploy
 
 <p>If you ever recreate the KV namespace, run <code>wrangler kv namespace create TICKETS_KV</code> and paste the returned ID into <code>wrangler.toml</code>.</p>
 <aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Secrets go in Worker secrets, nowhere else</div><div class="callout-body"><p>Put API tokens in with <code>wrangler secret put NAME</code>. The name goes in the command, and the value goes at the prompt. Never paste a token into a note, a commit, or a shell command.</p></div></aside></article>
-  <nav class="pager"><a class="prev key-btn" href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><small>&#9664;&#9664; Prev track</small><span>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><a class="next key-btn" href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><small>Next track &#9654;&#9654;</small><span>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a></nav>
+  <nav class="pager"><a class="prev key-btn" href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><small>&#9664; Prev entry</small><span>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><a class="next key-btn" href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><small>Next entry &#9654;</small><span>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a></nav>
   <section class="more">
-    <h2>Tracklist &middot; Projects</h2>
+    <h2>Directory &middot; Projects</h2>
     <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><span class="e-title">rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><time>Apr 20, 2026</time></li><li class="here" aria-current="page"><span class="num">02</span><a href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><span class="e-title">TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><time>Jul 7, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><span class="e-title">PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a><time></time></li></ol>
   </section>
 </main>

@@ -337,18 +337,14 @@ class Builder:
     def folder_block(self, f, link_title=True):
         count = len(f["posts"])
         idx = self.folders.index(f)
-        side = "ABCDEFGHIJ"[idx % 10]
         name = html.escape(f["name"])
         title = f'<a href="/folders/{f["slug"]}/">{name}</a>' if link_title else name
         desc = f'<p class="f-desc">{html.escape(f.get("description", ""))}</p>' if f.get("description") else ""
-        return (f'<section class="cassette" id="{f["slug"]}">'
-                f'<div class="cas-shell">'
-                f'<div class="cas-top"><span class="cas-side">Side {side}</span>'
-                f'<span class="cas-id">BL-{idx + 1:02d} &middot; {count} {"track" if count == 1 else "tracks"}</span></div>'
-                f'<div class="cas-label"><div class="cas-stripes" aria-hidden="true"><i></i><i></i><i></i></div>'
-                f'<h2>{title}</h2>{desc}</div>'
-                f'<div class="cas-window" aria-hidden="true"><span class="reel"></span><span class="tape"></span><span class="reel"></span></div>'
-                f'</div>'
+        return (f'<section class="module" id="{f["slug"]}">'
+                f'<div class="mod-head"><span class="led on" aria-hidden="true"></span>'
+                f'<span class="mod-id">DIR {idx + 1:02d}</span>'
+                f'<span class="mod-count">{count:02d} {"entry" if count == 1 else "entries"}</span></div>'
+                f'<div class="crt crt-mod"><h2>{title}</h2>{desc}</div>'
                 f'{self.entry_list(f["posts"])}</section>')
 
     def build(self):
@@ -367,33 +363,32 @@ class Builder:
                 plain = re.sub(r"\s+", " ", html.unescape(plain)).strip()
                 post["description"] = (plain[:157] + "…") if len(plain) > 160 else plain
 
-        # home: a "tape deck" header, then one cassette per folder
+        # home: a terminal header, then one module per folder
         dated = [p for p in self.posts if p["date"]]
         latest = dated[0] if dated else (self.posts[0] if self.posts else None)
-        play = (f'<a class="key key-play" href="/posts/{latest["slug"]}/"><span aria-hidden="true">&#9654;</span> Play latest</a>'
+        play = (f'<a class="key key-play" href="/posts/{latest["slug"]}/"><span aria-hidden="true">&#9654;</span> Latest entry</a>'
                 if latest else "")
-        bars = "".join(f'<i style="--h:{h}"></i>' for h in (30, 55, 80, 45, 65, 90, 40, 70, 50, 85, 35, 60, 75, 45, 25, 55))
         home = f"""<main class="wrap">
   <section class="deck">
     <div class="deck-head">
-      <span class="plate">{html.escape(SITE['short'])} &middot; model BL-1</span>
+      <span class="plate">{html.escape(SITE['short'])} &middot; terminal BL-1</span>
       <span class="leds" aria-hidden="true"><i class="on"></i><i></i><i></i></span>
     </div>
     <div class="deck-body">
-      <div class="lcd" role="img" aria-label="Brain Log, {len(self.posts)} entries in {len(self.folders)} folders">
-        <div class="lcd-row"><span>Now reading</span><span class="rec">&#9679; Rec</span></div>
-        <div class="lcd-title">{html.escape(SITE['hero_title'])}</div>
-        <div class="lcd-row"><span>{len(self.posts):03d} tracks / {len(self.folders):02d} tapes</span><span>{self.fmt(latest['date']) if latest and latest['date'] else ''}</span></div>
-        <div class="vu" aria-hidden="true">{bars}</div>
+      <div class="crt" role="img" aria-label="Brain Log, {len(self.posts)} entries in {len(self.folders)} folders">
+        <div class="crt-row"><span>Sys online</span><span class="rec">&#9679; Live</span></div>
+        <div class="crt-title">{html.escape(SITE['hero_title'])}</div>
+        <div class="crt-row"><span>{len(self.posts):03d} entries / {len(self.folders):02d} directories</span><span>{self.fmt(latest['date']) if latest and latest['date'] else ''}</span></div>
+        <div class="prompt" aria-hidden="true">&gt; select a directory<span class="cursor">_</span></div>
       </div>
       <div class="deck-side">
         <h1 class="sr-only">{html.escape(SITE['hero_title'])}</h1>
         <p class="tagline">{html.escape(SITE['tagline'])}</p>
-        <div class="keys">{play}<a class="key" href="#tapes"><span aria-hidden="true">&#9167;</span> Tapes</a></div>
+        <div class="keys">{play}<a class="key" href="#dirs"><span aria-hidden="true">&#8801;</span> Directories</a></div>
       </div>
     </div>
   </section>
-  <div class="tapes" id="tapes">
+  <div class="dirs" id="dirs">
   {"".join(self.folder_block(f) for f in self.folders)}
   </div>
 </main>"""
@@ -401,7 +396,7 @@ class Builder:
 
         # folder pages
         for f in self.folders:
-            body = f'<main class="wrap"><div class="tapes">{self.folder_block(f, link_title=False)}</div></main>'
+            body = f'<main class="wrap"><div class="dirs">{self.folder_block(f, link_title=False)}</div></main>'
             self.write(f"folders/{f['slug']}/index.html",
                        self.page(f["name"], body, f.get("description", ""), f"/folders/{f['slug']}/",
                                  crumbs=[(f["name"], None)]))
@@ -414,17 +409,17 @@ class Builder:
             prev_p = series[i - 1] if i > 0 else None
             next_p = series[i + 1] if i + 1 < len(series) else None
             pager = '<nav class="pager">'
-            pager += (f'<a class="prev key-btn" href="/posts/{prev_p["slug"]}/"><small>&#9664;&#9664; Prev track</small>'
+            pager += (f'<a class="prev key-btn" href="/posts/{prev_p["slug"]}/"><small>&#9664; Prev entry</small>'
                       f'<span>{html.escape(prev_p["title"])}</span></a>') if prev_p else "<span></span>"
-            pager += (f'<a class="next key-btn" href="/posts/{next_p["slug"]}/"><small>Next track &#9654;&#9654;</small>'
+            pager += (f'<a class="next key-btn" href="/posts/{next_p["slug"]}/"><small>Next entry &#9654;</small>'
                       f'<span>{html.escape(next_p["title"])}</span></a>') if next_p else "<span></span>"
             pager += "</nav>"
             toc = self.toc_html(post["toc"])
             content = f"""<main class="wrap note">
   <header class="note-head">
-    <div class="lcd lcd-strip">
-      <div class="lcd-row"><a href="/folders/{f['slug']}/">Tape: {html.escape(f['name'])}</a><span>Track {post['part']:02d}/{len(series):02d}</span></div>
-      <div class="lcd-row"><span>{(self.fmt(post['date']) if post['date'] else '&nbsp;')}</span><span>{post['minutes']:02d} min</span></div>
+    <div class="crt crt-strip">
+      <div class="crt-row"><a href="/folders/{f['slug']}/">Dir: {html.escape(f['name'])}</a><span>Entry {post['part']:02d}/{len(series):02d}</span></div>
+      <div class="crt-row"><span>{(self.fmt(post['date']) if post['date'] else '&nbsp;')}</span><span>{post['minutes']:02d} min</span></div>
     </div>
     <h1>{html.escape(post['title'])}</h1>
     <p class="lede">{html.escape(post['description'])}</p>
@@ -433,7 +428,7 @@ class Builder:
   <article class="prose">{post['html']}</article>
   {pager}
   <section class="more">
-    <h2>Tracklist &middot; {html.escape(f['name'])}</h2>
+    <h2>Directory &middot; {html.escape(f['name'])}</h2>
     {self.entry_list(series, current=post)}
   </section>
 </main>"""
