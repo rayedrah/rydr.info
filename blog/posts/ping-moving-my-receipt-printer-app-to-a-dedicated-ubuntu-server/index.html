@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server | Brain Log</title>
+<meta name="description" content="PING prints messages people send me on a thermal receipt printer. This is the step-by-step plan for moving it off my desktop onto a proper Ubuntu LTS server.">
+<meta property="og:title" content="PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server | Brain Log">
+<meta property="og:description" content="PING prints messages people send me on a thermal receipt printer. This is the step-by-step plan for moving it off my desktop onto a proper Ubuntu LTS server.">
+<meta property="og:url" content="https://rydr.info/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/projects/">Projects</a><i>/</i><span>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/projects/">Projects</a> &middot; Part 3 of 3</p>
+    <h1>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</h1>
+    <p class="lede">PING prints messages people send me on a thermal receipt printer. This is the step-by-step plan for moving it off my desktop onto a proper Ubuntu LTS server.</p>
+    <p class="meta">6 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#what-this-is">What this is</a></li><li><a href="#what-youll-need">What you&#x27;ll need</a></li><li><a href="#step-1-gather-the-project-files">Step 1: Gather the project files</a></li><li><a href="#step-2-base-setup-on-ubuntu">Step 2: Base setup on Ubuntu</a></li><li><a href="#step-3-use-a-virtual-environment-this-time">Step 3: Use a virtual environment this time</a></li><li><a href="#step-4-give-the-app-printer-access-scoped-properly">Step 4: Give the app printer access, scoped properly</a></li><li><a href="#step-5-replace-the-counter-file-with-sqlite">Step 5: Replace the counter file with SQLite</a></li><li><a href="#step-6-create-a-fresh-cloudflare-tunnel">Step 6: Create a fresh Cloudflare Tunnel</a></li><li><a href="#step-7-run-it-as-two-systemd-services">Step 7: Run it as two systemd services</a></li><li><a href="#step-8-harden-the-server">Step 8: Harden the server</a></li><li><a href="#step-9-cut-over">Step 9: Cut over</a></li><li><a href="#next">Next</a></li></ol></details>
+  <article class="prose"><h2 id="what-this-is">What this is</h2>
+<p>PING is a small Flask web app. Anyone can send a message from a web page, and it prints on a Rongta USB thermal receipt printer in my dorm. It's public through a Cloudflare Tunnel at <code>ping.rydr.info</code>, with per-IP rate limiting so nobody can flood the printer.</p>
+<p>It started on my Arch desktop. This guide moves it to a dedicated Ubuntu LTS server, and fixes the shortcuts I took the first time.</p>
+<aside class="callout callout-important"><div class="callout-title"><span class="callout-icon">!</span>Important</div><div class="callout-body"><p>The app has to run on whichever machine the printer is plugged into over USB, so the Ubuntu box needs to sit next to the printer.</p></div></aside>
+
+<h2 id="what-youll-need">What you'll need</h2>
+<ul>
+<li>An Ubuntu LTS machine with a free USB port</li>
+<li>The printer and its USB cable</li>
+<li>A Cloudflare account with your domain on Cloudflare DNS</li>
+<li>The project files from the old machine</li>
+</ul>
+<h2 id="step-1-gather-the-project-files">Step 1: Gather the project files</h2>
+<p>From the old machine, bring over:</p>
+<ul>
+<li><code>rydr_app.py</code></li>
+<li><code>templates/rydr.html</code></li>
+<li><code>static/</code> (CSS, fonts, textures, icons)</li>
+<li>the <code>99-escpos.rules</code> udev rule</li>
+<li>the two systemd service files (<code>rydr-ping.service</code>, <code>rydr-tunnel.service</code>)</li>
+</ul>
+<p>Leave two things behind on purpose:</p>
+<ul>
+<li><strong><code>transaction_counter.txt</code></strong>. It gets replaced by SQLite in Step 5.</li>
+<li><strong>The Cloudflare tunnel credentials.</strong> A fresh tunnel on the new machine is cleaner than copying certificates around.</li>
+</ul>
+<p>The easiest way to move code is git, even if it's only local:</p>
+<div class="hl"><pre><span></span><code><span class="c1"># on the old machine, inside the project folder</span>
+git<span class="w"> </span>init
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Initial commit before migrating to Ubuntu server"</span>
+</code></pre></div>
+
+<p>Push it to a private GitHub repo, and the migration becomes a single <code>git clone</code>.</p>
+<h2 id="step-2-base-setup-on-ubuntu">Step 2: Base setup on Ubuntu</h2>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>upgrade<span class="w"> </span>-y
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python3<span class="w"> </span>python3-venv<span class="w"> </span>python3-pip<span class="w"> </span>libusb-1.0-0<span class="w"> </span>git<span class="w"> </span>curl
+</code></pre></div>
+
+<h2 id="step-3-use-a-virtual-environment-this-time">Step 3: Use a virtual environment this time</h2>
+<p>On my desktop I installed packages with <code>--break-system-packages</code>. That works as a shortcut, but a server should keep the app's dependencies separate from the system Python:</p>
+<div class="hl"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>&lt;your-repo-url&gt;<span class="w"> </span>~/ping
+<span class="nb">cd</span><span class="w"> </span>~/ping
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>flask<span class="w"> </span>flask-limiter<span class="w"> </span>python-escpos<span class="w"> </span>pyusb<span class="w"> </span>pillow<span class="w"> </span>gunicorn<span class="w"> </span>user-agents
+</code></pre></div>
+
+<p>No git? <code>scp -r</code> the folder over instead and create the venv inside it the same way.</p>
+<h2 id="step-4-give-the-app-printer-access-scoped-properly">Step 4: Give the app printer access, scoped properly</h2>
+<p>The first time, I used a udev rule with <code>MODE="0666"</code>, which makes the printer readable and writable by every user on the machine. A server should limit that to one group.</p>
+<p>Create the group and add yourself to it:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>groupadd<span class="w"> </span>escpos
+sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>escpos<span class="w"> </span><span class="nv">$USER</span>
+</code></pre></div>
+
+<p>Create the rule:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/udev/rules.d/99-escpos.rules
+</code></pre></div>
+
+<div class="hl"><pre><span></span><code>SUBSYSTEM=="usb", ATTRS{idVendor}=="0fe6", ATTRS{idProduct}=="811e", MODE="0660", GROUP="escpos"
+</code></pre></div>
+
+<p>Reload the rules:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>udevadm<span class="w"> </span>control<span class="w"> </span>--reload-rules
+sudo<span class="w"> </span>udevadm<span class="w"> </span>trigger
+</code></pre></div>
+
+<p>Log out and back in so the group applies, then unplug and replug the printer once.</p>
+<aside class="callout callout-tip"><div class="callout-title"><span class="callout-icon">*</span>Tip</div><div class="callout-body"><p><code>0fe6:811e</code> is my printer's vendor and product ID. Find yours with <code>lsusb</code>.</p></div></aside>
+
+<h2 id="step-5-replace-the-counter-file-with-sqlite">Step 5: Replace the counter file with SQLite</h2>
+<p>Every receipt gets a transaction number. A plain text counter has a race: two people sending at the same moment can both read the same number before either writes it back. It also keeps no history.</p>
+<p>SQLite fixes both with one file and no database server, and it gives you a log of every message ever sent:</p>
+<div class="hl"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+
+<span class="n">DB_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">'ping.db'</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">init_db</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DB_PATH</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">'''</span>
+<span class="s1">            CREATE TABLE IF NOT EXISTS messages (</span>
+<span class="s1">                id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s1">                transaction_id INTEGER NOT NULL,</span>
+<span class="s1">                sender_name TEXT,</span>
+<span class="s1">                message TEXT NOT NULL,</span>
+<span class="s1">                ip TEXT,</span>
+<span class="s1">                browser TEXT,</span>
+<span class="s1">                os TEXT,</span>
+<span class="s1">                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP</span>
+<span class="s1">            )</span>
+<span class="s1">        '''</span><span class="p">)</span>
+
+<span class="n">init_db</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">log_message</span><span class="p">(</span><span class="n">sender_name</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">browser</span><span class="p">,</span> <span class="n">platform</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Insert the row and get the new transaction id in one atomic step."""</span>
+    <span class="k">with</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DB_PATH</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s1">'INSERT INTO messages (transaction_id, sender_name, message, ip, browser, os) '</span>
+            <span class="s1">'VALUES ((SELECT COALESCE(MAX(transaction_id), 0) + 1 FROM messages), ?, ?, ?, ?, ?)'</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">sender_name</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">browser</span><span class="p">,</span> <span class="n">platform</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">cur</span><span class="o">.</span><span class="n">lastrowid</span>
+</code></pre></div>
+
+<p>In the <code>/send</code> route, replace the old counter call with <code>log_message(...)</code> and print using the number it returns. Check recent messages any time:</p>
+<div class="hl"><pre><span></span><code>sqlite3<span class="w"> </span>ping.db<span class="w"> </span><span class="s2">"SELECT transaction_id, sender_name, created_at FROM messages ORDER BY id DESC LIMIT 10;"</span>
+</code></pre></div>
+
+<h2 id="step-6-create-a-fresh-cloudflare-tunnel">Step 6: Create a fresh Cloudflare Tunnel</h2>
+<div class="hl"><pre><span></span><code>curl<span class="w"> </span>-L<span class="w"> </span>--output<span class="w"> </span>cloudflared<span class="w"> </span>https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+chmod<span class="w"> </span>+x<span class="w"> </span>cloudflared
+sudo<span class="w"> </span>mv<span class="w"> </span>cloudflared<span class="w"> </span>/usr/local/bin/
+
+cloudflared<span class="w"> </span>tunnel<span class="w"> </span>login
+cloudflared<span class="w"> </span>tunnel<span class="w"> </span>create<span class="w"> </span>ping-rydr-prod
+cloudflared<span class="w"> </span>tunnel<span class="w"> </span>route<span class="w"> </span>dns<span class="w"> </span>ping-rydr-prod<span class="w"> </span>ping.rydr.info
+</code></pre></div>
+
+<p><code>route dns</code> overwrites the old DNS record, so there's nothing to clean up by hand. Once the new tunnel works, delete the old one under <strong>Zero Trust → Networks → Tunnels</strong>.</p>
+<h2 id="step-7-run-it-as-two-systemd-services">Step 7: Run it as two systemd services</h2>
+<p>The app runs under gunicorn on localhost, and the tunnel exposes it.</p>
+<p><code>/etc/systemd/system/rydr-ping.service</code>:</p>
+<div class="hl"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">PING receipt printer web app</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<span class="na">User</span><span class="o">=</span><span class="s">your-username</span>
+<span class="na">Group</span><span class="o">=</span><span class="s">escpos</span>
+<span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">/home/your-username/ping</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"PATH=/home/your-username/ping/venv/bin"</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/home/your-username/ping/venv/bin/gunicorn -w 3 -b 127.0.0.1:5000 --access-logfile /home/your-username/ping/logs/access.log --error-logfile /home/your-username/ping/logs/error.log rydr_app:app</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+<span class="na">RestartSec</span><span class="o">=</span><span class="s">5</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></div>
+
+<p><code>/etc/systemd/system/rydr-tunnel.service</code>:</p>
+<div class="hl"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Cloudflare Tunnel for ping.rydr.info</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target rydr-ping.service</span>
+<span class="na">Requires</span><span class="o">=</span><span class="s">rydr-ping.service</span>
+
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<span class="na">User</span><span class="o">=</span><span class="s">your-username</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/local/bin/cloudflared tunnel run --url http://localhost:5000 ping-rydr-prod</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+<span class="na">RestartSec</span><span class="o">=</span><span class="s">5</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></div>
+
+<p>Three gunicorn workers follows the <code>(2 × CPU cores) + 1</code> rule for a 2-core machine, so adjust it for yours. Then enable both:</p>
+<div class="hl"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ping/logs
+sudo<span class="w"> </span>cp<span class="w"> </span>*.service<span class="w"> </span>/etc/systemd/system/
+sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>rydr-ping.service
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>rydr-tunnel.service
+</code></pre></div>
+
+<h2 id="step-8-harden-the-server">Step 8: Harden the server</h2>
+<p><strong>Settings in a <code>.env</code> file</strong>, instead of editing the code every time:</p>
+<div class="hl"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>python-dotenv
+</code></pre></div>
+
+<div class="hl"><pre><span></span><code><span class="c1"># .env</span>
+<span class="nv">RECIPIENT_NAME</span><span class="o">=</span>rydr.
+<span class="nv">VENDOR_ID</span><span class="o">=</span>0x0fe6
+<span class="nv">PRODUCT_ID</span><span class="o">=</span>0x811e
+</code></pre></div>
+
+<div class="hl"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+<span class="n">RECIPIENT_NAME</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"RECIPIENT_NAME"</span><span class="p">,</span> <span class="s2">"rydr."</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Log rotation</strong>, so logs don't grow forever. Create <code>/etc/logrotate.d/ping</code>:</p>
+<div class="hl"><pre><span></span><code>/home/your-username/ping/logs/*.log {
+    weekly
+    rotate 8
+    compress
+    missingok
+    notifempty
+}
+</code></pre></div>
+
+<p><strong>Firewall.</strong> Cloudflare Tunnel only makes outbound connections, so the app needs no open inbound ports. Lock the rest down anyway:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>ufw<span class="w"> </span>default<span class="w"> </span>deny<span class="w"> </span>incoming
+sudo<span class="w"> </span>ufw<span class="w"> </span>default<span class="w"> </span>allow<span class="w"> </span>outgoing
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span>ssh
+sudo<span class="w"> </span>ufw<span class="w"> </span><span class="nb">enable</span>
+</code></pre></div>
+
+<p><strong>Automatic security updates</strong>, since nobody is watching this box:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>unattended-upgrades
+sudo<span class="w"> </span>dpkg-reconfigure<span class="w"> </span>--priority<span class="o">=</span>low<span class="w"> </span>unattended-upgrades
+</code></pre></div>
+
+<p><strong>SSH keys only.</strong> In <code>/etc/ssh/sshd_config</code>, set <code>PasswordAuthentication no</code>, then <code>sudo systemctl restart ssh</code>.</p>
+<p><strong>Nightly database backup</strong> with <code>crontab -e</code>:</p>
+<div class="hl"><pre><span></span><code>0 3 * * * sqlite3 /home/your-username/ping/ping.db ".backup /home/your-username/ping/backups/ping-$(date +\%F).db"
+</code></pre></div>
+
+<h2 id="step-9-cut-over">Step 9: Cut over</h2>
+<ol>
+<li>Check that both services show <strong>active</strong> in <code>systemctl status</code>.</li>
+<li>Move the printer's USB cable to the new machine.</li>
+<li>Send a real message from your phone and watch it print.</li>
+<li>Stop the old services on the desktop so nothing conflicts:</li>
+</ol>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>rydr-ping.service<span class="w"> </span>rydr-tunnel.service
+</code></pre></div>
+
+<h2 id="next">Next</h2>
+<p>Once this is stable, running it in Docker with USB passthrough (<code>--device</code>) would turn the next migration into one <code>docker compose up</code>.</p></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><small>&larr; Previous</small><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><span></span></nav>
+  <section class="more">
+    <h2>More in Projects</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><span class="e-title">rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><time>Apr 20, 2026</time></li><li><span class="num">02</span><a href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><span class="e-title">TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><time>Jul 7, 2026</time></li><li class="here" aria-current="page"><span class="num">03</span><a href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><span class="e-title">PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a><time></time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

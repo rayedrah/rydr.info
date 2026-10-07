@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers | Brain Log</title>
+<meta name="description" content="A reusable QR ticketing system I run my events on. One Worker file, one KV namespace, no monthly bill, and a check-in race condition I had to design around.">
+<meta property="og:title" content="TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers | Brain Log">
+<meta property="og:description" content="A reusable QR ticketing system I run my events on. One Worker file, one KV namespace, no monthly bill, and a check-in race condition I had to design around.">
+<meta property="og:url" content="https://rydr.info/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/projects/">Projects</a><i>/</i><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/projects/">Projects</a> &middot; Part 2 of 3</p>
+    <h1>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</h1>
+    <p class="lede">A reusable QR ticketing system I run my events on. One Worker file, one KV namespace, no monthly bill, and a check-in race condition I had to design around.</p>
+    <p class="meta"><time>Jul 7, 2026</time> &middot; 5 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#what-this-is">What this is</a></li><li><a href="#why-cloudflare-workers-kv">Why Cloudflare Workers + KV</a></li><li><a href="#how-the-data-is-laid-out">How the data is laid out</a></li><li><a href="#the-interesting-problem-two-scanners-one-lost-check-in">The interesting problem: two scanners, one lost check-in</a><ol><li><a href="#the-fix-two-check-in-modes">The fix: two check-in modes</a></li><li><a href="#the-trade-off-reads">The trade-off: reads</a></li></ol></li><li><a href="#two-separate-passwords">Two separate passwords</a></li><li><a href="#a-timezone-bug-worth-knowing-about">A timezone bug worth knowing about</a></li><li><a href="#hardening-i-did-before-thinking-about-making-it-public">Hardening I did before thinking about making it public</a></li><li><a href="#running-an-event-with-it">Running an event with it</a><ol><li><a href="#csv-format">CSV format</a></li></ol></li><li><a href="#staying-inside-the-free-tier">Staying inside the free tier</a></li><li><a href="#first-time-setup">First-time setup</a></li></ol></details>
+  <article class="prose"><h2 id="what-this-is">What this is</h2>
+<p>TRKT is a QR-code ticketing and live check-in system I built for the events I host. I built it once and reuse it for every event. Everything is done from a web dashboard, so running an event never touches the terminal.</p>
+<p>What it does:</p>
+<ul>
+<li>Create an event in the browser: fill in a form, upload a guest CSV, done.</li>
+<li>Every guest gets their own QR ticket link.</li>
+<li>Staff scan tickets at the door to check people in live.</li>
+<li>A tabbed dashboard: <strong>The Door</strong>, <strong>Settings</strong>, <strong>Ticket Design</strong>, <strong>Data &amp; Access</strong>.</li>
+<li>Add, edit, remove, and manually check in guests, with undo.</li>
+<li>Custom ticket designs (theme colours or your own HTML/CSS).</li>
+<li>Any extra CSV column becomes a custom field you can put on the ticket.</li>
+<li>CSV export, bulk add, and an arrivals chart.</li>
+</ul>
+<h2 id="why-cloudflare-workers-kv">Why Cloudflare Workers + KV</h2>
+<p>The system sits unused for months between events. Free tiers like Supabase and Firebase pause or delete inactive projects, or want a card on file. A Cloudflare Worker never sleeps and never expires: deploy once, come back next year, and it still works.</p>
+<ul>
+<li><strong>One Worker</strong> (a single JS file) serves every route.</li>
+<li><strong>One KV namespace</strong> stores every event ever created.</li>
+<li><strong>Cost:</strong> $0. The free tier gives 100k reads, 1,000 writes, and 1,000 lists per day.</li>
+<li>It runs on Cloudflare, not on my laptop. Laptop off, site still up.</li>
+</ul>
+<aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Note</div><div class="callout-body"><p>Only the Worker script gets deployed. There is no static hosting, so files sitting next to it never reach Cloudflare. That's why the favicons are base64-embedded in the code.</p></div></aside>
+
+<h2 id="how-the-data-is-laid-out">How the data is laid out</h2>
+<table>
+<thead>
+<tr>
+<th>KV key</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cfg:SLUG</code></td>
+<td>Event settings: name, date, venue, check-in mode, theme, custom fields, password hashes</td>
+</tr>
+<tr>
+<td><code>roster:SLUG</code></td>
+<td>Every guest, keyed by ticket ID</td>
+</tr>
+<tr>
+<td><code>checkin:SLUG:TICKETID</code></td>
+<td>One check-in record per guest (high-concurrency mode only)</td>
+</tr>
+<tr>
+<td><code>eventIndex</code></td>
+<td>The list of events shown on the landing page</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-interesting-problem-two-scanners-one-lost-check-in">The interesting problem: two scanners, one lost check-in</h2>
+<p>My first version stored attendance as a flag inside the single <code>roster:SLUG</code> blob. A check-in did <strong>read the blob → modify it → write the whole blob back</strong>.</p>
+<p>That breaks with two staff members. If two people scan two <em>different</em> guests within about 100ms, both read the same roster, and the second write overwrites the first. One check-in silently disappears.</p>
+<p>I tested it: 10 simultaneous scans, and the single-blob design kept only 3.</p>
+<h3 id="the-fix-two-check-in-modes">The fix: two check-in modes</h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Where attendance lives</th>
+<th>Use it when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Standard</strong></td>
+<td>A flag in the roster blob</td>
+<td>One person is scanning. Cheapest on reads.</td>
+</tr>
+<tr>
+<td><strong>High-concurrency</strong></td>
+<td>A separate <code>checkin:SLUG:TICKETID</code> key per guest</td>
+<td>Several people scan at once. No check-in is ever lost.</td>
+</tr>
+</tbody>
+</table>
+<p>In high-concurrency mode, two scanners write to <strong>different keys</strong>, so they physically can't overwrite each other. Same test: 10 simultaneous scans, all 10 kept.</p>
+<p>The mode is chosen when the event is created and can't be changed later.</p>
+<h3 id="the-trade-off-reads">The trade-off: reads</h3>
+<p>In high-concurrency mode, every dashboard refresh has to read every check-in so far. At 500 guests checked in, that's about 502 reads per refresh, <strong>per open dashboard</strong>. The number of scanners doesn't matter; the number of open dashboards does.</p>
+<p>So for a big event: scanners stay on the scan page, and only one organizer keeps the dashboard open. That's why the landing page asks "Dashboard or Authorise Scanner?" instead of sending everyone to the dashboard.</p>
+<h2 id="two-separate-passwords">Two separate passwords</h2>
+<ul>
+<li>The <strong>dashboard password</strong> protects management: the dashboard, exports, and every editing API.</li>
+<li>The <strong>scanner password</strong> protects check-in. A device authorises once and gets a 30-day cookie.</li>
+</ul>
+<p>Neither password opens the other's door. A scanner can't manage the event, and a dashboard login can't check anyone in. Guest ticket pages are never password-protected, since guests need to open them. Both passwords are stored as salted PBKDF2 hashes.</p>
+<h2 id="a-timezone-bug-worth-knowing-about">A timezone bug worth knowing about</h2>
+<p>Check-in times were originally formatted with <code>toLocaleTimeString()</code> <strong>on the Worker</strong>. Workers run in UTC, so a 7:00 AM check-in in Dhaka was recorded as 1:00 AM.</p>
+<p>The fix: store a plain epoch timestamp, and let the <strong>browser</strong> format it in the viewer's local time. Sorting by the real timestamp also fixed a bug where string sorting broke across AM/PM.</p>
+<h2 id="hardening-i-did-before-thinking-about-making-it-public">Hardening I did before thinking about making it public</h2>
+<ul>
+<li><strong>Password hashing:</strong> moved from unsalted SHA-256 to salted PBKDF2-SHA256 with 100,000 iterations. Old hashes still verify and upgrade the next time the password changes.</li>
+<li><strong>Rate limiting</strong> on login attempts and event creation.</li>
+<li><strong>Slug validation:</strong> event slugs are used in KV keys and URLs, so only <code>a-z0-9-</code> is allowed.</li>
+<li><strong>CSV formula-injection guard:</strong> any exported cell starting with <code>=</code>, <code>+</code>, <code>-</code>, or <code>@</code> gets a leading <code>'</code> so Excel never runs it as a formula.</li>
+<li><strong>Fixed a stored XSS bug</strong> on the event-creation results page, where guest names and the slug were inserted into <code>innerHTML</code> unescaped.</li>
+</ul>
+<h2 id="running-an-event-with-it">Running an event with it</h2>
+<ol>
+<li>Go to <code>/new</code>.</li>
+<li>Pick a slug (lowercase letters, numbers, hyphens), name, subtitle, and footer.</li>
+<li><strong>Choose the check-in mode.</strong> This is the one decision you can't undo.</li>
+<li>Set a dashboard password and a scanner password.</li>
+<li>Upload the guest CSV and submit. You get every guest's ticket link plus the dashboard link.</li>
+<li>On event day, staff open <code>/scan?event=SLUG</code> once to authorise their phones, then scan tickets.</li>
+</ol>
+<h3 id="csv-format">CSV format</h3>
+<p>The first row is headers. Only <code>Name</code> is required; blank-name rows are skipped.</p>
+<div class="hl"><pre><span></span><code>Name,Seat,Meal Preference
+John Smith,Table 1,Vegetarian
+Jane Doe,Table 2,Chicken
+</code></pre></div>
+
+<p>Any column beyond <code>Name</code>, <code>Seat</code>, and <code>Badge</code> becomes a custom field, so <code>Meal Preference</code> turns into <code>{{meal_preference}}</code> for the ticket template. Quote values that contain commas.</p>
+<h2 id="staying-inside-the-free-tier">Staying inside the free tier</h2>
+<ul>
+<li><strong>Writes (1,000/day)</strong> are the limit to respect. A check-in, add, edit, or undo is 1 write. Bulk add is 2 writes total, no matter how many guests.</li>
+<li><strong>Reads</strong> run out from dashboards, not scanners. If reads are exhausted, scans fail, because a scan needs to read the guest record.</li>
+<li>Finalise guest lists the day before, so edits and check-ins don't land in the same UTC day.</li>
+<li>For a really big event, Workers Paid is $5 for one month. Turn it on for that month, then turn it off.</li>
+</ul>
+<h2 id="first-time-setup">First-time setup</h2>
+<div class="hl"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>wrangler
+wrangler<span class="w"> </span>login
+wrangler<span class="w"> </span>whoami
+<span class="nb">cd</span><span class="w"> </span>worker
+wrangler<span class="w"> </span>deploy
+</code></pre></div>
+
+<p>If you ever recreate the KV namespace, run <code>wrangler kv namespace create TICKETS_KV</code> and paste the returned ID into <code>wrangler.toml</code>.</p>
+<aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Secrets go in Worker secrets, nowhere else</div><div class="callout-body"><p>Put API tokens in with <code>wrangler secret put NAME</code>. The name goes in the command, and the value goes at the prompt. Never paste a token into a note, a commit, or a shell command.</p></div></aside></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><small>&larr; Previous</small><span>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><a class="next" href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><small>Next &rarr;</small><span>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a></nav>
+  <section class="more">
+    <h2>More in Projects</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><span class="e-title">rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><time>Apr 20, 2026</time></li><li class="here" aria-current="page"><span class="num">02</span><a href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><span class="e-title">TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><time>Jul 7, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><span class="e-title">PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a><time></time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

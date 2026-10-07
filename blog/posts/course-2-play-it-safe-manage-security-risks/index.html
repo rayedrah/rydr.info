@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course 2: Play It Safe, Manage Security Risks | Brain Log</title>
+<meta name="description" content="CISSP domains, threats vs risks vs vulnerabilities, NIST frameworks, audits, SIEM tools, and playbooks.">
+<meta property="og:title" content="Course 2: Play It Safe, Manage Security Risks | Brain Log">
+<meta property="og:description" content="CISSP domains, threats vs risks vs vulnerabilities, NIST frameworks, audits, SIEM tools, and playbooks.">
+<meta property="og:url" content="https://rydr.info/blog/posts/course-2-play-it-safe-manage-security-risks/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a><i>/</i><span>Course 2: Play It Safe, Manage Security Risks</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a> &middot; Part 2 of 5</p>
+    <h1>Course 2: Play It Safe, Manage Security Risks</h1>
+    <p class="lede">CISSP domains, threats vs risks vs vulnerabilities, NIST frameworks, audits, SIEM tools, and playbooks.</p>
+    <p class="meta">16 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#1-cissp-security-domains">1. CISSP Security Domains</a><ol><li><a href="#domain-1-details-security-risk-and-management">Domain 1 details — Security Risk and Management</a></li><li><a href="#domain-5-details-iam-the-4-components">Domain 5 details — IAM: the 4 components</a></li><li><a href="#domain-6-details-security-assessment-and-testing">Domain 6 details — Security Assessment and Testing</a></li><li><a href="#domain-8-details-software-development-security-3-phases">Domain 8 details — Software Development Security (3 phases)</a></li></ol></li><li><a href="#2-threats-risks-and-vulnerabilities">2. Threats, Risks, and Vulnerabilities</a><ol><li><a href="#core-definitions">Core definitions</a></li><li><a href="#risk-levels-by-asset">Risk levels (by asset)</a></li><li><a href="#threat-types">Threat types</a></li><li><a href="#risk-likelihood-factors">Risk likelihood factors</a></li><li><a href="#reference-lists-for-threatsrisks">Reference lists for threats/risks</a></li><li><a href="#notable-vulnerabilities-examples">Notable vulnerabilities (examples)</a></li><li><a href="#layers-of-the-web">Layers of the web</a></li><li><a href="#impacts-of-threatsrisksvulnerabilities">Impacts of threats/risks/vulnerabilities</a></li></ol></li><li><a href="#3-risk-management">3. Risk Management</a><ol><li><a href="#4-strategies-to-manage-risk">4 strategies to manage risk</a></li><li><a href="#frameworks-used">Frameworks used</a></li><li><a href="#nist-risk-management-framework-rmf-7-steps">NIST Risk Management Framework (RMF) — 7 steps</a></li></ol></li><li><a href="#4-security-frameworks-controls-and-the-cia-triad">4. Security Frameworks, Controls, and the CIA Triad</a><ol><li><a href="#security-frameworks-vs-controls">Security frameworks vs. controls</a></li><li><a href="#3-common-types-of-controls-mechanisms">3 common types of controls (mechanisms)</a></li><li><a href="#the-cia-triad">The CIA Triad</a></li></ol></li><li><a href="#5-nist-frameworks">5. NIST Frameworks</a><ol><li><a href="#nist-cybersecurity-framework-csf">NIST Cybersecurity Framework (CSF)</a></li><li><a href="#nist-special-publication-sp-800-53">NIST Special Publication (S.P.) 800-53</a></li></ol></li><li><a href="#6-owasp-security-principles">6. OWASP Security Principles</a><ol><li><a href="#core-principles">Core principles</a></li><li><a href="#additional-owasp-principles">Additional OWASP principles</a></li></ol></li><li><a href="#7-security-audits">7. Security Audits</a><ol><li><a href="#goals-and-objectives">Goals and objectives</a></li><li><a href="#factors-affecting-audit-type">Factors affecting audit type</a></li><li><a href="#two-types-of-audits">Two types of audits</a></li><li><a href="#purpose-of-internal-audits">Purpose of internal audits</a></li><li><a href="#common-elements-of-an-internal-audit">Common elements of an internal audit</a></li><li><a href="#audit-checklist-5-areas">Audit checklist (5 areas)</a></li><li><a href="#role-of-frameworks-in-audits">Role of frameworks in audits</a></li></ol></li><li><a href="#8-control-types-and-categories">8. Control Types and Categories</a><ol><li><a href="#4-control-types-by-function">4 control types (by function)</a></li><li><a href="#administrative-controls">Administrative Controls</a></li><li><a href="#technical-controls">Technical Controls</a></li><li><a href="#physical-controls">Physical Controls</a></li></ol></li><li><a href="#9-cybersecurity-tools-logs-and-siem">9. Cybersecurity Tools — Logs and SIEM</a><ol><li><a href="#logs">Logs</a></li><li><a href="#siem-security-information-and-event-management">SIEM (Security Information and Event Management)</a></li><li><a href="#the-future-of-siem">The future of SIEM</a></li><li><a href="#types-of-siem-deployment">Types of SIEM deployment</a></li><li><a href="#common-siemsecurity-tools">Common SIEM/security tools</a></li><li><a href="#splunk-dashboards">Splunk dashboards</a></li><li><a href="#chronicle-dashboards">Chronicle dashboards</a></li></ol></li><li><a href="#10-playbooks-and-incident-response">10. Playbooks and Incident Response</a><ol><li><a href="#playbooks-are-living-documents">Playbooks are living documents</a></li><li><a href="#types-of-playbooks">Types of playbooks</a></li><li><a href="#6-phases-of-incident-response">6 phases of incident response</a></li><li><a href="#playbooks-siem">Playbooks + SIEM</a></li><li><a href="#playbooks-soar">Playbooks + SOAR</a></li></ol></li><li><a href="#11-glossary">11. Glossary</a></li></ol></details>
+  <article class="prose"><aside class="callout callout-summary"><div class="callout-title"><span class="callout-icon">=</span>What this course covers</div><div class="callout-body"><p>CISSP's 8 security domains → threats/risks/vulnerabilities → security frameworks and controls → the CIA triad → NIST frameworks → security audits → SIEM tools and dashboards → playbooks and incident response.</p></div></aside>
+
+<h2 id="1-cissp-security-domains">1. CISSP Security Domains</h2>
+<aside class="callout callout-info"><div class="callout-title"><span class="callout-icon">i</span>Security</div><div class="callout-body"><p>Posture An organization's ability to manage its defense of critical assets and data, and react to change.</p></div></aside>
+
+<p>CISSP (Certified Information Systems Security Professional) defines <strong>8 domains</strong> that map the full scope of the security profession.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Domain</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Security Risk and Management</strong></td>
+<td>Defining security goals/objectives, risk mitigation, compliance, business continuity, legal regulations</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Asset Security</strong></td>
+<td>Securing digital and physical assets — storage, maintenance, retention, destruction of data</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Security Architecture and Engineering</strong></td>
+<td>Optimizing data security via effective tools, systems, processes to protect assets</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Communication and Network Security</strong></td>
+<td>Managing and securing physical networks and wireless communication</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Identity and Access Management (IAM)</strong></td>
+<td>Access and authorization; keeping data secure through policy-controlled access</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Security Assessment and Testing</strong></td>
+<td>Testing controls, collecting/analyzing data, conducting audits to monitor risk</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Security Operations</strong></td>
+<td>Investigations and preventive measures; begins once an incident is identified; includes forensics</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Software Development Security</strong></td>
+<td>Secure coding practices across the SDLC</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-1-details-security-risk-and-management">Domain 1 details — Security Risk and Management</h3>
+<ul>
+<li><strong>Defining security goals/objectives</strong> — reduces risk to critical assets like PII/SPII</li>
+<li><strong>Risk mitigation</strong> — right procedures/rules in place to quickly reduce breach impact</li>
+<li><strong>Compliance</strong> — primary method for developing internal security policy, regulatory requirements, independent standards</li>
+<li><strong>Business continuity</strong> — maintaining everyday productivity via disaster recovery plans</li>
+<li><strong>Legal regulations</strong> — following rules/expectations for ethical behavior to minimize negligence, abuse, fraud</li>
+</ul>
+<aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Shared</div><div class="callout-body"><p>Responsibility All individuals within an organization take an active role in lowering risk and maintaining physical and virtual security.</p></div></aside>
+
+<h3 id="domain-5-details-iam-the-4-components">Domain 5 details — IAM: the 4 components</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identification</td>
+<td>ID card, username</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Password, fingerprint</td>
+</tr>
+<tr>
+<td>Authorization</td>
+<td>Access per assigned role</td>
+</tr>
+<tr>
+<td>Accountability</td>
+<td>Log files of access</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-6-details-security-assessment-and-testing">Domain 6 details — Security Assessment and Testing</h3>
+<ul>
+<li>Checking whether controls fulfill the security goal</li>
+<li>Frequent audits to monitor risk</li>
+<li>Reviewing a pre-made control list, adding/removing per audit findings</li>
+</ul>
+<h3 id="domain-8-details-software-development-security-3-phases">Domain 8 details — Software Development Security (3 phases)</h3>
+<ol>
+<li><strong>Secure design</strong> — during the design phase</li>
+<li><strong>Secure coding practice</strong> — during the development phase</li>
+<li><strong>Penetration testing</strong> — during the deployment phase</li>
+</ol>
+<hr />
+<h2 id="2-threats-risks-and-vulnerabilities">2. Threats, Risks, and Vulnerabilities</h2>
+<h3 id="core-definitions">Core definitions</h3>
+<ul>
+<li><strong>Asset</strong> — anything an organization perceives as valuable (digital or physical)<ul>
+<li><em>Digital:</em> SSNs/national ID numbers, dates of birth, bank account numbers, mailing addresses</li>
+<li><em>Physical:</em> payment kiosks, servers, desktop computers, office spaces</li>
+</ul>
+</li>
+<li><strong>Threat</strong> — any circumstance/event that can negatively impact assets</li>
+<li><strong>Risk</strong> — anything that can impact the <strong>CIA</strong> (confidentiality, integrity, availability) of an asset<ul>
+<li>Basic formula: <strong>risk = likelihood of a threat</strong></li>
+<li>Analogy: risk = being late to work; threats = traffic, accident, flat tire</li>
+</ul>
+</li>
+<li><strong>Vulnerability</strong> — a weakness that can be exploited by a threat</li>
+</ul>
+<h3 id="risk-levels-by-asset">Risk levels (by asset)</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Low</strong></td>
+<td>Wouldn't harm reputation/operations or cause financial damage if compromised</td>
+</tr>
+<tr>
+<td><strong>Medium</strong></td>
+<td>Not public information; may cause some damage to finances, reputation, or operations</td>
+</tr>
+<tr>
+<td><strong>High</strong></td>
+<td>Protected by regulations/laws; compromise = severe negative impact on finances, operations, or reputation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="threat-types">Threat types</h3>
+<ul>
+<li><strong>Insider threats</strong> — staff/vendors abuse authorized access to obtain data that harms the org</li>
+<li><strong>Advanced Persistent Threats (APTs)</strong> — actor maintains unauthorized system access over an extended period</li>
+</ul>
+<h3 id="risk-likelihood-factors">Risk likelihood factors</h3>
+<ul>
+<li><strong>External risk</strong> — outside the org (e.g., threat actors seeking private info)</li>
+<li><strong>Internal risk</strong> — current/former employee, vendor, or trusted partner</li>
+<li><strong>Legacy systems</strong> — outdated/unaccounted-for systems (e.g., old card-payment machines)</li>
+<li><strong>Multiparty risk</strong> — third-party vendors gaining access to IP (trade secrets, designs)</li>
+<li><strong>Software compliance/licensing</strong> — unpatched or non-compliant software</li>
+</ul>
+<h3 id="reference-lists-for-threatsrisks">Reference lists for threats/risks</h3>
+<ul>
+<li>NIST cybersecurity risk lists</li>
+<li>NIST National Vulnerability Database</li>
+<li>CISA Known Exploited Vulnerabilities (KEV) Catalog</li>
+<li><strong>OWASP Top Ten</strong> — top 10 critical web app security risks, updated regularly<ul>
+<li>2017 → 2021 update added 3 new categories: <strong>insecure design</strong>, <strong>software and data integrity failures</strong>, <strong>server-side request forgery</strong> — security constantly evolves</li>
+</ul>
+</li>
+</ul>
+<h3 id="notable-vulnerabilities-examples">Notable vulnerabilities (examples)</h3>
+<table>
+<thead>
+<tr>
+<th>Vulnerability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ProxyLogon</strong></td>
+<td>Pre-auth vuln in Microsoft Exchange; attacker completes auth and deploys malicious code remotely</td>
+</tr>
+<tr>
+<td><strong>ZeroLogon</strong></td>
+<td>Vuln in Microsoft Netlogon (auth protocol used to verify identity before site access)</td>
+</tr>
+<tr>
+<td><strong>Log4Shell</strong></td>
+<td>Lets attacker run Java code on victim's machine or leak sensitive data; enables remote takeover of internet-connected devices</td>
+</tr>
+<tr>
+<td><strong>PetitPotam</strong></td>
+<td>Affects Windows NTLM; LAN-based attacker can initiate an auth request (theft technique)</td>
+</tr>
+<tr>
+<td><strong>Security logging &amp; monitoring failures</strong></td>
+<td>Insufficient logging/monitoring lets attackers exploit undetected</td>
+</tr>
+<tr>
+<td><strong>Server-side request forgery (SSRF)</strong></td>
+<td>Manipulates server-side app into accessing/updating backend resources; can steal data</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>As an entry-level analyst, this work falls under <strong>vulnerability management</strong> — monitoring systems to identify and mitigate vulnerabilities. Patches only help if actually applied → continuous monitoring is critical.</p>
+</blockquote>
+<h3 id="layers-of-the-web">Layers of the web</h3>
+<ul>
+<li>Surface Web</li>
+<li>Deep Web</li>
+<li>Dark Web</li>
+</ul>
+<h3 id="impacts-of-threatsrisksvulnerabilities">Impacts of threats/risks/vulnerabilities</h3>
+<ul>
+<li><strong>Financial</strong> — fines for non-compliance, cost to correct, stopped production</li>
+<li><strong>Identity theft</strong></li>
+<li><strong>Reputation damage</strong></li>
+</ul>
+<hr />
+<h2 id="3-risk-management">3. Risk Management</h2>
+<h3 id="4-strategies-to-manage-risk">4 strategies to manage risk</h3>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Acceptance</strong></td>
+<td>Accept the risk to avoid disrupting business continuity</td>
+</tr>
+<tr>
+<td><strong>Avoidance</strong></td>
+<td>Create a plan/path to avoid the risk altogether</td>
+</tr>
+<tr>
+<td><strong>Transference</strong></td>
+<td>Transfer the risk to a third party to handle</td>
+</tr>
+<tr>
+<td><strong>Mitigation</strong></td>
+<td>Lessen the impact of a known risk</td>
+</tr>
+</tbody>
+</table>
+<h3 id="frameworks-used">Frameworks used</h3>
+<ul>
+<li><strong>NIST RMF</strong> — NIST Risk Management Framework</li>
+<li><strong>HITRUST</strong> — Health Information Trust Alliance</li>
+</ul>
+<h3 id="nist-risk-management-framework-rmf-7-steps">NIST Risk Management Framework (RMF) — 7 steps</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prepare</strong></td>
+<td>Activities needed to manage security/privacy risk before a breach occurs — identify risk</td>
+</tr>
+<tr>
+<td><strong>Categorize</strong></td>
+<td>Develop risk management processes/tasks — entry-level staff should know this process</td>
+</tr>
+<tr>
+<td><strong>Select</strong></td>
+<td>Choose, customize, and document the controls that protect the org — keep the playbook current</td>
+</tr>
+<tr>
+<td><strong>Implement</strong></td>
+<td>Put security/privacy plans into action — ready for an ongoing risk or breach</td>
+</tr>
+<tr>
+<td><strong>Assess</strong></td>
+<td>Determine whether established controls are implemented correctly; identify weaknesses</td>
+</tr>
+<tr>
+<td><strong>Authorize</strong></td>
+<td>Be accountable for existing security/privacy risk — generate reports, develop action plans</td>
+</tr>
+<tr>
+<td><strong>Monitor</strong></td>
+<td>Stay aware of how systems are operating — assess and maintain technical operations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-security-frameworks-controls-and-the-cia-triad">4. Security Frameworks, Controls, and the CIA Triad</h2>
+<h3 id="security-frameworks-vs-controls">Security frameworks vs. controls</h3>
+<ul>
+<li><strong>Security frameworks</strong> — guidelines for building plans that mitigate risk and threats to data/privacy. People are the biggest threat to security, so frameworks help build plans that raise employee awareness of social engineering attacks.</li>
+<li><strong>Security controls</strong> — safeguards designed to reduce specific security risks; can prevent significant losses.</li>
+</ul>
+<h3 id="3-common-types-of-controls-mechanisms">3 common types of controls (mechanisms)</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Encryption</strong></td>
+<td>Converts data from readable (plain) to encoded (cipher) form to ensure confidentiality</td>
+</tr>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>Verifying who/what someone is (e.g., username + password, MFA)</td>
+</tr>
+<tr>
+<td><strong>Authorization</strong></td>
+<td>Granting access to specific resources within a system; verifying permission</td>
+</tr>
+</tbody>
+</table>
+<aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Vishing</div><div class="callout-body"><p>The exploitation of electronic voice communication to obtain sensitive information or impersonate a known source.</p></div></aside>
+
+<h3 id="the-cia-triad">The CIA Triad</h3>
+<blockquote>
+<p>A model that helps organizations consider risk when setting up systems and security policies. Maintaining acceptable risk while designing for these three elements establishes a strong <strong>security posture</strong>.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Definition</th>
+<th>How it's implemented</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Confidentiality</strong></td>
+<td>Only authorized users can access specific assets/data</td>
+<td>Principle of least privilege — limit user access to only what's needed for the job</td>
+</tr>
+<tr>
+<td><strong>Integrity</strong></td>
+<td>Data is verifiably correct, authentic, and reliable</td>
+<td>Cryptography (transforms data so unauthorized parties can't read/tamper with it); encryption</td>
+</tr>
+<tr>
+<td><strong>Availability</strong></td>
+<td>Data is accessible to those authorized to use it</td>
+<td>Controlled remote/internal network access scoped to job role (e.g., accounting sees accounts, not dev project data)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-nist-frameworks">5. NIST Frameworks</h2>
+<p>Organizations use frameworks as a starting point to build plans that mitigate risks, threats, and vulnerabilities to sensitive data and assets.</p>
+<h3 id="nist-cybersecurity-framework-csf">NIST Cybersecurity Framework (CSF)</h3>
+<p>A voluntary framework of standards, guidelines, and best practices to manage cybersecurity risk. Widely respected and used across industries.</p>
+<p><strong>CSF v2.0</strong> added a new <strong>Govern</strong> function, emphasizing strong cybersecurity governance, and places greater emphasis on supply chain risk management.</p>
+<p><strong>6 core functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Govern</strong></td>
+<td>Overall governance across all other functions — establishing, overseeing, and improving cybersecurity strategy, policy, roles, and risk management to align with business goals/regulations</td>
+</tr>
+<tr>
+<td><strong>Identify</strong></td>
+<td>Management of cybersecurity risk and its effect on people and assets</td>
+</tr>
+<tr>
+<td><strong>Protect</strong></td>
+<td>Strategy to protect the org via policies, procedures, training, and tools that mitigate threats</td>
+</tr>
+<tr>
+<td><strong>Detect</strong></td>
+<td>Identifying potential security incidents, improving monitoring speed/efficiency</td>
+</tr>
+<tr>
+<td><strong>Respond</strong></td>
+<td>Proper procedures to contain, neutralize, and analyze incidents; implement process improvements</td>
+</tr>
+<tr>
+<td><strong>Recover</strong></td>
+<td>Returning affected systems back to normal operation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nist-special-publication-sp-800-53">NIST Special Publication (S.P.) 800-53</h3>
+<p>A unified framework for protecting the security of information systems within the U.S. federal government.</p>
+<hr />
+<h2 id="6-owasp-security-principles">6. OWASP Security Principles</h2>
+<p><strong>OWASP</strong> = Open Worldwide Application Security Project (formerly Open Web Application Security Project) — a non-profit focused on improving software security.</p>
+<h3 id="core-principles">Core principles</h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Minimize attack surface area</strong></td>
+<td>Reduce the total set of attack vectors an attacker could exploit</td>
+</tr>
+<tr>
+<td><strong>Principle of least privilege</strong></td>
+<td>Users get only the access required for their everyday tasks</td>
+</tr>
+<tr>
+<td><strong>Defense in depth</strong></td>
+<td>Multiple, varying security controls that address risk in different ways</td>
+</tr>
+<tr>
+<td><strong>Separation of duties</strong></td>
+<td>Critical actions rely on multiple people, each following least privilege — no one person holds too many responsibilities</td>
+</tr>
+<tr>
+<td><strong>Keep security simple</strong></td>
+<td>Avoid unnecessary complexity — complexity makes security harder to manage</td>
+</tr>
+<tr>
+<td><strong>Fix security issues correctly</strong></td>
+<td>Identify root cause, contain impact, identify vulnerabilities, test that remediation succeeded</td>
+</tr>
+</tbody>
+</table>
+<h3 id="additional-owasp-principles">Additional OWASP principles</h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Establish secure defaults</strong></td>
+<td>The secure option is the default state; it should take extra effort to make something insecure</td>
+</tr>
+<tr>
+<td><strong>Fail securely</strong></td>
+<td>When a control fails, it defaults to its most secure state (e.g., a failed firewall blocks all new connections rather than allowing everything)</td>
+</tr>
+<tr>
+<td><strong>Don't trust services (third parties)</strong></td>
+<td>Don't assume a partner's systems are secure just because they're a partner — verify independently (e.g., verify a vendor's reward-point balance before sharing it with customers)</td>
+</tr>
+<tr>
+<td><strong>Avoid security by obscurity</strong></td>
+<td>Security shouldn't depend on hiding implementation details; rely instead on password policy, defense in depth, transaction limits, solid network architecture, and audit controls</td>
+</tr>
+</tbody>
+</table>
+<aside class="callout callout-tip"><div class="callout-title"><span class="callout-icon">*</span>Staying current "Don't be too overwhelmed with trying to understand every single specialization within cybersecurity." Search for articles matching your specialization, nail the fundamentals, and be persistent.</div><div class="callout-body"></div></aside>
+
+<hr />
+<h2 id="7-security-audits">7. Security Audits</h2>
+<aside class="callout callout-info"><div class="callout-title"><span class="callout-icon">i</span>Security</div><div class="callout-body"><p>Audit A review of an organization's security controls, policies, and procedures against a set of expectations. Independent review evaluating internal criteria (policies, procedures, best practices) and external criteria (regulatory compliance, laws, federal regulations).</p></div></aside>
+
+<h3 id="goals-and-objectives">Goals and objectives</h3>
+<ul>
+<li><strong>Goal:</strong> ensure IT practices meet industry/organizational standards</li>
+<li><strong>Objective:</strong> identify and address areas of remediation and growth</li>
+<li>Audits must be performed to safeguard data and avoid government fines/penalties; frequency depends on local laws and compliance regulations</li>
+</ul>
+<h3 id="factors-affecting-audit-type">Factors affecting audit type</h3>
+<ul>
+<li>Industry type</li>
+<li>Organization size</li>
+<li>Ties to applicable government regulations</li>
+<li>Business's geographic location</li>
+<li>Business decision to adhere to a specific regulatory compliance</li>
+</ul>
+<h3 id="two-types-of-audits">Two types of audits</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Internal</strong></td>
+<td>Entry-level friendly; improves security posture; avoids compliance fines</td>
+</tr>
+<tr>
+<td><strong>External</strong></td>
+<td>Independent, third-party review</td>
+</tr>
+</tbody>
+</table>
+<h3 id="purpose-of-internal-audits">Purpose of internal audits</h3>
+<ul>
+<li>Identify organizational risk</li>
+<li>Assess controls</li>
+<li>Correct compliance issues</li>
+</ul>
+<h3 id="common-elements-of-an-internal-audit">Common elements of an internal audit</h3>
+<ol>
+<li>Establishing the scope and goals</li>
+<li>Conducting a risk assessment</li>
+<li>Completing a controls assessment</li>
+<li>Assessing compliance</li>
+<li>Communicating results</li>
+</ol>
+<h4 id="element-1-scope-and-goals">Element 1 — Scope and goals</h4>
+<ul>
+<li><strong>Scope</strong> = the specific criteria of the audit</li>
+<li><strong>Goals</strong> = outline of the org's security objectives</li>
+<li>Entry-level analysts review scope/goals set by seniors</li>
+</ul>
+<p><em>Sample scope:</em> assess user permissions, identify existing controls/procedures/system protocols, account for technology in use. <em>Sample goals:</em> adhere to NIST CSF, establish policies for regulatory compliance, fortify system controls.</p>
+<h4 id="element-2-risk-assessment">Element 2 — Risk assessment</h4>
+<ul>
+<li>Identifies potential threats, risks, vulnerabilities and what security measures should apply</li>
+<li>Usually done by senior analysts; entry-level staff may analyze provided details to determine needed compliance/controls</li>
+</ul>
+<h4 id="key-audit-questions">Key audit questions</h4>
+<ul>
+<li>What is the audit meant to achieve?</li>
+<li>Which assets are most at risk?</li>
+<li>Are current controls sufficient to protect those assets?</li>
+<li>What controls and compliance regulations need to be implemented?</li>
+</ul>
+<h4 id="element-3-controls-assessment">Element 3 — Controls assessment</h4>
+<p>Closely reviewing existing assets, then evaluating potential risk to ensure internal controls/processes are effective.</p>
+<p><strong>3 control categories:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Administrative</strong></td>
+<td>Human component of cybersecurity</td>
+</tr>
+<tr>
+<td><strong>Technical</strong></td>
+<td>Hardware or software solutions</td>
+</tr>
+<tr>
+<td><strong>Physical</strong></td>
+<td>Physical measures — cameras, locks, etc.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="element-4-compliance-assessment">Element 4 — Compliance assessment</h4>
+<p>Adhering to relevant standards or compliance regulations.</p>
+<h4 id="element-5-stakeholder-communication">Element 5 — Stakeholder communication</h4>
+<ul>
+<li>Summarizes scope and goals</li>
+<li>Lists existing risks</li>
+<li>Notes urgency for addressing each risk</li>
+<li>Identifies compliance regulations</li>
+<li>Provides recommendations</li>
+</ul>
+<h3 id="audit-checklist-5-areas">Audit checklist (5 areas)</h3>
+<ol>
+<li><strong>Identify the scope of the audit</strong> — list assets assessed, note how the audit helps org goals, indicate audit frequency, evaluate policies/protocols/procedures</li>
+<li><strong>Complete a risk assessment</strong> — evaluate risks tied to budget, controls, internal processes, external standards</li>
+<li><strong>Conduct the audit</strong> — assess security of the assets listed in scope</li>
+<li><strong>Create a mitigation plan</strong> — strategy to lower risk level and potential costs/penalties</li>
+<li><strong>Communicate results to stakeholders</strong> — detailed report of findings, improvements, and compliance needs</li>
+</ol>
+<h3 id="role-of-frameworks-in-audits">Role of frameworks in audits</h3>
+<p>Frameworks like <strong>NIST CSF</strong> and <strong>ISO 27000</strong> help organizations prepare for regulatory compliance audits and save time on both external and internal audits.</p>
+<hr />
+<h2 id="8-control-types-and-categories">8. Control Types and Categories</h2>
+<h3 id="4-control-types-by-function">4 control types (by function)</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Preventative</strong></td>
+<td>Designed to prevent an incident from occurring in the first place</td>
+</tr>
+<tr>
+<td><strong>Corrective</strong></td>
+<td>Used to restore an asset after an incident</td>
+</tr>
+<tr>
+<td><strong>Detective</strong></td>
+<td>Determine whether an incident has occurred or is in progress</td>
+</tr>
+<tr>
+<td><strong>Deterrent</strong></td>
+<td>Designed to discourage attacks</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>These work together to provide <strong>defense in depth</strong>.</p>
+</blockquote>
+<h3 id="administrative-controls">Administrative Controls</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Least privilege</td>
+<td>Preventative</td>
+<td>Reduce risk/impact of malicious insiders or compromised accounts</td>
+</tr>
+<tr>
+<td>Disaster recovery plans</td>
+<td>Corrective</td>
+<td>Provide business continuity</td>
+</tr>
+<tr>
+<td>Password policies</td>
+<td>Preventative</td>
+<td>Reduce account compromise via brute force/dictionary attacks</td>
+</tr>
+<tr>
+<td>Access control policies</td>
+<td>Preventative</td>
+<td>Bolster confidentiality/integrity by defining group access</td>
+</tr>
+<tr>
+<td>Account management policies</td>
+<td>Preventative</td>
+<td>Manage account lifecycle, reduce attack surface, limit impact from former employees/default accounts</td>
+</tr>
+<tr>
+<td>Separation of duties</td>
+<td>Preventative</td>
+<td>Reduce risk/impact of malicious insiders or compromised accounts</td>
+</tr>
+</tbody>
+</table>
+<h3 id="technical-controls">Technical Controls</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Firewall</td>
+<td>Preventative</td>
+<td>Filter unwanted/malicious traffic from entering the network</td>
+</tr>
+<tr>
+<td>IDS/IPS</td>
+<td>Detective</td>
+<td>Detect and prevent anomalous traffic matching a signature/rule</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>Deterrent</td>
+<td>Provide confidentiality to sensitive information</td>
+</tr>
+<tr>
+<td>Backups</td>
+<td>Corrective</td>
+<td>Restore/recover from an event</td>
+</tr>
+<tr>
+<td>Password management</td>
+<td>Preventative</td>
+<td>Reduce password fatigue</td>
+</tr>
+<tr>
+<td>Antivirus (AV) software</td>
+<td>Corrective</td>
+<td>Detect and quarantine known threats</td>
+</tr>
+<tr>
+<td>Manual monitoring/maintenance/intervention</td>
+<td>Preventative</td>
+<td>Identify and manage threats/risks/vulnerabilities on out-of-date systems</td>
+</tr>
+</tbody>
+</table>
+<h3 id="physical-controls">Physical Controls</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Time-controlled safe</td>
+<td>Deterrent</td>
+<td>Reduce attack surface/impact from physical threats</td>
+</tr>
+<tr>
+<td>Adequate lighting</td>
+<td>Deterrent</td>
+<td>Limit hiding places</td>
+</tr>
+<tr>
+<td>CCTV</td>
+<td>Preventative/Detective</td>
+<td>Reduce risk of events and inform post-event investigation</td>
+</tr>
+<tr>
+<td>Locking cabinets (network gear)</td>
+<td>Preventative</td>
+<td>Bolster integrity by preventing unauthorized physical access</td>
+</tr>
+<tr>
+<td>Alarm-provider signage</td>
+<td>Deterrent</td>
+<td>Make a successful attack seem less likely</td>
+</tr>
+<tr>
+<td>Locks</td>
+<td>Deterrent/Preventative</td>
+<td>Bolster integrity by deterring/preventing unauthorized physical access</td>
+</tr>
+<tr>
+<td>Fire detection/prevention</td>
+<td>Detective/Preventative</td>
+<td>Detect and prevent damage to physical assets</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-cybersecurity-tools-logs-and-siem">9. Cybersecurity Tools — Logs and SIEM</h2>
+<h3 id="logs">Logs</h3>
+<blockquote>
+<p>A record of events that occur within an organization's systems and networks.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Log type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Firewall logs</strong></td>
+<td>Record of attempted/established connections — inbound traffic from the internet and outbound requests from within the network</td>
+</tr>
+<tr>
+<td><strong>Network logs</strong></td>
+<td>Record of all computers/devices entering and leaving the network, plus connections between devices/services</td>
+</tr>
+<tr>
+<td><strong>Server logs</strong></td>
+<td>Record of events related to services (websites, email, file shares) — logins, password/username requests</td>
+</tr>
+</tbody>
+</table>
+<h3 id="siem-security-information-and-event-management">SIEM (Security Information and Event Management)</h3>
+<blockquote>
+<p>An application that collects and analyzes log data to monitor critical activities in an organization.</p>
+</blockquote>
+<ul>
+<li>Real-time visibility</li>
+<li>Event monitoring and analysis</li>
+<li>Automated alerts</li>
+<li>Stores log data</li>
+<li>Currently still requires <strong>human interaction</strong> for analysis of security events</li>
+</ul>
+<p><strong>Metrics</strong> — key technical attributes (response time, availability, failure rate) used to assess software application performance.</p>
+<h3 id="the-future-of-siem">The future of SIEM</h3>
+<ul>
+<li>Growing shift to <strong>cloud-hosted</strong> SIEM (vendor maintains infrastructure, accessed via internet) and <strong>cloud-native</strong> SIEM (fully vendor-managed, built to exploit cloud availability/flexibility/scalability)</li>
+<li>IoT growth → larger attack surface → more data to analyze</li>
+<li>AI/ML expected to enhance threat-terminology identification, dashboard visualization, and data storage</li>
+<li><strong>SOAR</strong> (Security Orchestration, Automation, and Response) — automates responses to common incidents, freeing analysts for complex/uncommon cases</li>
+<li>Long-term trend: interconnected security platforms communicating with each other (still in progress)</li>
+</ul>
+<aside class="callout callout-quote"><div class="callout-title"><span class="callout-icon">&quot;</span>On accessibility and security "I think of accessibility as making information, activities, or even environments meaningful, sensible, usable to as many people as possible." Decisions made based on one's own abilities to enhance security can be ineffective — remember there's a range of abilities you're serving.</div><div class="callout-body"></div></aside>
+
+<h3 id="types-of-siem-deployment">Types of SIEM deployment</h3>
+<ul>
+<li>Self-hosted</li>
+<li>Cloud-hosted</li>
+<li>Hybrid (leverages cloud while maintaining confidentiality)</li>
+</ul>
+<h3 id="common-siemsecurity-tools">Common SIEM/security tools</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Splunk Enterprise</strong></td>
+<td>Self-hosted, proprietary</td>
+<td>Retains, analyzes, searches org log data; real-time security info/alerts</td>
+</tr>
+<tr>
+<td><strong>Splunk Cloud</strong></td>
+<td>Cloud-hosted, proprietary</td>
+<td>Collects, searches, monitors log data</td>
+</tr>
+<tr>
+<td><strong>Chronicle (Google SecOps)</strong></td>
+<td>Cloud-native, proprietary</td>
+<td>Retains, analyzes, searches log data</td>
+</tr>
+<tr>
+<td><strong>Linux</strong></td>
+<td>Open-source</td>
+<td>OS foundation used widely in security tooling</td>
+</tr>
+<tr>
+<td><strong>Suricata</strong></td>
+<td>Open-source</td>
+<td>Network analysis and threat detection software; inspects traffic for suspicious behavior and generates logs; developed by the Open Information Security Foundation (OISF)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>"The path looks different for everyone."</p>
+</blockquote>
+<h3 id="splunk-dashboards">Splunk dashboards</h3>
+<table>
+<thead>
+<tr>
+<th>Dashboard</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Security posture</strong></td>
+<td>Last 24 hrs of notable security events/trends for SOCs; real-time investigation (e.g., suspicious activity from a specific IP)</td>
+</tr>
+<tr>
+<td><strong>Executive summary</strong></td>
+<td>Analyzes/monitors overall org health over time; used for high-level stakeholder insights</td>
+</tr>
+<tr>
+<td><strong>Incident review</strong></td>
+<td>Identifies suspicious patterns during an incident; highlights high-risk items needing immediate review; visual event timeline</td>
+</tr>
+<tr>
+<td><strong>Risk analysis</strong></td>
+<td>Identifies risk per risk object (user, computer, IP); shows changes in risk-related behavior; helps prioritize mitigation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="chronicle-dashboards">Chronicle dashboards</h3>
+<p>Chronicle analyzes data by: a specific asset, a domain name, a user, or an IP address.</p>
+<table>
+<thead>
+<tr>
+<th>Dashboard</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Enterprise insights</strong></td>
+<td>Highlights recent alerts; identifies suspicious domains (IOCs — Indicators of Compromise) with confidence score and severity level</td>
+</tr>
+<tr>
+<td><strong>Data ingestion and health</strong></td>
+<td>Shows number of event logs, log sources, and success rate of data processed into Chronicle</td>
+</tr>
+<tr>
+<td><strong>IOC matches</strong></td>
+<td>Indicates top threats/risks/vulnerabilities; tracks domain names, IPs, device IOCs over time to spot trends</td>
+</tr>
+<tr>
+<td><strong>Main dashboard</strong></td>
+<td>High-level summary of data ingestion, alerting, and event activity over time</td>
+</tr>
+<tr>
+<td><strong>Rule detections</strong></td>
+<td>Statistics on incidents with highest occurrence/severity/detections over time</td>
+</tr>
+<tr>
+<td><strong>User sign-in overview</strong></td>
+<td>User access behavior across the org — flags unusual activity (e.g., simultaneous logins from multiple locations)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-playbooks-and-incident-response">10. Playbooks and Incident Response</h2>
+<aside class="callout callout-info"><div class="callout-title"><span class="callout-icon">i</span>Playbook</div><div class="callout-body"><p>A manual that provides details about any operational action — a predefined, up-to-date list of steps to perform when responding to an incident.</p></div></aside>
+
+<aside class="callout callout-info"><div class="callout-title"><span class="callout-icon">i</span>Incident</div><div class="callout-body"><p>Response An organization's quick attempt to identify an attack, contain the damage, and correct the effects of a security breach.</p></div></aside>
+
+<h3 id="playbooks-are-living-documents">Playbooks are living documents</h3>
+<p>Playbooks are collaboratively maintained and updated when:</p>
+<ul>
+<li>A failure/oversight is identified in policies, procedures, or the playbook itself</li>
+<li>Industry standards change (laws, regulatory compliance)</li>
+<li>The threat landscape changes (evolving threat actor tactics/techniques)</li>
+</ul>
+<h3 id="types-of-playbooks">Types of playbooks</h3>
+<ul>
+<li>Incident and vulnerability response (most common for entry-level roles) — built from the org's business continuity plan</li>
+<li>Ransomware, vishing, business email compromise (BEC), open attacks, privacy incidents, data leaks, denial-of-service attacks, service alerts, and others</li>
+</ul>
+<h3 id="6-phases-of-incident-response">6 phases of incident response</h3>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Preparation</strong></td>
+<td>Sets the foundation for successful incident response</td>
+</tr>
+<tr>
+<td><strong>Detection and Analysis</strong></td>
+<td>Identify and analyze the incident</td>
+</tr>
+<tr>
+<td><strong>Containment</strong></td>
+<td>Reduce damage of an ongoing attack — high priority to prevent ongoing risk</td>
+</tr>
+<tr>
+<td><strong>Eradication and Recovery</strong></td>
+<td>Remove malicious code, mitigate vulnerabilities, restore affected systems (a.k.a. IT restoration)</td>
+</tr>
+<tr>
+<td><strong>Post-Incident Activity</strong></td>
+<td>Documentation, future planning, full-scale incident analysis, implement improvements</td>
+</tr>
+<tr>
+<td><strong>Coordination</strong></td>
+<td>Meet compliance requirements, inform security analysts throughout</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>A sense of urgency is essential — risk equals the likelihood of a threat. Mishandling data during response can compromise forensic evidence, rendering it unusable.</p>
+</blockquote>
+<h3 id="playbooks-siem">Playbooks + SIEM</h3>
+<p>Used alongside SIEM tools — e.g., if unusual user behavior is flagged by a SIEM, the playbook tells analysts how to address it.</p>
+<h3 id="playbooks-soar">Playbooks + SOAR</h3>
+<p><strong>SOAR</strong> (Security Orchestration, Automation, and Response) automates repetitive tasks generated by tools like SIEM or MDR (Managed Detection and Response). Example: too many failed login attempts → SOAR auto-blocks the account → analyst follows the playbook to resolve.</p>
+<blockquote>
+<p>"Some teams come in and out of fashion, but security is ever present." "We can teach you anything, but we can't teach how to relate to people."</p>
+</blockquote>
+<hr />
+<h2 id="11-glossary">11. Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Asset</strong></td>
+<td>An item perceived as having value to an organization</td>
+</tr>
+<tr>
+<td><strong>Attack vectors</strong></td>
+<td>The pathways attackers use to penetrate security defenses</td>
+</tr>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>The process of verifying who someone is</td>
+</tr>
+<tr>
+<td><strong>Authorization</strong></td>
+<td>Granting access to specific resources in a system</td>
+</tr>
+<tr>
+<td><strong>Availability</strong></td>
+<td>Data is accessible to those authorized to access it</td>
+</tr>
+<tr>
+<td><strong>Biometrics</strong></td>
+<td>Unique physical characteristics used to verify identity</td>
+</tr>
+<tr>
+<td><strong>CIA Triad</strong></td>
+<td>Model informing how orgs consider risk when setting up systems/policies</td>
+</tr>
+<tr>
+<td><strong>Confidentiality</strong></td>
+<td>Only authorized users can access specific assets/data</td>
+</tr>
+<tr>
+<td><strong>Detect</strong></td>
+<td>NIST core function — identifying incidents, improving monitoring speed/efficiency</td>
+</tr>
+<tr>
+<td><strong>Encryption</strong></td>
+<td>Converting data from readable to encoded format</td>
+</tr>
+<tr>
+<td><strong>Govern</strong></td>
+<td>NIST core function — establishing/overseeing/improving cybersecurity strategy, policy, roles, risk management</td>
+</tr>
+<tr>
+<td><strong>Identify</strong></td>
+<td>NIST core function — managing cybersecurity risk's effect on people/assets</td>
+</tr>
+<tr>
+<td><strong>Incident response</strong></td>
+<td>Org's quick attempt to identify an attack, contain damage, correct effects of a breach</td>
+</tr>
+<tr>
+<td><strong>Integrity</strong></td>
+<td>Data is correct, authentic, and reliable</td>
+</tr>
+<tr>
+<td><strong>Log</strong></td>
+<td>A record of events within an org's systems</td>
+</tr>
+<tr>
+<td><strong>Metrics</strong></td>
+<td>Key technical attributes (response time, availability, failure rate) assessing software performance</td>
+</tr>
+<tr>
+<td><strong>NIST CSF</strong></td>
+<td>Voluntary framework of standards/guidelines/best practices to manage cybersecurity risk</td>
+</tr>
+<tr>
+<td><strong>NIST S.P. 800-53</strong></td>
+<td>Unified framework protecting U.S. federal government info systems</td>
+</tr>
+<tr>
+<td><strong>OWASP</strong></td>
+<td>Non-profit focused on improving software security</td>
+</tr>
+<tr>
+<td><strong>Operating system (OS)</strong></td>
+<td>Interface between computer hardware and the user</td>
+</tr>
+<tr>
+<td><strong>Playbook</strong></td>
+<td>Manual detailing operational actions for incident response</td>
+</tr>
+<tr>
+<td><strong>Protect</strong></td>
+<td>NIST core function — policies/procedures/training/tools to mitigate threats</td>
+</tr>
+<tr>
+<td><strong>Recover</strong></td>
+<td>NIST core function — returning affected systems to normal operation</td>
+</tr>
+<tr>
+<td><strong>Respond</strong></td>
+<td>NIST core function — containing/neutralizing/analyzing incidents, improving process</td>
+</tr>
+<tr>
+<td><strong>Risk</strong></td>
+<td>Anything impacting confidentiality, integrity, or availability of an asset</td>
+</tr>
+<tr>
+<td><strong>Security audit</strong></td>
+<td>Review of security controls/policies/procedures against expectations</td>
+</tr>
+<tr>
+<td><strong>Security controls</strong></td>
+<td>Safeguards designed to reduce specific security risks</td>
+</tr>
+<tr>
+<td><strong>Security frameworks</strong></td>
+<td>Guidelines for building plans to mitigate risk/threats to data/privacy</td>
+</tr>
+<tr>
+<td><strong>Security posture</strong></td>
+<td>Org's ability to manage defense of critical assets/data and react to change</td>
+</tr>
+<tr>
+<td><strong>SIEM</strong></td>
+<td>Application collecting/analyzing log data to monitor critical org activities</td>
+</tr>
+<tr>
+<td><strong>SIEM tools</strong></td>
+<td>Software platform collecting/analyzing/correlating security data across IT infrastructure</td>
+</tr>
+<tr>
+<td><strong>SOAR</strong></td>
+<td>Collection of apps/tools/workflows automating responses to security events</td>
+</tr>
+<tr>
+<td><strong>Splunk Cloud</strong></td>
+<td>Cloud-hosted tool to collect/search/monitor log data</td>
+</tr>
+<tr>
+<td><strong>Splunk Enterprise</strong></td>
+<td>Self-hosted tool to retain/analyze/search log data, real-time alerts</td>
+</tr>
+<tr>
+<td><strong>Chronicle</strong></td>
+<td>Cloud-native tool to retain/analyze/search data</td>
+</tr>
+<tr>
+<td><strong>Threat</strong></td>
+<td>Any circumstance/event that can negatively impact assets</td>
+</tr>
+</tbody>
+</table></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/course-1-foundations-of-cybersecurity/"><small>&larr; Previous</small><span>Course 1: Foundations of Cybersecurity</span></a><a class="next" href="/blog/posts/course-3-networks-and-network-security/"><small>Next &rarr;</small><span>Course 3: Networks and Network Security</span></a></nav>
+  <section class="more">
+    <h2>More in Google Cybersecurity Course Notes</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/course-1-foundations-of-cybersecurity/"><span class="e-title">Course 1: Foundations of Cybersecurity</span></a><time></time></li><li class="here" aria-current="page"><span class="num">02</span><a href="/blog/posts/course-2-play-it-safe-manage-security-risks/"><span class="e-title">Course 2: Play It Safe, Manage Security Risks</span></a><time></time></li><li><span class="num">03</span><a href="/blog/posts/course-3-networks-and-network-security/"><span class="e-title">Course 3: Networks and Network Security</span></a><time>Jul 24, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/course-4-linux-and-sql/"><span class="e-title">Course 4: Linux and SQL</span></a><time>Sep 8, 2026</time></li><li><span class="num">05</span><a href="/blog/posts/course-5-assets-threats-and-vulnerabilities/"><span class="e-title">Course 5: Assets, Threats, and Vulnerabilities</span></a><time></time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

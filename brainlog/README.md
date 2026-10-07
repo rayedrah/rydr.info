@@ -22,26 +22,34 @@ This folder holds the generator. The built site lives in `../blog/` and is commi
 
 First time only: `pip install -r requirements.txt`
 
+## Folders
+
+Entries are grouped into folders on the home page. The folders and their order are set in `site.json` under `"folders"`:
+
+* Projects
+* AGS Internship
+* System Followups
+* Google Cybersecurity Course Notes
+
+Inside a folder, entries are numbered by `order`, and every entry gets Previous / Next links, so a folder reads like a series. A note with a `folder:` that isn't in `site.json` gets a new folder at the end.
+
 ## Frontmatter
 
 ```yaml
 ---
 publish: true            # required
 title: GitHub over SSH   # defaults to the file name
-date: 2026-03-19         # logged
-updated: 2026-10-07      # revised, defaults to date
-category: Cyber          # home page group, defaults to the first tag
-status: revised          # spark | logged | revised | core | fading
-audience: Anyone tired of typing GitHub passwords
-description: One line for the home page and link previews.
-tags: [git, cyber-tools]
+folder: Projects         # which folder it goes in
+order: 4                 # position inside the folder (01, 02, ...)
+date: 2026-03-19         # optional; leave it out and no date is shown
+description: One line shown on the home page and at the top of the entry.
 draft: true              # optional, skipped unless build.py --drafts
 allow_private_ips: true  # optional, for teaching notes with example IPs
-scan_allow: ["git@github.com"]  # optional, values the secret check ignores
+scan_allow: ["git@github.com"]  # optional, exact values the secret check should ignore
 ---
 ```
 
-Wikilinks, image embeds, callouts, `==highlights==`, tables, and code blocks all work. Links to unpublished notes turn into plain text, and `%% comments %%` are stripped.
+Wikilinks, image embeds, callouts, `==highlights==`, `- [ ]` checklists, tables, and code blocks all work. Links to unpublished notes turn into plain text, and `%% comments %%` are stripped.
 
 ## Preview locally
 

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor | Brain Log</title>
+<meta name="description" content="Getting the login screen onto my external monitor instead of the closed laptop panel, plus the clipboard, screenshot, lock, idle, wallpaper, and greeter setup I started with.">
+<meta property="og:title" content="Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor | Brain Log">
+<meta property="og:description" content="Getting the login screen onto my external monitor instead of the closed laptop panel, plus the clipboard, screenshot, lock, idle, wallpaper, and greeter setup I started with.">
+<meta property="og:url" content="https://rydr.info/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/system-followups/">System Followups</a><i>/</i><span>Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/system-followups/">System Followups</a> &middot; Part 1 of 4</p>
+    <h1>Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</h1>
+    <p class="lede">Getting the login screen onto my external monitor instead of the closed laptop panel, plus the clipboard, screenshot, lock, idle, wallpaper, and greeter setup I started with.</p>
+    <p class="meta">3 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#the-machine">The machine</a></li><li><a href="#problem-the-login-screen-shows-up-on-the-closed-laptop">Problem: the login screen shows up on the closed laptop</a></li><li><a href="#fix-disable-the-laptop-panel-at-boot-systemd-boot">Fix: disable the laptop panel at boot (systemd-boot)</a><ol><li><a href="#undo-get-the-laptop-screen-back">Undo: get the laptop screen back</a></li></ol></li><li><a href="#clipboard-history-cliphist-wofi">Clipboard history (cliphist + wofi)</a></li><li><a href="#screenshots-hyprshot">Screenshots (hyprshot)</a></li><li><a href="#notifications-lock-and-idle">Notifications, lock, and idle</a></li><li><a href="#wallpaper-awww">Wallpaper (awww)</a></li><li><a href="#login-greeter-sysc-greet">Login greeter (sysc-greet)</a></li></ol></details>
+  <article class="prose"><h2 id="the-machine">The machine</h2>
+<p>An ASUS laptop with hybrid graphics (Intel Iris Xe + NVIDIA RTX 3050 Mobile), running Arch Linux with the Hyprland window manager. Most of the time the lid is closed and I use a $50 Dell monitor over HDMI.</p>
+<p>This entry covers the first working setup. The later entries in this folder follow what changed after things broke.</p>
+<h2 id="problem-the-login-screen-shows-up-on-the-closed-laptop">Problem: the login screen shows up on the closed laptop</h2>
+<p>My login screen kept appearing on the <strong>laptop panel</strong> instead of the external monitor. Inside Hyprland I had already disabled the laptop screen:</p>
+<div class="hl"><pre><span></span><code>monitor=eDP-1,disable
+monitor=,preferred,auto,auto
+</code></pre></div>
+
+<p>But that only applies <strong>after</strong> login. The boot order is the problem:</p>
+<div class="hl"><pre><span></span><code>kernel starts the laptop panel (eDP) first
+  → the login greeter attaches to the first display
+  → login shows on the laptop
+  → Hyprland disables the laptop screen, but only after you log in
+</code></pre></div>
+
+<p>So the fix has to happen at the <strong>kernel</strong> level, before anything else draws.</p>
+<h2 id="fix-disable-the-laptop-panel-at-boot-systemd-boot">Fix: disable the laptop panel at boot (systemd-boot)</h2>
+<p>Edit the boot entry:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>nano<span class="w"> </span>/boot/loader/entries/arch.conf
+</code></pre></div>
+
+<p>Change the <code>options</code> line from:</p>
+<div class="hl"><pre><span></span><code>options root=/dev/nvme0n1p3 rw
+</code></pre></div>
+
+<p>to:</p>
+<div class="hl"><pre><span></span><code>options root=/dev/nvme0n1p3 rw video=eDP-1:d video=eDP-2:d
+</code></pre></div>
+
+<p><code>video=eDP-*:d</code> tells the kernel to disable the internal display (<code>d</code> = disabled). Reboot, and the whole chain (boot, greeter, Hyprland) appears on the HDMI monitor while the laptop screen stays off.</p>
+<aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Don't boot without the monitor plugged in</div><div class="callout-body"><p>With these parameters set, booting without the external monitor gives a completely blank screen.</p></div></aside>
+
+<h3 id="undo-get-the-laptop-screen-back">Undo: get the laptop screen back</h3>
+<p>Edit the same file and remove the <code>video=</code> parameters:</p>
+<div class="hl"><pre><span></span><code>options root=/dev/nvme0n1p3 rw
+</code></pre></div>
+
+<p>Reboot, and the laptop screen works normally.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Kernel parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desktop (external only)</td>
+<td><code>video=eDP-1:d video=eDP-2:d</code></td>
+</tr>
+<tr>
+<td>Laptop</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h2 id="clipboard-history-cliphist-wofi">Clipboard history (cliphist + wofi)</h2>
+<p>I wanted clipboard history with a popup picker, while still pasting by hand, because auto-paste tools like <code>wtype</code> are unreliable in terminals and different apps use different paste shortcuts.</p>
+<p>Start the clipboard watchers in <code>hyprland.conf</code>:</p>
+<div class="hl"><pre><span></span><code><span class="na">exec-once</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">wl-paste --type text --watch cliphist store</span>
+<span class="na">exec-once</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">wl-paste --type image --watch cliphist store</span>
+</code></pre></div>
+
+<p>Bind the picker:</p>
+<div class="hl"><pre><span></span><code><span class="na">bind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$mainMod, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy</span>
+</code></pre></div>
+
+<p>How it works:</p>
+<div class="hl"><pre><span></span><code>copy something → SUPER+V → pick an item → paste it yourself
+</code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>Where</th>
+<th>Paste with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Terminal</td>
+<td>Ctrl + Shift + V</td>
+</tr>
+<tr>
+<td>Other apps</td>
+<td>Ctrl + V</td>
+</tr>
+</tbody>
+</table>
+<p>The picker only puts the item back on the clipboard. You still paste it, and that's what makes it work the same everywhere.</p>
+<h2 id="screenshots-hyprshot">Screenshots (hyprshot)</h2>
+<table>
+<thead>
+<tr>
+<th>Keys</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SUPER + X</td>
+<td>Region screenshot, copy only</td>
+</tr>
+<tr>
+<td>SUPER + Shift + X</td>
+<td>Region screenshot, saved to Pictures</td>
+</tr>
+<tr>
+<td>Fn + PrtSc</td>
+<td>Whole screen, saved</td>
+</tr>
+</tbody>
+</table>
+<p><code>hyprshot -m window</code> lets you click a window to capture it.</p>
+<h2 id="notifications-lock-and-idle">Notifications, lock, and idle</h2>
+<ul>
+<li><strong>Notifications:</strong> swaync, started with <code>exec-once = swaync</code>.</li>
+<li><strong>Lock screen:</strong> hyprlock, bound to SUPER + L.</li>
+<li><strong>Idle:</strong> hypridle locks the screen after 300 seconds, configured in <code>~/.config/hypr/hypridle.conf</code>.</li>
+</ul>
+<h2 id="wallpaper-awww">Wallpaper (awww)</h2>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>awww
+</code></pre></div>
+
+<p>In <code>hyprland.conf</code>:</p>
+<div class="hl"><pre><span></span><code><span class="na">exec-once</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">awww-daemon</span>
+<span class="na">exec-once</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">awww img /path/to/wallpaper.jpg --resize fit</span>
+</code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--resize fit</code></td>
+<td>whole image, may add bars</td>
+</tr>
+<tr>
+<td><code>--resize crop</code></td>
+<td>fills the screen, crops edges</td>
+</tr>
+<tr>
+<td><code>--resize no</code></td>
+<td>original size, centered</td>
+</tr>
+</tbody>
+</table>
+<p>There's no config file; everything is a command. For a transition: <code>awww img wall.jpg --transition-type wave --transition-duration 2</code>.</p>
+<aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Note</div><div class="callout-body"><p>Starting <code>awww img</code> at the same moment as <code>awww-daemon</code> can fail, because the daemon isn't ready yet. Part 4 fixes this.</p></div></aside>
+
+<h2 id="login-greeter-sysc-greet">Login greeter (sysc-greet)</h2>
+<div class="hl"><pre><span></span><code>yay<span class="w"> </span>-S<span class="w"> </span>sysc-greet-hyprland
+</code></pre></div>
+
+<p><code>/etc/greetd/config.toml</code>:</p>
+<div class="hl"><pre><span></span><code><span class="k">[terminal]</span>
+<span class="n">vt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="k">[default_session]</span>
+<span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"start-hyprland -- -c /etc/greetd/hyprland-greeter-config.conf"</span>
+<span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"greeter"</span>
+</code></pre></div>
+
+<p>The ASCII art lives in <code>/usr/share/sysc-greet/ascii_configs/hyprland.conf</code>. Change <code>name=</code> for the display name, add <code>ascii_1=</code> through <code>ascii_N=</code> for variants, and set <code>colors=</code> for color cycling.</p>
+<p>On the login screen, <strong>F1</strong> opens themes and background effects, <strong>F2</strong> picks the session, <strong>F4</strong> is the power menu, and <strong>Page Up/Down</strong> cycles the ASCII variants.</p>
+<p>I later dropped the greeter entirely. Part 2 explains why.</p></article>
+  <nav class="pager"><span></span><a class="next" href="/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/"><small>Next &rarr;</small><span>Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></a></nav>
+  <section class="more">
+    <h2>More in System Followups</h2>
+    <ol class="entries"><li class="here" aria-current="page"><span class="num">01</span><a href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><span class="e-title">Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/"><span class="e-title">Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></a><time>Apr 22, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><span class="e-title">Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a><time>May 9, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/arch-hyprland-part-4-moving-to-lua-config-and-a-bsod-lock-screen/"><span class="e-title">Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</span></a><time>Oct 4, 2026</time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

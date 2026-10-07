@@ -4,55 +4,36 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Brain Log</title>
-<meta name="description" content="Rayed Rahman&#x27;s brain log: notes on Linux, home labs, security, and the things I build.">
+<meta name="description" content="Rayed Rahman&#x27;s Brain Log: Google Cybersecurity course notes, project write-ups, AGS internship work, and Arch Linux system logs.">
 <meta property="og:title" content="Brain Log">
-<meta property="og:description" content="Rayed Rahman&#x27;s brain log: notes on Linux, home labs, security, and the things I build.">
+<meta property="og:description" content="Rayed Rahman&#x27;s Brain Log: Google Cybersecurity course notes, project write-ups, AGS internship work, and Arch Linux system logs.">
 <meta property="og:url" content="https://rydr.info/blog/">
-<meta name="theme-color" content="#f1efe8">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
 <link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/blog/style.css">
-<script>try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}</script>
 </head>
 <body>
 <header class="bar">
-  <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
-  <nav class="navlinks"><a href="/blog/">Entries</a><a href="/blog/tags/">Tags</a><a href="https://rydr.info">rydr.info</a><button class="theme" type="button" aria-label="Toggle dark mode" onclick="toggleTheme()">◐</button></nav>
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
 </header>
 
-<main class="home">
-  <section class="lockup">
-    <div class="lockup-label"><span>fig. 01</span><span>rydr/brain.log</span></div>
-    <h1>RYDR<br><span>Brain Log</span></h1>
-    <p class="lede">Everything I break, fix, and figure out gets written down here. Some entries are sparks, some are core. All of them are logged.</p>
-    <dl class="spec">
-      <div><dt>Author</dt><dd>Rayed Rahman</dd></div>
-      <div><dt>Entries</dt><dd>4</dd></div>
-      <div><dt>Last logged</dt><dd>Oct 2026</dd></div>
-    </dl>
-  </section>
-  <section class="block">
-    <h2 class="label">Latest entries</h2>
-    <ol class="recent"><li><a href="/blog/posts/day-1-with-obsidian/"><span class="r-title">Day 1 with Obsidian</span><span class="r-desc">Setting up my vault: a terminal theme, a pixel font, plugins, and a CSS snippet that finally fixed my folder icons.</span></a><span class="r-meta"><span class="status status-logged">logged</span><time>Oct 2026</time></span></li><li><a href="/blog/posts/arch-hyprland-booting-straight-to-my-external-monitor/"><span class="r-title">Arch + Hyprland: Booting Straight to My External Monitor</span><span class="r-desc">My login screen kept showing up on the closed laptop panel. The fix lives at the kernel level, plus my clipboard history setup.</span></a><span class="r-meta"><span class="status status-revised">revised</span><time>Oct 2026</time></span></li><li><a href="/blog/posts/networks-and-network-security/"><span class="r-title">Networks and Network Security</span><span class="r-desc">My notes from Course 3 of the Google Cybersecurity Certificate: network structure, protocols, attacks, and hardening.</span></a><span class="r-meta"><span class="status status-logged">logged</span><time>Jul 2026</time></span></li><li><a href="/blog/posts/github-over-ssh/"><span class="r-title">GitHub over SSH</span><span class="r-desc">The git add variants I keep mixing up, and the compact SSH key setup that means never typing a password for GitHub again.</span></a><span class="r-meta"><span class="status status-revised">revised</span><time>Mar 2026</time></span></li></ol>
-  </section>
-  <section class="block">
-    <h2 class="label">All entries</h2>
-    <div class="cats"><section class="cat" id="cyber"><h3><span class="idx">01</span>Cyber<span class="count">2</span></h3><ul class="tree"><li class="row"><span class="branch" aria-hidden="true">├──</span><a href="/blog/posts/networks-and-network-security/">Networks and Network Security</a><span class="dots" aria-hidden="true"></span><span class="status status-logged">logged</span><time>Jul 2026</time></li><li class="row"><span class="branch" aria-hidden="true">└──</span><a href="/blog/posts/github-over-ssh/">GitHub over SSH</a><span class="dots" aria-hidden="true"></span><span class="status status-revised">revised</span><time>Mar 2026</time></li></ul></section><section class="cat" id="systems"><h3><span class="idx">02</span>Systems<span class="count">2</span></h3><ul class="tree"><li class="row"><span class="branch" aria-hidden="true">├──</span><a href="/blog/posts/day-1-with-obsidian/">Day 1 with Obsidian</a><span class="dots" aria-hidden="true"></span><span class="status status-logged">logged</span><time>Oct 2026</time></li><li class="row"><span class="branch" aria-hidden="true">└──</span><a href="/blog/posts/arch-hyprland-booting-straight-to-my-external-monitor/">Arch + Hyprland: Booting Straight to My External Monitor</a><span class="dots" aria-hidden="true"></span><span class="status status-revised">revised</span><time>Oct 2026</time></li></ul></section></div>
-  </section>
-  <section class="block">
-    <h2 class="label">Entry status</h2>
-    <ul class="legend"><li><span class="status status-spark">spark</span><span>Half-formed idea. Expect gaps.</span></li><li><span class="status status-logged">logged</span><span>Written up, not revisited yet.</span></li><li><span class="status status-revised">revised</span><span>Revisited and kept current.</span></li><li><span class="status status-core">core</span><span>Stable reference I keep coming back to.</span></li><li><span class="status status-fading">fading</span><span>Probably out of date.</span></li></ul>
-  </section>
+<main class="wrap">
+  <header class="intro">
+    <h1>Brain Log</h1>
+    <p>Course notes, project write-ups, and system logs from Rayed Rahman. Each folder reads in order.</p>
+  </header>
+  <section class="folder" id="projects"><h2><span class="f-icon" aria-hidden="true"></span><a href="/blog/folders/projects/">Projects</a><span class="f-count">3 entries</span></h2><p class="f-desc">Things I built, how they work, and how to set them up yourself.</p><ol class="entries"><li><span class="num">01</span><a href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><span class="e-title">rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span><span class="e-desc">How I put a hand-written HTML/CSS/JS site on GitHub Pages under my own domain, and the two DNS problems on my own network that made it look broken.</span></a><time>Apr 20, 2026</time></li><li><span class="num">02</span><a href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><span class="e-title">TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span><span class="e-desc">A reusable QR ticketing system I run my events on. One Worker file, one KV namespace, no monthly bill, and a check-in race condition I had to design around.</span></a><time>Jul 7, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><span class="e-title">PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span><span class="e-desc">PING prints messages people send me on a thermal receipt printer. This is the step-by-step plan for moving it off my desktop onto a proper Ubuntu LTS server.</span></a><time></time></li></ol></section><section class="folder" id="ags-internship"><h2><span class="f-icon" aria-hidden="true"></span><a href="/blog/folders/ags-internship/">AGS Internship</a><span class="f-count">2 entries</span></h2><p class="f-desc">Work from my cybersecurity internship at AGS Quality Action: assessment scoping and the CTF platform.</p><ol class="entries"><li><span class="num">01</span><a href="/blog/posts/scoping-my-first-web-vulnerability-assessment/"><span class="e-title">Scoping My First Web Vulnerability Assessment</span><span class="e-desc">The checklist I built for my first real vulnerability assessment of a Cloudflare-fronted website, based on OWASP WSTG v4.2, PTES, and NIST SP 800-115.</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/building-a-50-challenge-ctf-platform-for-a-national-cyber-drill/"><span class="e-title">Building a 50-Challenge CTF Platform for a National Cyber Drill</span><span class="e-desc">How I built, branded, and ran the CTF platform for the 2nd Agile Cyber Drill 2026 with CTFd, Docker Compose, a Flask challenge backend, and Cloudflare Tunnel.</span></a><time></time></li></ol></section><section class="folder" id="system-followups"><h2><span class="f-icon" aria-hidden="true"></span><a href="/blog/folders/system-followups/">System Followups</a><span class="f-count">4 entries</span></h2><p class="f-desc">My Arch Linux + Hyprland laptop, logged in order from first setup to the current config.</p><ol class="entries"><li><span class="num">01</span><a href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><span class="e-title">Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span><span class="e-desc">Getting the login screen onto my external monitor instead of the closed laptop panel, plus the clipboard, screenshot, lock, idle, wallpaper, and greeter setup I started with.</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/"><span class="e-title">Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span><span class="e-desc">After a crash I rebuilt the setup around the NVIDIA open driver, dropped the display manager, fixed a garbled TTY, and wrote down how to recover when it breaks.</span></a><time>Apr 22, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><span class="e-title">Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span><span class="e-desc">Three display setups on a hybrid-GPU laptop, which four files change for each one, and how both GPUs share the work in dual-monitor mode.</span></a><time>May 9, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/arch-hyprland-part-4-moving-to-lua-config-and-a-bsod-lock-screen/"><span class="e-title">Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</span><span class="e-desc">An update broke my wallpaper and deprecated my config, so I moved Hyprland to its new Lua config, fixed a startup race, and rebuilt the lock screen.</span></a><time>Oct 4, 2026</time></li></ol></section><section class="folder" id="google-cybersecurity-course-notes"><h2><span class="f-icon" aria-hidden="true"></span><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a><span class="f-count">5 entries</span></h2><p class="f-desc">My notes from the Google Cybersecurity Certificate, one entry per course.</p><ol class="entries"><li><span class="num">01</span><a href="/blog/posts/course-1-foundations-of-cybersecurity/"><span class="e-title">Course 1: Foundations of Cybersecurity</span><span class="e-desc">Security history, the main attack types, ethics, and the roles that make up a security team.</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/course-2-play-it-safe-manage-security-risks/"><span class="e-title">Course 2: Play It Safe, Manage Security Risks</span><span class="e-desc">CISSP domains, threats vs risks vs vulnerabilities, NIST frameworks, audits, SIEM tools, and playbooks.</span></a><time></time></li><li><span class="num">03</span><a href="/blog/posts/course-3-networks-and-network-security/"><span class="e-title">Course 3: Networks and Network Security</span><span class="e-desc">Network structure, protocols, common network attacks, and hardening.</span></a><time>Jul 24, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/course-4-linux-and-sql/"><span class="e-title">Course 4: Linux and SQL</span><span class="e-desc">Operating systems, the Linux command line, permissions, and querying databases with SQL.</span></a><time>Sep 8, 2026</time></li><li><span class="num">05</span><a href="/blog/posts/course-5-assets-threats-and-vulnerabilities/"><span class="e-title">Course 5: Assets, Threats, and Vulnerabilities</span><span class="e-desc">Asset security, risk planning, threat modeling, and the vulnerabilities attackers look for.</span></a><time></time></li></ol></section>
 </main>
 <footer class="foot">
   <div class="foot-inner">
-    <span>© 2026 Rayed Rahman</span>
-    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">GitHub</a><a href="/blog/rss.xml">RSS</a></span>
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
   </div>
 </footer>
-<script>
-function toggleTheme(){var d=document.documentElement.classList.toggle("dark");try{localStorage.setItem("theme",d?"dark":"light")}catch(e){}}
-</script>
 </body>
 </html>

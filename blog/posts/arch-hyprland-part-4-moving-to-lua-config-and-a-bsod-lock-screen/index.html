@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen | Brain Log</title>
+<meta name="description" content="An update broke my wallpaper and deprecated my config, so I moved Hyprland to its new Lua config, fixed a startup race, and rebuilt the lock screen.">
+<meta property="og:title" content="Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen | Brain Log">
+<meta property="og:description" content="An update broke my wallpaper and deprecated my config, so I moved Hyprland to its new Lua config, fixed a startup race, and rebuilt the lock screen.">
+<meta property="og:url" content="https://rydr.info/blog/posts/arch-hyprland-part-4-moving-to-lua-config-and-a-bsod-lock-screen/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/system-followups/">System Followups</a><i>/</i><span>Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/system-followups/">System Followups</a> &middot; Part 4 of 4</p>
+    <h1>Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</h1>
+    <p class="lede">An update broke my wallpaper and deprecated my config, so I moved Hyprland to its new Lua config, fixed a startup race, and rebuilt the lock screen.</p>
+    <p class="meta"><time>Oct 4, 2026</time> &middot; 5 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#what-broke">What broke</a></li><li><a href="#step-1-split-the-config-into-lua-modules">Step 1: Split the config into Lua modules</a></li><li><a href="#step-2-fix-the-wallpaper-race">Step 2: Fix the wallpaper race</a></li><li><a href="#step-3-the-lock-screen">Step 3: The lock screen</a><ol><li><a href="#tuning-it-to-your-own-image">Tuning it to your own image</a></li></ol></li><li><a href="#when-the-new-config-breaks">When the new config breaks</a></li><li><a href="#still-on-my-list">Still on my list</a></li></ol></details>
+  <article class="prose"><h2 id="what-broke">What broke</h2>
+<p>After a system update (Hyprland 0.54 → 0.56), I rebooted to Hyprland's default background and a deprecation message. Two separate causes:</p>
+<ol>
+<li><strong>Hyprland 0.56 deprecates <code>hyprland.conf</code></strong> (the old "hyprlang" format), and 0.57 removes it entirely. The future is a Lua config.</li>
+<li><strong>A startup race:</strong> <code>awww img</code> ran at the same moment as <code>awww-daemon</code> and failed because the daemon wasn't ready yet.</li>
+</ol>
+<h2 id="step-1-split-the-config-into-lua-modules">Step 1: Split the config into Lua modules</h2>
+<p>Hyprland loads <code>hyprland.lua</code> if it exists and falls back to <code>hyprland.conf</code> if not. I moved to this layout:</p>
+<div class="hl"><pre><span></span><code>~/.config/hypr/
+├── hyprland.lua          ← entry point, loads the modules
+├── modules/
+│   ├── keybinds.lua      ← loaded first, outside pcall
+│   ├── env.lua           ← environment variables
+│   ├── monitors.lua      ← monitors + workspace rules
+│   ├── input.lua         ← keyboard, touchpad, gestures
+│   ├── looknfeel.lua     ← gaps, borders, blur, animations
+│   ├── rules.lua         ← window rules
+│   └── autostart.lua     ← things to run on startup
+├── hyprland.conf.bak     ← old config, rollback only
+└── hyprlock.conf / hypridle.conf  ← still hyprlang, unaffected
+</code></pre></div>
+
+<aside class="callout callout-tip"><div class="callout-title"><span class="callout-icon">*</span>Load keybinds first, outside <code>pcall</code></div><div class="callout-body"><p>The other modules load inside <code>pcall</code>, so an error in one doesn't take everything down. Keybinds load first and outside it, so even if another module is broken, the keyboard still works and you can fix things.</p></div></aside>
+
+<p><code>modules/env.lua</code>:</p>
+<div class="hl"><pre><span></span><code><span class="nv">hl</span><span class="p">.</span><span class="nf">env</span><span class="p">(</span><span class="s2">"XCURSOR_SIZE"</span><span class="p">,</span><span class="w"> </span><span class="s2">"24"</span><span class="p">)</span>
+<span class="nv">hl</span><span class="p">.</span><span class="nf">env</span><span class="p">(</span><span class="s2">"HYPRCURSOR_SIZE"</span><span class="p">,</span><span class="w"> </span><span class="s2">"24"</span><span class="p">)</span>
+<span class="nv">hl</span><span class="p">.</span><span class="nf">env</span><span class="p">(</span><span class="s2">"LIBVA_DRIVER_NAME"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nvidia"</span><span class="p">)</span>
+<span class="nv">hl</span><span class="p">.</span><span class="nf">env</span><span class="p">(</span><span class="s2">"__GLX_VENDOR_LIBRARY_NAME"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nvidia"</span><span class="p">)</span>
+<span class="nv">hl</span><span class="p">.</span><span class="nf">env</span><span class="p">(</span><span class="s2">"NVD_BACKEND"</span><span class="p">,</span><span class="w"> </span><span class="s2">"direct"</span><span class="p">)</span>
+<span class="nv">hl</span><span class="p">.</span><span class="nf">env</span><span class="p">(</span><span class="s2">"GBM_BACKEND"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nvidia-drm"</span><span class="p">)</span>
+<span class="c1">-- hl.env("AQ_DRM_DEVICES", "/dev/dri/card0")</span>
+<span class="c1">-- Uncomment AQ_DRM_DEVICES (card0 only) for docked mode</span>
+</code></pre></div>
+
+<p>The choice between <code>.lua</code> and <code>.conf</code> happens once at startup, so switching needs a log out and back in, not a reload.</p>
+<p>Confirm which config actually loaded:</p>
+<div class="hl"><pre><span></span><code>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"config"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$XDG_RUNTIME_DIR</span><span class="s2">/hypr/</span><span class="nv">$HYPRLAND_INSTANCE_SIGNATURE</span><span class="s2">/hyprland.log"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head
+</code></pre></div>
+
+<p>Look for <code>configProvider: lua</code>. Then check for errors (empty output means clean):</p>
+<div class="hl"><pre><span></span><code>hyprctl<span class="w"> </span>configerrors
+</code></pre></div>
+
+<h2 id="step-2-fix-the-wallpaper-race">Step 2: Fix the wallpaper race</h2>
+<p>Instead of starting the daemon and setting the wallpaper at the same time, wait until the daemon answers:</p>
+<div class="hl"><pre><span></span><code><span class="nv">hl</span><span class="p">.</span><span class="nf">on</span><span class="p">(</span><span class="s2">"hyprland.start"</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">()</span>
+<span class="w">    </span><span class="nv">hl</span><span class="p">.</span><span class="nf">exec_cmd</span><span class="p">(</span><span class="s2">"waybar"</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">hl</span><span class="p">.</span><span class="nf">exec_cmd</span><span class="p">(</span><span class="s2">"shikane"</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">hl</span><span class="p">.</span><span class="nf">exec_cmd</span><span class="p">(</span><span class="s2">"swaync"</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">hl</span><span class="p">.</span><span class="nf">exec_cmd</span><span class="p">(</span><span class="s2">"hypridle"</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">hl</span><span class="p">.</span><span class="nf">exec_cmd</span><span class="p">(</span><span class="s2">"wl-paste --type text --watch cliphist store"</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">hl</span><span class="p">.</span><span class="nf">exec_cmd</span><span class="p">(</span><span class="s2">"wl-paste --type image --watch cliphist store"</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">hl</span><span class="p">.</span><span class="nf">exec_cmd</span><span class="p">(</span><span class="s2">"awww-daemon"</span><span class="p">)</span>
+<span class="w">    </span><span class="c1">-- wait up to ~5s for awww-daemon, then set the wallpaper</span>
+<span class="w">    </span><span class="nv">hl</span><span class="p">.</span><span class="nf">exec_cmd</span><span class="p">(</span><span class="s2">"sh -c 'for i in $(seq 50); do awww query &gt;/dev/null 2&gt;&amp;1 &amp;&amp; break; sleep 0.1; done; awww img ...'"</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The loop checks <code>awww query</code> every 0.1 seconds, up to 50 times, and sets the wallpaper as soon as the daemon is up.</p>
+<h2 id="step-3-the-lock-screen">Step 3: The lock screen</h2>
+<p>I rebuilt hyprlock around a 3840x2160 wallpaper of a cyborg skull whose goggles show a cracked Windows blue screen. The login form sits inside the goggles, styled like a BSOD, while the art's own BSOD text stays visible on the left.</p>
+<p>The background settings that keep the art sharp:</p>
+<div class="hl"><pre><span></span><code>blur_passes = 0
+brightness = 1.0
+color = rgb(0, 0, 0)    # fallback: a wrong image path shows black instead of failing
+</code></pre></div>
+
+<p>Every widget has <code>monitor =</code> left blank, so both screens get the same layout.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Position</th>
+<th>Color</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visor panel (1000x260 shape)</td>
+<td><code>0, 40</code></td>
+<td>invisible <code>rgba(4, 4, 220, 0.0)</code></td>
+</tr>
+<tr>
+<td>Date</td>
+<td><code>200, 145</code></td>
+<td>white</td>
+</tr>
+<tr>
+<td>Login box (560x120, 2px border)</td>
+<td><code>200, 40</code></td>
+<td>transparent fill, white border</td>
+</tr>
+<tr>
+<td>"welcome back" bar</td>
+<td><code>70, 96</code></td>
+<td>white</td>
+</tr>
+<tr>
+<td>"welcome back rydr.!" text</td>
+<td><code>70, 101</code></td>
+<td>BSOD blue <code>rgb(4, 4, 220)</code></td>
+</tr>
+<tr>
+<td>"Username:" / "Password:"</td>
+<td><code>10, 61</code> / <code>10, 31</code></td>
+<td>white</td>
+</tr>
+<tr>
+<td><code>$USER</code></td>
+<td><code>140, 61</code></td>
+<td>yellow <code>rgb(255, 214, 0)</code></td>
+</tr>
+<tr>
+<td>Password field (200x50)</td>
+<td><code>150, 31</code></td>
+<td>pink dots <code>rgb(255, 46, 151)</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The font is <strong>Press Start 2P</strong> everywhere.</li>
+<li>The BSOD blue was sampled straight from the pixels of the image.</li>
+<li>Everything is shifted 200px right of center to land inside the goggles.</li>
+<li>hyprlock reads its config fresh on every lock, so changes show up immediately.</li>
+</ul>
+<h3 id="tuning-it-to-your-own-image">Tuning it to your own image</h3>
+<ul>
+<li><strong>Panel transparency:</strong> the 4th value of the visor panel's <code>color</code> (0.0 is invisible, 1.0 is solid).</li>
+<li><strong>Move everything up or down:</strong> change the second <code>position</code> number on every widget by the same amount.</li>
+<li><strong>Move everything left or right:</strong> change the first <code>position</code> number on every widget by the same amount.</li>
+<li><strong>Lock shows black:</strong> the image path is wrong. Check it with <code>ls</code>.</li>
+<li><strong>No login widgets:</strong> run <code>hyprlock</code> from a terminal and read the parse errors.</li>
+</ul>
+<aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Note</div><div class="callout-body"><p>The positions are tuned for the 1920x1080 external monitor. The laptop screen runs at 1.25x scale, so alignment with the goggles is slightly off there.</p></div></aside>
+
+<h2 id="when-the-new-config-breaks">When the new config breaks</h2>
+<p><strong>Hyprland won't start</strong></p>
+<ol>
+<li>Make sure you're on a physical TTY.</li>
+<li><code>lsmod | grep nvidia</code> to check the modules.</li>
+<li><code>ls /dev/nvidia*</code> to check that <code>/dev/nvidia0</code> exists. If it's missing, reboot. Don't try a manual <code>modprobe</code>.</li>
+</ol>
+<p><strong>The Lua config is broken</strong></p>
+<ul>
+<li><code>hyprctl configerrors</code> shows what's wrong.</li>
+<li>A broken module shows a critical notification, but keybinds still work.</li>
+<li>To roll back from a TTY: <code>mv ~/.config/hypr/hyprland.lua ~/.config/hypr/hyprland.lua.off</code>, then log in again. This only works on 0.56 or older, since 0.57 removes the old format.</li>
+</ul>
+<p><strong>Wallpaper missing</strong></p>
+<ul>
+<li><code>pgrep -a awww</code> to check that the daemon is running.</li>
+<li>Set it manually: <code>awww img ~/Downloads/Wallpapers/wallhaven-xezolo.png --resize fit --outputs HDMI-A-1,eDP-1</code></li>
+<li>An "awww-daemon instance already running" panic is harmless. It just means the daemon is already up.</li>
+</ul>
+<p><strong>GBM device error / no allocator</strong></p>
+<p>Usually <code>nvidia_drm</code> loaded but <code>/dev/nvidia0</code> wasn't created. Reboot cleanly.</p>
+<h2 id="still-on-my-list">Still on my list</h2>
+<p>My dotfiles repo lives at <code>~/.config/hypr/dotfiles/</code>, so GNU Stow links things relative to the wrong folder, and the live config has drifted from the repo. The fix is to copy the live <code>hyprland.lua</code> and <code>modules/</code> into the repo, move it to <code>~/dotfiles</code>, remove the stray symlink, and run <code>stow -t ~</code> on each package.</p></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><small>&larr; Previous</small><span>Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a><span></span></nav>
+  <section class="more">
+    <h2>More in System Followups</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><span class="e-title">Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/"><span class="e-title">Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></a><time>Apr 22, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><span class="e-title">Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a><time>May 9, 2026</time></li><li class="here" aria-current="page"><span class="num">04</span><a href="/blog/posts/arch-hyprland-part-4-moving-to-lua-config-and-a-bsod-lock-screen/"><span class="e-title">Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</span></a><time>Oct 4, 2026</time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

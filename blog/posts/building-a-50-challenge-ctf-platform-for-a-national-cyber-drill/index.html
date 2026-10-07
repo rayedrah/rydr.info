@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building a 50-Challenge CTF Platform for a National Cyber Drill | Brain Log</title>
+<meta name="description" content="How I built, branded, and ran the CTF platform for the 2nd Agile Cyber Drill 2026 with CTFd, Docker Compose, a Flask challenge backend, and Cloudflare Tunnel.">
+<meta property="og:title" content="Building a 50-Challenge CTF Platform for a National Cyber Drill | Brain Log">
+<meta property="og:description" content="How I built, branded, and ran the CTF platform for the 2nd Agile Cyber Drill 2026 with CTFd, Docker Compose, a Flask challenge backend, and Cloudflare Tunnel.">
+<meta property="og:url" content="https://rydr.info/blog/posts/building-a-50-challenge-ctf-platform-for-a-national-cyber-drill/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/ags-internship/">AGS Internship</a><i>/</i><span>Building a 50-Challenge CTF Platform for a National Cyber Drill</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/ags-internship/">AGS Internship</a> &middot; Part 2 of 2</p>
+    <h1>Building a 50-Challenge CTF Platform for a National Cyber Drill</h1>
+    <p class="lede">How I built, branded, and ran the CTF platform for the 2nd Agile Cyber Drill 2026 with CTFd, Docker Compose, a Flask challenge backend, and Cloudflare Tunnel.</p>
+    <p class="meta">4 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#context">Context</a></li><li><a href="#the-stack">The stack</a></li><li><a href="#step-1-move-dns-to-cloudflare">Step 1: Move DNS to Cloudflare</a></li><li><a href="#step-2-bring-up-ctfd-with-docker-compose">Step 2: Bring up CTFd with Docker Compose</a></li><li><a href="#step-3-expose-it-with-cloudflare-tunnel">Step 3: Expose it with Cloudflare Tunnel</a></li><li><a href="#step-4-plan-the-challenge-mix">Step 4: Plan the challenge mix</a></li><li><a href="#step-5-build-in-small-batches">Step 5: Build in small batches</a></li><li><a href="#step-6-brand-it">Step 6: Brand it</a></li><li><a href="#bugs-i-hit-and-what-they-taught-me">Bugs I hit, and what they taught me</a></li><li><a href="#scaling-notes-for-next-time">Scaling notes for next time</a></li></ol></details>
+  <article class="prose"><h2 id="context">Context</h2>
+<p>For the 2nd Agile Cyber Drill 2026, a national cybersecurity capacity-building initiative, I built the CTF platform participants competed on: 50 challenges across six categories, served from subdomains of my own domain.</p>
+<aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>No spoilers</div><div class="callout-body"><p>This covers how the platform was built and run. Flags, solutions, and challenge internals stay private, since the challenges may be reused.</p></div></aside>
+
+<h2 id="the-stack">The stack</h2>
+<table>
+<thead>
+<tr>
+<th>Piece</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CTFd</strong></td>
+<td>The CTF platform: accounts, challenges, scoring, admin panel</td>
+</tr>
+<tr>
+<td><strong>Docker Compose</strong></td>
+<td>Runs CTFd, MariaDB, Redis, Nginx, and the challenge containers together</td>
+</tr>
+<tr>
+<td><strong>Flask + gunicorn</strong></td>
+<td>A custom backend for challenges that need live, interactive endpoints</td>
+</tr>
+<tr>
+<td><strong>Cloudflare Tunnel</strong></td>
+<td>Exposes it all publicly with no open ports on the host</td>
+</tr>
+</tbody>
+</table>
+<p>Two public hostnames:</p>
+<ul>
+<li><code>agsctf.rydr.info</code> → CTFd</li>
+<li><code>webchal.rydr.info</code> → the Flask challenge backend</li>
+</ul>
+<h2 id="step-1-move-dns-to-cloudflare">Step 1: Move DNS to Cloudflare</h2>
+<p>My main site's DNS lived at Spaceship. To let Cloudflare Tunnel create and route subdomains, I moved <code>rydr.info</code>'s nameservers to Cloudflare. The main site still runs on GitHub Pages, and only the DNS moved.</p>
+<h2 id="step-2-bring-up-ctfd-with-docker-compose">Step 2: Bring up CTFd with Docker Compose</h2>
+<div class="hl"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">      </span><span class="c1"># start everything</span>
+docker<span class="w"> </span>compose<span class="w"> </span>ps<span class="w">         </span><span class="c1"># check status</span>
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w">    </span><span class="c1"># follow logs</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w">       </span><span class="c1"># stop</span>
+</code></pre></div>
+
+<p>Make sure Docker Desktop is running first, then confirm <code>http://localhost:8000</code> works <strong>before</strong> exposing anything publicly.</p>
+<p>On a fresh install, the first account created in CTFd's setup wizard becomes the admin.</p>
+<h2 id="step-3-expose-it-with-cloudflare-tunnel">Step 3: Expose it with Cloudflare Tunnel</h2>
+<div class="hl"><pre><span></span><code>cloudflared<span class="w"> </span>tunnel<span class="w"> </span>run<span class="w"> </span>--url<span class="w"> </span>http://localhost:8000<span class="w"> </span>agsctf
+</code></pre></div>
+
+<p>A second route handles <code>webchal.rydr.info</code> for the Flask backend. Then the platform is reachable from any device.</p>
+<aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Laptop-hosted means laptop-dependent</div><div class="callout-body"><p>During the drill, the platform ran from my Mac. Mac asleep or tunnel stopped means site down. The planned fix is a clean install on a real server from a fresh repo with no secrets in it.</p></div></aside>
+
+<h2 id="step-4-plan-the-challenge-mix">Step 4: Plan the challenge mix</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Crypto</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Forensics</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Misc / security trivia</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Reverse engineering</td>
+<td>4</td>
+</tr>
+<tr>
+<td>OSINT</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>Points scale from 50 for warm-ups to 300 for the capstones. Most challenges were sized for 10 to 20 minutes, so beginners could score early and stay engaged, while the harder ones built on skills from the easier ones in the same category.</p>
+<h2 id="step-5-build-in-small-batches">Step 5: Build in small batches</h2>
+<p>I didn't write all 50 and then test. Each category was built in batches of two or three challenges:</p>
+<ol>
+<li>Add the challenge's routes to the Flask backend (or its files, for offline challenges).</li>
+<li>Rebuild the containers.</li>
+<li>Write the <code>challenge.yml</code> for CTFd.</li>
+<li>Solve it myself from scratch before moving on.</li>
+</ol>
+<p>Solving every challenge myself is what caught the bugs below before participants did. It also produced a full solution guide for all six categories, converted to a 24-page PDF with <code>pandoc</code> + <code>wkhtmltopdf</code> for the organizers.</p>
+<h2 id="step-6-brand-it">Step 6: Brand it</h2>
+<p>CTFd lets you inject CSS through <strong>Admin → Config → Theme Header</strong>, so I themed it in the client's colors without forking CTFd:</p>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Hex</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Navy</td>
+<td><code>#1a3a6b</code></td>
+<td>primary brand color</td>
+</tr>
+<tr>
+<td>Orange</td>
+<td><code>#f5891f</code></td>
+<td>accents and buttons</td>
+</tr>
+<tr>
+<td>Black</td>
+<td><code>#0a0a0a</code></td>
+<td>background</td>
+</tr>
+</tbody>
+</table>
+<aside class="callout callout-important"><div class="callout-title"><span class="callout-icon">!</span>The theme isn't in git</div><div class="callout-body"><p>CTFd stores theme settings in its own database, not in your repo. A fresh install or a database wipe loses it. Keep a copy of the CSS snippet somewhere outside CTFd.</p></div></aside>
+
+<h2 id="bugs-i-hit-and-what-they-taught-me">Bugs I hit, and what they taught me</h2>
+<p><strong>The admin login broke after a domain migration.</strong> CTFd's <code>Users</code> model has a <code>@validates("password")</code> decorator that hashes any value assigned to <code>.password</code>. I had called <code>hash_password()</code> myself first, so the password got hashed twice and no longer matched. The fix, in the Flask shell: assign the <strong>plain text</strong> password to <code>user.password</code> and let CTFd hash it once.</p>
+<p><strong>A crypto challenge was impossible to solve.</strong> In one RSA challenge, the plaintext encoded to a number larger than the modulus <code>n</code>. RSA only works when the message is smaller than <code>n</code>, so no correct answer could ever come out. Lesson: check your challenge's math by solving it, not just by generating it.</p>
+<p><strong>Small inconsistencies add up.</strong> A few challenges used the wrong flag prefix, some descriptions had stray backslash escapes that broke links, and 47 <code>challenge.yml</code> files still said "Your Name" as the author. All fixed with a bulk pass, but a quick lint step before importing would have caught them.</p>
+<p><strong>Reverse engineering binaries need the right OS.</strong> The RE challenges were Linux x86-64 ELF binaries, which don't run natively on macOS. Test them in a Linux Docker container.</p>
+<p><strong>Long test scripts should show progress.</strong> Testing scripts that run against the live tunnel can look frozen with no output. Print a progress line so you can tell "working" from "hung."</p>
+<h2 id="scaling-notes-for-next-time">Scaling notes for next time</h2>
+<ul>
+<li>CTFd's default SQLite is fine for small test runs. For a real concurrent event, use a proper database server (MySQL/MariaDB), as the Compose stack does.</li>
+<li>Tune gunicorn's worker count for the number of people you expect to be playing at once.</li>
+<li>Host it on a real server, not a laptop.</li>
+</ul></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/scoping-my-first-web-vulnerability-assessment/"><small>&larr; Previous</small><span>Scoping My First Web Vulnerability Assessment</span></a><span></span></nav>
+  <section class="more">
+    <h2>More in AGS Internship</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/scoping-my-first-web-vulnerability-assessment/"><span class="e-title">Scoping My First Web Vulnerability Assessment</span></a><time></time></li><li class="here" aria-current="page"><span class="num">02</span><a href="/blog/posts/building-a-50-challenge-ctf-platform-for-a-national-cyber-drill/"><span class="e-title">Building a 50-Challenge CTF Platform for a National Cyber Drill</span></a><time></time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

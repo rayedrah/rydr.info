@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course 3: Networks and Network Security | Brain Log</title>
+<meta name="description" content="Network structure, protocols, common network attacks, and hardening.">
+<meta property="og:title" content="Course 3: Networks and Network Security | Brain Log">
+<meta property="og:description" content="Network structure, protocols, common network attacks, and hardening.">
+<meta property="og:url" content="https://rydr.info/blog/posts/course-3-networks-and-network-security/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a><i>/</i><span>Course 3: Networks and Network Security</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a> &middot; Part 3 of 5</p>
+    <h1>Course 3: Networks and Network Security</h1>
+    <p class="lede">Network structure, protocols, common network attacks, and hardening.</p>
+    <p class="meta"><time>Jul 24, 2026</time> &middot; 32 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#module-1-introduction-to-networks">Module 1: Introduction to Networks</a><ol><li><a href="#core-definitions">Core definitions</a></li><li><a href="#network-devices">Network devices</a></li><li><a href="#cloud-networks">Cloud networks</a></li><li><a href="#network-communication">Network communication</a></li><li><a href="#tcpip-model">TCP/IP model</a></li><li><a href="#the-osi-model-7-layers">The OSI Model (7 layers)</a></li><li><a href="#ip-and-mac-addressing">IP and MAC addressing</a></li><li><a href="#fields-of-an-ipv4-packet-header-13-fields-2060-bytes-total">Fields of an IPv4 packet header (13 fields, 20–60 bytes total)</a></li></ol></li><li><a href="#module-2-network-operations">Module 2: Network Operations</a><ol><li><a href="#network-protocols-overview">Network protocols overview</a></li><li><a href="#additional-network-protocols">Additional network protocols</a></li><li><a href="#wireless-protocols">Wireless protocols</a></li><li><a href="#firewalls">Firewalls</a></li><li><a href="#vpns">VPNs</a></li><li><a href="#security-zones">Security zones</a></li><li><a href="#cidr-and-subnetting">CIDR and subnetting</a></li><li><a href="#proxy-servers">Proxy servers</a></li><li><a href="#network-protocols-recap-3-categories">Network protocols recap (3 categories)</a></li></ol></li><li><a href="#module-3-secure-against-network-intrusions">Module 3: Secure Against Network Intrusions</a><ol><li><a href="#common-network-intrusion-attacks">Common network intrusion attacks</a></li><li><a href="#network-interception-attacks">Network interception attacks</a></li><li><a href="#backdoor-attacks">Backdoor attacks</a></li><li><a href="#possible-organizational-impacts">Possible organizational impacts</a></li><li><a href="#matt-a-professional-on-dealing-with-attacks">Matt: a professional on dealing with attacks</a></li><li><a href="#dos-ddos-attacks">DoS / DDoS attacks</a></li><li><a href="#tcpdump-network-protocol-analyzers">tcpdump / network protocol analyzers</a></li><li><a href="#case-study-2016-ddos-on-a-dns-service-provider">Case study: 2016 DDoS on a DNS service provider</a></li><li><a href="#malicious-packet-sniffing">Malicious packet sniffing</a></li><li><a href="#ip-spoofing">IP spoofing</a></li><li><a href="#reading-tcpdump-logs-worked-example">Reading tcpdump logs — worked example</a></li><li><a href="#module-3-glossary">Module 3 glossary</a></li></ol></li><li><a href="#module-4-security-hardening">Module 4: Security Hardening</a><ol><li><a href="#os-hardening">OS hardening</a></li><li><a href="#brute-force-attacks">Brute-force attacks</a></li><li><a href="#network-hardening">Network hardening</a></li><li><a href="#network-security-appliances-defense-in-depth">Network security appliances (defense in depth)</a></li><li><a href="#cloud-hardening">Cloud hardening</a></li><li><a href="#shared-responsibility-model">Shared responsibility model</a></li><li><a href="#module-4-glossary">Module 4 glossary</a></li></ol></li><li><a href="#module-1-glossary">Module 1 glossary</a></li><li><a href="#module-2-glossary">Module 2 Glossary</a></li><li><a href="#module-3-glossary_1">Module 3 Glossary</a></li></ol></details>
+  <article class="prose"><p><strong>What we'll learn:</strong> Structure of a network | Network Operations | Network Attacks | Security Hardening</p>
+<blockquote>
+<p>"Despite this being a fairly technical field, the most important thing you're going to learn are the connections you're going to make to other people."</p>
+<p>"Once you have that fundamental level of skills and background, there are so many different directions you can go and so much opportunity out there."</p>
+<p>"Cybersecurity is a TEAM SPORT."</p>
+</blockquote>
+<p><strong>TAKE THINGS APART | FEEL UNCOMFORTABLE | FIND OPPORTUNITIES | LEARN HOW THINGS WORK</strong></p>
+<hr />
+<h2 id="module-1-introduction-to-networks">Module 1: Introduction to Networks</h2>
+<p><strong>What we'll learn:</strong> Structure of a network | Standard Networking Tools | Cloud Networks | TCP/IP model</p>
+<h3 id="core-definitions">Core definitions</h3>
+<blockquote>
+<p><strong>Network</strong> — A group of connected devices.</p>
+<p><strong>Local Area Network (LAN)</strong> — A network that spans a small area like an office building, a school, or a home.</p>
+<p><strong>Wide Area Network (WAN)</strong> — A network that spans a large geographic area like a city, state, or country.</p>
+<p>An entry-level cybersecurity analyst uses command lines, log parsing, and network traffic analysis in their everyday scope of work.</p>
+</blockquote>
+<ul>
+<li><strong>Network traffic analysis</strong>: looking at network traffic across various application and network layers.</li>
+</ul>
+<h3 id="network-devices">Network devices</h3>
+<p>Physical devices that form a network. Many of their functions can also be performed by <strong>virtualization tools</strong> (software that performs network operations).</p>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hub</strong></td>
+<td>Broadcasts information to every device on the network. Repeats all information to all ports → vulnerable to eavesdropping, mostly used in limited home-office setups now.</td>
+</tr>
+<tr>
+<td><strong>Switch</strong></td>
+<td>Makes connections between specific devices by sending/receiving data between them. More intelligent and secure than a hub; maintains a MAC address table mapping MAC addresses to ports. Part of the <strong>data link layer</strong>.</td>
+</tr>
+<tr>
+<td><strong>Router</strong></td>
+<td>Connects multiple networks together and directs traffic based on the destination network's IP address. Part of the <strong>network layer</strong>. Can include firewall features.</td>
+</tr>
+<tr>
+<td><strong>Modem</strong></td>
+<td>Connects your router to the internet (via your ISP) and brings internet access to the LAN.</td>
+</tr>
+<tr>
+<td><strong>Firewall</strong></td>
+<td>Monitors incoming/outgoing traffic on the network; first line of defense. Rules configured by the organization.</td>
+</tr>
+<tr>
+<td><strong>Server</strong></td>
+<td>Provides information/services to clients (client-server model). Examples: DNS servers, file servers, corporate mail servers.</td>
+</tr>
+<tr>
+<td><strong>Wireless access point</strong></td>
+<td>Sends/receives digital signals over radio waves (Wi-Fi) to create a wireless network.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example home network layout:</strong> modem (from ISP) → router → firewall (monitors traffic) → switch (optional, adds ports) → devices/file server. Two routers can be connected to a switch for load balancing.</p>
+<p>Each device/desktop computer has a unique <strong>MAC address</strong> and <strong>IP address</strong> and connects via wired or wireless connection.</p>
+<p><strong>Network diagrams</strong> — maps that use small graphics and dotted lines to show devices and their connections; security analysts use them to develop and refine strategies for securing network architecture.</p>
+<h3 id="cloud-networks">Cloud networks</h3>
+<blockquote>
+<p><strong>Cloud computing</strong> — The practice of using remote servers, applications, and network services hosted on the internet instead of on local physical devices (as opposed to <strong>on-premise</strong> networks, where devices live at a physical location the company owns).</p>
+<p><strong>Cloud network</strong> — A collection of servers/computers that stores resources and data in remote data centers, accessed via the internet.</p>
+</blockquote>
+<p>A <strong>cloud service provider (CSP)</strong> owns large data centers globally and sells storage/compute/services to companies via API or web console.</p>
+<p><strong>Three CSP service categories:</strong></p>
+<ul>
+<li>
+<p><strong>SaaS (Software as a Service)</strong> — software suites operated by the CSP, used remotely without hosting it yourself.</p>
+</li>
+<li>
+<p><strong>IaaS (Infrastructure as a Service)</strong> — virtual computer components (containers, storage) configured remotely via API/console.</p>
+</li>
+<li>
+<p><strong>PaaS (Platform as a Service)</strong> — tools for designing custom applications in the cloud.</p>
+</li>
+<li>
+<p><strong>Hybrid cloud</strong> — CSP services + on-premise infrastructure combined (most orgs use this).</p>
+</li>
+<li>
+<p><strong>Multi-cloud</strong> — using more than one CSP.</p>
+</li>
+<li>
+<p><strong>Software-defined networks (SDN)</strong> — virtual network devices/services (virtual switches, routers, firewalls) hosted at the CSP's data center; physical hardware increasingly supports this too.</p>
+</li>
+</ul>
+<p><strong>Why cloud computing / SDN is beneficial:</strong></p>
+<ul>
+<li><strong>Reliability</strong> — availability, secure connections, consistent uptime.</li>
+<li><strong>Cost</strong> — avoids large upfront infrastructure spend; CSPs offer services at a fraction of self-hosting cost.</li>
+<li><strong>Scalability</strong> — elastic utility model, pay for what you need, scale quickly via API/console (e.g. spinning up WAFs, IDS/IPS, L3/L4 firewalls on demand).</li>
+</ul>
+<h3 id="network-communication">Network communication</h3>
+<blockquote>
+<p><strong>Data packet</strong> — A basic unit of information that travels from one device to another within a network.</p>
+</blockquote>
+<p><strong>Packet structure:</strong> <code>HEADER || BODY || FOOTER</code></p>
+<ul>
+<li>
+<p><strong>Header</strong> — IP address, MAC address, protocol number (tells the receiving end what to do with the packet).</p>
+</li>
+<li>
+<p><strong>Body</strong> — the message.</p>
+</li>
+<li>
+<p><strong>Footer</strong> — signals the receiving end that the packet is finished.</p>
+</li>
+<li>
+<p><strong>Bandwidth</strong> — max data transmission capacity a device can receive per second (bits per second).</p>
+</li>
+<li>
+<p><strong>Speed</strong> — the rate at which data packets are actually received/downloaded.</p>
+</li>
+<li>
+<p><strong>Packet sniffing</strong> — the practice of capturing and inspecting data packets across a network.</p>
+</li>
+</ul>
+<h3 id="tcpip-model">TCP/IP model</h3>
+<blockquote>
+<p><strong>TCP</strong> — An internet communication protocol that allows two devices to form a connection and stream data (organizes data so it can travel across a network).</p>
+<p><strong>IP</strong> — A set of standards for routing and addressing data packets between devices. Includes the <strong>IP address</strong>, which functions as the address for each device on a network.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>IP</th>
+<th>TCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Job</td>
+<td>Addressing &amp; routing</td>
+<td>Reliability &amp; ordering</td>
+</tr>
+<tr>
+<td>Guarantees delivery?</td>
+<td>No (best-effort)</td>
+<td>Yes (retransmits lost packets)</td>
+</tr>
+<tr>
+<td>Cares about order?</td>
+<td>No</td>
+<td>Yes (reorders packets)</td>
+</tr>
+<tr>
+<td>Needs a connection first?</td>
+<td>No</td>
+<td>Yes (handshake)</td>
+</tr>
+<tr>
+<td>Analogy</td>
+<td>The postal service (delivers envelopes)</td>
+<td>The courier ensuring nothing's lost/out of order</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IP gets packets moving to the right address; TCP makes sure they all show up intact and in order.</strong></p>
+<blockquote>
+<p><strong>Port</strong> — A software-based location that organizes the sending/receiving of data between devices; splits traffic and prioritizes operations.</p>
+</blockquote>
+<p>Common ports: <strong>25</strong> (email) · <strong>443</strong> (secure internet communication) · <strong>20</strong> (large file transfers)</p>
+<p><strong>The four TCP/IP layers:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Also called</th>
+<th>Function</th>
+<th>Key protocols</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Network Access</strong></td>
+<td>Data Link Layer</td>
+<td>Creation/transmission of data packets across physical hardware</td>
+<td>ARP</td>
+</tr>
+<tr>
+<td><strong>Internet</strong></td>
+<td>Network Layer</td>
+<td>Attaches IP address so packets know their destination</td>
+<td>IP, ICMP</td>
+</tr>
+<tr>
+<td><strong>Transport</strong></td>
+<td>—</td>
+<td>Error control, ensures smooth transport</td>
+<td>TCP, UDP</td>
+</tr>
+<tr>
+<td><strong>Application</strong></td>
+<td>—</td>
+<td>Determines how packets interact with receiving devices (file transfers, email, etc.)</td>
+<td>HTTP, SMTP, SSH, FTP, DNS</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>ARP (Address Resolution Protocol)</strong> — part of the network access layer.</li>
+<li><strong>ICMP</strong> — shares error info/status updates: reports dropped/lost packets, connectivity issues, packets redirected to other routers.</li>
+<li><strong>TCP</strong> contains the destination service's port number in its header.</li>
+<li><strong>UDP</strong> is connectionless.</li>
+<li>Application layer protocols rely on the layers below them to actually move the data.</li>
+</ul>
+<p><strong>TCP/IP vs OSI:</strong> Both are conceptual models for visualizing data transmission between systems. TCP/IP has <strong>4 layers</strong>; it's essentially a simplified/condensed version of the OSI model's <strong>7 layers</strong>. Some orgs favor one model over the other, so security analysts should know both.</p>
+<h3 id="the-osi-model-7-layers">The OSI Model (7 layers)</h3>
+<p>Working from Layer 7 (user-facing) down to Layer 1 (physical):</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Name</th>
+<th>Function</th>
+<th>Addressing / Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7</td>
+<td><strong>Application</strong></td>
+<td>User's direct connection to the internet via applications/requests (e.g. browser using HTTP/HTTPS, email using SMTP, DNS translating domain names to IPs)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Presentation</strong></td>
+<td>Encryption, compression, confirms character code sets are interpretable by the receiving system</td>
+<td>e.g. SSL, which encrypts data between browsers and web servers for HTTPS</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Session</strong></td>
+<td>Keeps the session open during transfer, handles authentication, reconnection, and checkpoints if the connection drops; requests to layer 4, responds to layer 6</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Transport</strong></td>
+<td>Delivers data between devices; controls speed/flow; segments data into smaller pieces and reassembles at destination</td>
+<td>Port Number · protocols: TCP, UDP</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Network</strong></td>
+<td>Logical addressing and routing packets between different networks; reads frame address to find destination</td>
+<td>IP Address</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Data Link</strong></td>
+<td>Communication within a single local network segment; home of switches and NICs</td>
+<td>MAC Address · protocols: NCP, HDLC, SDLC</td>
+</tr>
+<tr>
+<td>1</td>
+<td><strong>Physical</strong></td>
+<td>The physical cables, hubs, modems; translates packets into a stream of 0s and 1s for transmission over the wire</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key takeaway:</strong> Both models help visualize data transmission and communicate where disruptions/threats occur. OSI's extra granularity (7 vs 4 layers) helps pinpoint exactly where in the stack an attack or failure happened.</p>
+<h3 id="ip-and-mac-addressing">IP and MAC addressing</h3>
+<blockquote>
+<p><strong>IP address</strong> — A unique string of characters that identifies the location of a device on the internet. (IPv4 / IPv6)</p>
+<p><strong>MAC address</strong> — A unique alphanumeric identifier assigned to each physical device on a network.</p>
+</blockquote>
+<p><strong>IPv4 vs IPv6:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>IPv4</th>
+<th>IPv6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Format</td>
+<td>4 decimal numbers (0–255), separated by periods</td>
+<td>8 hexadecimal groups, separated by colons</td>
+</tr>
+<tr>
+<td>Size</td>
+<td>4 bytes</td>
+<td>16 bytes</td>
+</tr>
+<tr>
+<td>Address space</td>
+<td>~4.3 billion addresses</td>
+<td>340 undecillion addresses</td>
+</tr>
+<tr>
+<td>Example</td>
+<td><code>198.51.100.0</code></td>
+<td><code>2002:0db8:0000:0000:0000:ff21:0023:1234</code> (can shorten consecutive zero groups to <code>::</code>)</td>
+</tr>
+<tr>
+<td>Header</td>
+<td>More fields (IHL, Identification, Flags)</td>
+<td>Simpler; adds a Flow Label field for special routing handling</td>
+</tr>
+</tbody>
+</table>
+<p>IPv6 was developed to solve <strong>IPv4 address exhaustion</strong>. It also offers more efficient routing and eliminates private address collisions that can occur on IPv4.</p>
+<h3 id="fields-of-an-ipv4-packet-header-13-fields-2060-bytes-total">Fields of an IPv4 packet header (13 fields, 20–60 bytes total)</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Version (VER)</strong></td>
+<td>4-bit field telling the receiving device which IP protocol version is used (e.g. IPv4).</td>
+</tr>
+<tr>
+<td><strong>IP Header Length (HLEN/IHL)</strong></td>
+<td>Length of the header; marks where header ends and data begins.</td>
+</tr>
+<tr>
+<td><strong>Type of Service (ToS)</strong></td>
+<td>Lets routers prioritize packets to maintain quality of service.</td>
+</tr>
+<tr>
+<td><strong>Total Length</strong></td>
+<td>Total size of the packet (header + data); max 65,535 bytes.</td>
+</tr>
+<tr>
+<td><strong>Identification</strong></td>
+<td>Unique ID for reassembling fragments of an oversized original packet.</td>
+</tr>
+<tr>
+<td><strong>Flags</strong></td>
+<td>Tells the router whether the packet was fragmented, and how many fragments remain.</td>
+</tr>
+<tr>
+<td><strong>Fragmentation Offset</strong></td>
+<td>Tells routing devices where a fragment belongs in the original packet.</td>
+</tr>
+<tr>
+<td><strong>Time to Live (TTL)</strong></td>
+<td>Counter set by the source, decremented at each router hop; at 0 the packet is dropped and an ICMP Time Exceeded message is returned to the sender.</td>
+</tr>
+<tr>
+<td><strong>Protocol</strong></td>
+<td>Tells the receiving device which protocol the data portion uses.</td>
+</tr>
+<tr>
+<td><strong>Header Checksum</strong></td>
+<td>Detects corruption of the header in transit; corrupted packets are discarded.</td>
+</tr>
+<tr>
+<td><strong>Source IP Address</strong></td>
+<td>IPv4 address of the sender.</td>
+</tr>
+<tr>
+<td><strong>Destination IP Address</strong></td>
+<td>IPv4 address of the destination.</td>
+</tr>
+<tr>
+<td><strong>Options</strong></td>
+<td>Allows security options to be applied if HLEN &gt; 5.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Security angle:</strong> analyzing these fields reveals where a packet came from, where it's going, and what protocol it's using — critical info when inspecting suspicious packets.</p>
+<hr />
+<h2 id="module-2-network-operations">Module 2: Network Operations</h2>
+<p><strong>What we'll learn:</strong> Network Protocols | VPNs | Firewalls, Security Zones, and Proxy Servers</p>
+<h3 id="network-protocols-overview">Network protocols overview</h3>
+<blockquote>
+<p><strong>Network protocol</strong> — A set of rules used by two or more devices on a network to describe the order of delivery and the structure of data. A shared "language" for devices to understand each other.</p>
+</blockquote>
+<p>Protocols matter for security because vulnerabilities in them can be exploited — e.g. a malicious actor abusing DNS to redirect traffic from a legitimate site to a malicious one.</p>
+<p><strong>Three categories: communication, management, security.</strong></p>
+<p><strong>Communication protocols</strong> (govern data exchange, timing, and recovery of lost data):</p>
+<ul>
+<li><strong>TCP</strong> — three-way handshake: device sends <strong>SYN</strong> → server responds <strong>SYN/ACK</strong> → device sends final <strong>ACK</strong> → connection established. Transport layer.</li>
+<li><strong>UDP</strong> — connectionless, less reliable but faster; used for things like DNS requests. Transport layer.</li>
+<li><strong>HTTP</strong> — port 80, application layer; being replaced by HTTPS since it's insecure.</li>
+<li><strong>DNS</strong> — translates domain names to IP addresses; normally UDP port 53, switches to TCP for large replies. Application layer.</li>
+</ul>
+<p><strong>Management protocols</strong> (monitoring/managing network activity):</p>
+<ul>
+<li><strong>SNMP</strong> — monitors/manages network devices; can reset passwords, change baseline configs, report bandwidth usage. Application layer.</li>
+<li><strong>ICMP</strong> — reports transmission errors between devices; basis of the <code>ping</code> command. Internet layer.</li>
+</ul>
+<p><strong>Security protocols</strong> (encrypt data in transit):</p>
+<ul>
+<li><strong>HTTPS</strong> — secure HTTP using SSL/TLS encryption, port 443. Application layer.</li>
+<li><strong>SFTP</strong> — secure file transfer using SSH, typically TCP port 22; commonly used with cloud storage uploads/downloads. Application layer.</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> encryption protocols like these don't conceal the source/destination IP address — an attacker intercepting encrypted traffic can still learn some basic info about it.</p>
+</blockquote>
+<h3 id="additional-network-protocols">Additional network protocols</h3>
+<blockquote>
+<p><strong>NAT (Network Address Translation)</strong> — The router swaps a device's private IP address for the router's public IP address when sending traffic outside the home network (and reverses it for responses). Spans layer 2 (internet) and layer 3 (transport) of the TCP/IP model.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Private IP addresses</th>
+<th>Public IP addresses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Assigned by</td>
+<td>Router</td>
+<td>ISP and IANA</td>
+</tr>
+<tr>
+<td>Uniqueness</td>
+<td>Unique only within the private network</td>
+<td>Unique globally</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Free</td>
+<td>Costs to lease</td>
+</tr>
+<tr>
+<td>Example ranges</td>
+<td>10.0.0.0–10.255.255.255, 172.16.0.0–172.31.255.255, 192.168.0.0–192.168.255.255</td>
+<td>The rest of the assignable space</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>DHCP (Dynamic Host Configuration Protocol)</strong> — Management-family, application layer protocol; works with the router to assign a unique IP to each device and provide the appropriate DNS server / default gateway. Servers use UDP port 67, clients use UDP port 68.</p>
+<p><strong>ARP (Address Resolution Protocol)</strong> — Translates IP addresses found in data packets into the MAC address of the hardware device when the MAC address is unknown. Network Access Layer protocol; no port number since it's not an application-layer protocol. Each device tracks IP↔MAC matches in an <strong>ARP cache</strong>.</p>
+<p><strong>SSH (Secure Shell)</strong> — Creates a secure connection with a remote system; TCP port 22; more secure replacement for Telnet.</p>
+</blockquote>
+<p><strong>Other application-layer protocols:</strong></p>
+<ul>
+<li><strong>Telnet</strong> — connects to a remote system in clear text (insecure); TCP port 23.</li>
+<li><strong>POP3</strong> — retrieves/downloads email locally from a mail server; unencrypted TCP/UDP port 110, encrypted (SSL/TLS) TCP/UDP port 995. Mail may or may not stay on the server after download, so syncing across devices isn't guaranteed.</li>
+<li><strong>IMAP</strong> — downloads email headers/content but keeps content on the server, enabling multi-device sync and partial reading before a message finishes downloading; unencrypted TCP port 143, encrypted (TLS) TCP port 993.</li>
+<li><strong>SMTP</strong> — transmits/routes email from sender to recipient, works with Message Transfer Agent (MTA) software to resolve addresses via DNS; unencrypted TCP/UDP port 25 (often abused for spam), encrypted (TLS) TCP/UDP port 587.</li>
+</ul>
+<p><strong>Port reference table:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DHCP</td>
+<td>UDP 67 (servers) / UDP 68 (clients)</td>
+</tr>
+<tr>
+<td>ARP</td>
+<td>none</td>
+</tr>
+<tr>
+<td>Telnet</td>
+<td>TCP 23</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>TCP 22</td>
+</tr>
+<tr>
+<td>POP3</td>
+<td>TCP/UDP 110 (unencrypted) / TCP/UDP 995 (SSL/TLS)</td>
+</tr>
+<tr>
+<td>IMAP</td>
+<td>TCP 143 (unencrypted) / TCP 993 (SSL/TLS)</td>
+</tr>
+<tr>
+<td>SMTP</td>
+<td>TCP/UDP 25 (unencrypted)</td>
+</tr>
+<tr>
+<td>SMTPS</td>
+<td>TCP/UDP 587 (TLS)</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>80</td>
+</tr>
+<tr>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>Large file transfers</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Email (general)</td>
+<td>25</td>
+</tr>
+</tbody>
+</table>
+<p>Firewalls can filter traffic based on these port numbers (e.g. only allowing POP3 access from IPs belonging to the org).</p>
+<h3 id="wireless-protocols">Wireless protocols</h3>
+<blockquote>
+<p><strong>IEEE 802.11 (Wi-Fi)</strong> — A set of standards defining communication for wireless LANs; a suite of protocols for wireless communication.</p>
+<p><strong>WPA (Wi-Fi Protected Access)</strong> — A wireless security protocol for devices to connect to the internet.</p>
+</blockquote>
+<ul>
+<li><strong>WEP (Wired Equivalent Privacy)</strong> — designed to give wireless connections the same privacy level as wired ones.</li>
+<li><strong>WPA</strong> — uses <strong>Temporal Key Integrity Protocol (TKIP)</strong>.</li>
+<li><strong>WPA2/WPA3</strong> — WPA3 encrypts traffic with AES as it travels from device to access point. Both offer <strong>personal mode</strong> (home networks) and <strong>enterprise mode</strong> (business networks/applications).</li>
+</ul>
+<h3 id="firewalls">Firewalls</h3>
+<blockquote>
+<p><strong>Firewall</strong> — A network security device that monitors traffic to and from a network.</p>
+</blockquote>
+<ul>
+<li><strong>Port filtering</strong> — a firewall function that blocks/allows certain ports to limit unwanted communication.</li>
+</ul>
+<p><strong>Firewall types (by deployment):</strong> Hardware · Software · <strong>Cloud-based</strong> (software firewalls hosted by a CSP).</p>
+<p><strong>Firewall types (by behavior):</strong></p>
+<ul>
+<li><strong>Stateful</strong> — tracks information passing through it and proactively filters threats based on behaviors/patterns; only needs a rule in one direction since it uses a state table to match return traffic to an existing session.</li>
+<li><strong>Stateless</strong> — operates on predefined rules only, doesn't track packet info; needs rules configured in both directions.</li>
+</ul>
+<p><strong>Next-generation firewalls (NGFWs)</strong> — most advanced tier. Benefits: deep packet inspection, intrusion protection, threat intelligence. Application-aware (can filter by application, not just IP/port); some include malware sandboxing, network anti-virus, URL/DNS filtering.</p>
+<h3 id="vpns">VPNs</h3>
+<blockquote>
+<p><strong>VPN</strong> — A network security service that changes your public IP address and hides your virtual location so you can keep data private on a public network like the internet. Also encrypts data in transit.</p>
+<p><strong>Encapsulation</strong> — The process a VPN uses to protect data by wrapping sensitive data inside other data packets.</p>
+</blockquote>
+<p>A VPN server acts as a gateway between a device and the internet, creating a virtual tunnel that hides the IP and encrypts traffic. Lets trusted connections be established over untrusted networks.</p>
+<ul>
+<li><strong>Remote access VPN</strong> — connects an individual personal device to a VPN server; connection established over the internet.</li>
+<li><strong>Site-to-site VPN</strong> — used by enterprises to extend their network to other locations/networks; more complex to configure/manage than remote access VPNs.</li>
+</ul>
+<p><strong>VPN protocols:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>WireGuard</th>
+<th>IPSec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Age</td>
+<td>Newer</td>
+<td>Older, more established</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>Faster (fewer lines of code)</td>
+<td>Slower by comparison</td>
+</tr>
+<tr>
+<td>Setup</td>
+<td>Simple, open source, easy to deploy/debug</td>
+<td>More complex</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>Streaming, large file downloads, site-to-site and client-server</td>
+<td>Widely supported across OSes; common in site-to-site VPNs</td>
+</tr>
+</tbody>
+</table>
+<p>Choosing between them depends on connection speed needs, compatibility with existing infrastructure, and business/individual needs.</p>
+<p>Organizations increasingly combine <strong>VPN + SD-WAN</strong> (software-defined WAN) to securely connect users to applications across multiple locations over large distances.</p>
+<h3 id="security-zones">Security zones</h3>
+<blockquote>
+<p><strong>Security zone</strong> — A segment of a network that protects the internal network from the internet, part of a technique called <strong>network segmentation</strong>.</p>
+<p><strong>Network segmentation</strong> — A security technique that divides the network into segments.</p>
+</blockquote>
+<p><strong>Two top-level zones:</strong></p>
+<ul>
+<li><strong>Uncontrolled zone</strong> — any network outside the organization's control.</li>
+<li><strong>Controlled zone</strong> — a subnet that protects the internal network from the uncontrolled zone.</li>
+</ul>
+<p><strong>Areas within the controlled zone:</strong></p>
+<ul>
+<li><strong>DMZ (Demilitarized zone)</strong> — contains public-facing services that can access the internet.</li>
+<li><strong>Internal network</strong> — private servers/data the org needs to protect.</li>
+<li><strong>Restricted zone</strong> — highly confidential info, accessible only to employees with certain privileges.</li>
+</ul>
+<p><strong>Structure:</strong> <code>THE INTERNET → FIREWALL → DMZ → FIREWALL → INTERNAL NETWORK → FIREWALL → RESTRICTED ZONE</code></p>
+<h3 id="cidr-and-subnetting">CIDR and subnetting</h3>
+<blockquote>
+<p><strong>CIDR (Classless Inter-Domain Routing)</strong> — A method of assigning subnet masks to IP addresses to create a subnet.</p>
+</blockquote>
+<p><strong>The problem CIDR solves:</strong> an IPv4 address like <code>192.168.1.10</code> alone doesn't tell you where the "network" part ends and the "host" (device) part begins. CIDR notation (<code>/24</code>, <code>/16</code>, etc.) specifies the split.</p>
+<ul>
+<li><code>/24</code> → 24 bits network, 8 bits host → 256 addresses (254 usable; 2 reserved for network + broadcast address)</li>
+<li><code>/16</code> → 65,536 addresses</li>
+<li><code>/30</code> → 4 addresses (2 usable) — common for router-to-router links</li>
+</ul>
+<p><strong>Rule of thumb:</strong> smaller number after the slash = bigger network. Bigger number = smaller network.</p>
+<p><strong>Subnetting</strong> = taking one large network and dividing it into smaller organized groups (subnets), defined by the combination of IP address + network mask assigned to each device — a "network within a network." If devices on the same subnet talk to each other, the switch keeps that traffic local, improving speed/efficiency. Subnetting is also how security zones get created.</p>
+<p><em>Example:</em> a company's <code>10.0.0.0/16</code> block can be split into department-level <code>/24</code> subnets (HR, Engineering, Guest Wi-Fi, Servers/DMZ) — each its own isolated security zone, with firewall rules between them so a compromise in one subnet doesn't automatically expose the rest.</p>
+<p><strong>CIDR replaced classful addressing</strong> (Class A–E, used in the 1980s, ran out of room as internet adoption grew in the 1990s) — expanded the number of usable IPv4 addresses and reduced routing table size.</p>
+<p><strong>CIDR/subnetting vs. asking your ISP for more IPs — two different problems:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Subnetting (CIDR)</th>
+<th>Asking ISP for more IPs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What it does</td>
+<td>Reorganizes IPs you already have into smaller logical groups</td>
+<td>Gets you more actual addresses you didn't have before</td>
+</tr>
+<tr>
+<td>Where</td>
+<td>Internal, on your own router/network</td>
+<td>External, negotiated with the ISP</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Free (just config/math)</td>
+<td>Usually costs money, may be limited by IPv4 exhaustion</td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Organization, security segmentation, reduced broadcast traffic</td>
+<td>Getting more devices a public-facing address</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Analogy:</strong> your ISP gives you one apartment building (a public IP or IP block). Subnetting is dividing floors/rooms within that same building for different purposes — you're not getting more building, just organizing what you have. Asking the ISP for more IPs is asking for an entirely additional building.</p>
+<p>Most home/office networks only get <strong>one</strong> public IP from the ISP but have many devices — this works via <strong>NAT</strong>: the router uses private IPs (the reserved <code>192.168.x.x</code> / <code>10.x.x.x</code> CIDR blocks, non-routable on the public internet) internally and translates them all to share the single public IP.</p>
+<p><strong>Bottom line:</strong> CIDR/subnetting is a design tool for addresses you already control; asking the ISP for more IPs is a request for more raw address space from the entity that owns the internet-routable blocks.</p>
+<h3 id="proxy-servers">Proxy servers</h3>
+<blockquote>
+<p><strong>Proxy server</strong> — A server that fulfills a client's requests by forwarding them to other servers.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Forward proxy</strong></td>
+<td>Regulates/restricts a client's access to the internet; hides internal client identity from external servers.</td>
+</tr>
+<tr>
+<td><strong>Reverse proxy</strong></td>
+<td>Regulates/restricts the internet's access to an internal server; hides the real server from clients (often sits in the DMZ; used for load balancing, caching, SSL termination).</td>
+</tr>
+<tr>
+<td><strong>Email proxy server</strong></td>
+<td>Protects the network from spam.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Firewall vs. proxy server:</strong></p>
+<ul>
+<li><strong>Firewall</strong> = a gatekeeper. Decides <em>whether</em> traffic is allowed through, based on rules (IP, port, protocol, sometimes app-level). Doesn't participate in the conversation — just permits or blocks it.</li>
+<li><strong>Proxy server</strong> = a middleman. Actually receives the traffic, processes it, and makes a <em>new</em> request on the client's/destination's behalf. The two real endpoints never talk directly, only to the proxy.</li>
+</ul>
+<p>Analogy: a firewall is a bouncer checking ID at the door; a proxy is a personal assistant who does the errand on your behalf so the shop never deals with you directly.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Firewall</th>
+<th>Proxy server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Role</td>
+<td>Filters/blocks traffic</td>
+<td>Relays/forwards traffic on your behalf</td>
+</tr>
+<tr>
+<td>OSI layer</td>
+<td>Network/Transport (NGFWs also app layer)</td>
+<td>Application</td>
+</tr>
+<tr>
+<td>Terminates connection?</td>
+<td>No — passes through or drops</td>
+<td>Yes — terminates one connection, opens a new one</td>
+</tr>
+<tr>
+<td>Sees full content?</td>
+<td>Basic: no (headers only); NGFW: some inspection</td>
+<td>Yes — can see/modify URLs, headers, payloads</td>
+</tr>
+<tr>
+<td>Typical purpose</td>
+<td>Block unauthorized access, enforce segmentation</td>
+<td>Hide identity/IP, cache content, filter/log web requests, bypass geo-restrictions, load balancing</td>
+</tr>
+</tbody>
+</table>
+<p>They often work together in the same pipeline: <code>Internet → Firewall → Proxy Server → Internal Clients</code>. The firewall enforces broad access rules; the proxy handles content-level work (logging visited sites, caching, stripping malicious content, masking internal IPs).</p>
+<h3 id="network-protocols-recap-3-categories">Network protocols recap (3 categories)</h3>
+<ol>
+<li><strong>Communication protocols</strong> — establish connections between servers (TCP, UDP, SMTP).</li>
+<li><strong>Management protocols</strong> — troubleshoot network issues (ICMP).</li>
+<li><strong>Security protocols</strong> — encrypt data in transit (IPSec, SSL/TLS).</li>
+</ol>
+<p>Other commonly used protocols: <strong>HTTP</strong> (browser↔server communication), <strong>DNS</strong> (maps hostnames to IPs), <strong>ARP</strong> (maps IP↔MAC on the LAN).</p>
+<hr />
+<h2 id="module-3-secure-against-network-intrusions">Module 3: Secure Against Network Intrusions</h2>
+<p><strong>What we'll learn:</strong> Network Security | Network Intrusion Tactics | Network Attack Protection</p>
+<h3 id="common-network-intrusion-attacks">Common network intrusion attacks</h3>
+<ul>
+<li>Malware</li>
+<li>Spoofing</li>
+<li>Packet sniffing</li>
+<li>Packet flooding</li>
+</ul>
+<p><strong>How attacks harm an organization:</strong> leaking valuable/confidential information · damaging reputation · hurting customer retention · costing money and time.</p>
+<p>Motivations vary: financial, personal, political, disgruntled employees, activists opposed to a company's values.</p>
+<h3 id="network-interception-attacks">Network interception attacks</h3>
+<p>Intercept network traffic to steal information or interfere with a transmission (e.g. altering the destination account on an intercepted bank transfer). Includes <strong>packet sniffing</strong>, <strong>on-path attacks</strong>, and <strong>replay attacks</strong>.</p>
+<h3 id="backdoor-attacks">Backdoor attacks</h3>
+<blockquote>
+<p><strong>Backdoor</strong> — A weakness intentionally left by programmers/admins that bypasses normal access control, usually meant for troubleshooting or admin tasks. Attackers exploit backdoors post-compromise for persistent access, then can install malware, run DoS attacks, steal data, or change security settings.</p>
+</blockquote>
+<h3 id="possible-organizational-impacts">Possible organizational impacts</h3>
+<ul>
+<li><strong>Financial</strong> — lost revenue during downtime, rebuild costs, ransomware payouts, litigation/settlement costs.</li>
+<li><strong>Reputation</strong> — public trust erodes; customers may switch to competitors.</li>
+<li><strong>Public safety</strong> — attacks on government/utility/defense networks can cause real-world physical harm.</li>
+</ul>
+<h3 id="matt-a-professional-on-dealing-with-attacks">Matt: a professional on dealing with attacks</h3>
+<blockquote>
+<p>"As an Incident Responder, I am here to help."</p>
+</blockquote>
+<p><strong>INCIDENT RESPONSE is standing beside people when they want you the most.</strong></p>
+<p><strong>The 3 C's:</strong> Command · Control · Communication</p>
+<h3 id="dos-ddos-attacks">DoS / DDoS attacks</h3>
+<blockquote>
+<p><strong>DoS (Denial of Service)</strong> — An attack that targets a network or server and floods it with traffic.</p>
+<p><strong>DDoS (Distributed Denial of Service)</strong> — Uses multiple devices/servers in different locations to flood the target with unwanted traffic.</p>
+</blockquote>
+<ul>
+<li><strong>SYN flood</strong> — simulates TCP connections, floods the server with SYN packets.</li>
+<li><strong>ICMP flood</strong> — repeatedly sends ICMP request packets to a server.</li>
+<li><strong>Ping of death</strong> — sends an oversized ICMP packet (&gt;64KB) to crash a system.</li>
+</ul>
+<h3 id="tcpdump-network-protocol-analyzers">tcpdump / network protocol analyzers</h3>
+<blockquote>
+<p><strong>Network protocol analyzer</strong> (packet sniffer / packet analyzer) — A tool that captures and analyzes data traffic within a network; used to monitor networks and identify suspicious activity.</p>
+</blockquote>
+<p>Common analyzers: SolarWinds NetFlow Traffic Analyzer, ManageEngine OpManager, Azure Network Watcher, <strong>Wireshark</strong>, <strong>tcpdump</strong>.</p>
+<p><strong>tcpdump</strong> — command-line, lightweight (low memory/CPU), text-based, uses the open-source libpcap library. Preinstalled on many Linux distros, also runs on macOS. Prints packet info directly to the terminal (and optionally a log file).</p>
+<p><strong>Info captured per packet:</strong></p>
+<ul>
+<li><strong>Timestamp</strong> — hours:minutes:seconds.fraction</li>
+<li><strong>Source IP / Source port</strong></li>
+<li><strong>Destination IP / Destination port</strong></li>
+</ul>
+<p>By default tcpdump resolves host addresses to hostnames and swaps port numbers for their commonly associated service names.</p>
+<p><strong>Common uses:</strong> baseline traffic patterns, detect/identify malicious traffic, custom alerts, locate unauthorized IM traffic or rogue wireless access points. (Attackers can also abuse these tools to capture sensitive data like usernames/passwords.)</p>
+<h3 id="case-study-2016-ddos-on-a-dns-service-provider">Case study: 2016 DDoS on a DNS service provider</h3>
+<blockquote>
+<p><strong>Botnet</strong> — A collection of malware-infected computers under the control of a single threat actor (the "bot-herder").</p>
+</blockquote>
+<ul>
+<li>University students built a botnet targeting gaming servers, then posted its code publicly (partly to avoid being traced) — which let other criminals pick it up.</li>
+<li>On <strong>October 21, 2016</strong>, at 7:00 a.m., the botnet fired tens of millions of DNS requests at a major DNS service provider, overwhelming and shutting down the service. Since many large companies relied on this provider, sites across North America and Europe went down.</li>
+<li>Systems were restored after ~2 hours; subsequent attack waves were mitigated because the company was now prepared.</li>
+<li><strong>Lesson:</strong> distributing important operations across dynamically scalable hosts helps operations continue even if baseline infrastructure goes down.</li>
+</ul>
+<h3 id="malicious-packet-sniffing">Malicious packet sniffing</h3>
+<ul>
+<li><strong>Passive packet sniffing</strong> — reading data packets in transit without altering them.</li>
+<li><strong>Active packet sniffing</strong> — manipulating data packets in transit.</li>
+</ul>
+<p><strong>Prevention:</strong> VPN tunnels · using HTTPS sites · avoiding unprotected Wi-Fi.</p>
+<h3 id="ip-spoofing">IP spoofing</h3>
+<blockquote>
+<p><strong>IP spoofing</strong> — Changing the source IP of a data packet to impersonate an authorized system and gain access.</p>
+</blockquote>
+<p><strong>Common IP spoofing attacks:</strong></p>
+<ul>
+<li><strong>On-path attack</strong> (a.k.a. meddler-in-the-middle) — a hacker intercepts communication between two trusted devices/servers, potentially harvesting usernames/passwords or spoofing a DNS response to redirect a domain to a malicious IP. <strong>Best defense: encrypt data in transit (e.g. TLS).</strong></li>
+<li><strong>Replay attack</strong> — intercepts a data packet in transit and delays or replays it later.</li>
+<li><strong>Smurf attack</strong> — sniffs an authorized user's IP, then floods it with (often ICMP) packets; once the spoofed packet hits the broadcast address it's sent to every device/server on the network, overwhelming them. <strong>Best defense: an NGFW that detects unusual traffic/anomalies.</strong></li>
+<li><strong>DoS attack (as IP-spoofing-adjacent)</strong> — the attacker prevents a compromised system from responding to legitimate traffic; unlike spoofing, the packets used are fully "authorized" (real IP in the header) — the attacker just floods the target until it crashes.</li>
+</ul>
+<p><strong>Pro tip:</strong> defense-in-depth — no single strategy stops every attack type; layer encryption + multiple mitigation strategies together.</p>
+<h3 id="reading-tcpdump-logs-worked-example">Reading tcpdump logs — worked example</h3>
+<div class="hl"><pre><span></span><code>14:18:32.192571 IP your.machine.52444 &gt; dns.google.domain: 35084+ A? yummyrecipesforme.com. (24)
+14:18:32.204388 IP dns.google.domain &gt; your.machine.52444: 35084 1/0/0 A 203.0.113.22 (40)
+</code></pre></div>
+
+<p>Source computer (port 52444) sends a DNS resolution request for <code>yummyrecipesforme.com</code>; the DNS server replies with IP <code>203.0.113.22</code>.</p>
+<div class="hl"><pre><span></span><code>14:18:36.786501 IP your.machine.36086 &gt; yummyrecipesforme.com.http: Flags [S], seq 2873951608, ...
+14:18:36.786517 IP yummyrecipesforme.com.http &gt; your.machine.36086: Flags [S.], seq 3984334959, ack 2873951609, ...
+</code></pre></div>
+
+<p>Source (port 36086) sends a TCP connection request (<code>Flags [S]</code>) directly to the destination's HTTP port (<code>.http</code> = port 80); destination acknowledges (<code>Flags [S.]</code>). Communication continues for ~2 minutes.</p>
+<p><strong>TCP flag codes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[S]</code></td>
+<td>Connection Start</td>
+</tr>
+<tr>
+<td><code>[F]</code></td>
+<td>Connection Finish</td>
+</tr>
+<tr>
+<td><code>[P]</code></td>
+<td>Data Push</td>
+</tr>
+<tr>
+<td><code>[R]</code></td>
+<td>Connection Reset</td>
+</tr>
+<tr>
+<td><code>[.]</code></td>
+<td>Acknowledgment</td>
+</tr>
+</tbody>
+</table>
+<div class="hl"><pre><span></span><code>14:18:36.786589 IP your.machine.36086 &gt; yummyrecipesforme.com.http: Flags [P.], ... HTTP: GET / HTTP/1.1
+</code></pre></div>
+
+<p>Browser requests data via <code>HTTP GET</code> — possibly the download request for a malicious file.</p>
+<div class="hl"><pre><span></span><code>14:20:32.192571 IP your.machine.52444 &gt; dns.google.domain: 21899+ A? greatrecipesforme.com. (24)
+14:20:32.204388 IP dns.google.domain &gt; your.machine.52444: 21899 1/0/0 A 192.0.2.172 (40)
+14:25:29.576493 IP your.machine.56378 &gt; greatrecipesforme.com.http: Flags [S], ...
+</code></pre></div>
+
+<p><strong>Sudden change:</strong> a new DNS request goes out (same source port <code>.52444</code>), this time resolving to a <em>different</em> domain/IP (<code>greatrecipesforme.com</code> / <code>192.0.2.172</code>) — traffic gets redirected to a spoofed site, using a new outgoing port (<code>.56378</code>).</p>
+<p><strong>Reference resources:</strong> tcpdump intro/cheat sheet articles · "What is a computer port?" · IANA Service Name and Transport Protocol Port Number Registry · tcpdump output interpretation guides.</p>
+<h3 id="module-3-glossary">Module 3 glossary</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active packet sniffing</td>
+<td>Manipulating data packets in transit</td>
+</tr>
+<tr>
+<td>Botnet</td>
+<td>Malware-infected computers controlled by a single "bot-herder"</td>
+</tr>
+<tr>
+<td>DoS attack</td>
+<td>Targets a network/server and floods it with traffic</td>
+</tr>
+<tr>
+<td>DDoS attack</td>
+<td>DoS using multiple distributed devices/servers</td>
+</tr>
+<tr>
+<td>ICMP</td>
+<td>Protocol devices use to report transmission errors</td>
+</tr>
+<tr>
+<td>ICMP flood</td>
+<td>DoS via repeated ICMP request packets</td>
+</tr>
+<tr>
+<td>IP spoofing</td>
+<td>Changing a packet's source IP to impersonate an authorized system</td>
+</tr>
+<tr>
+<td>On-path attack</td>
+<td>Intercepting/altering data between two trusted parties</td>
+</tr>
+<tr>
+<td>Packet sniffing</td>
+<td>Capturing and inspecting data packets across a network</td>
+</tr>
+<tr>
+<td>Passive packet sniffing</td>
+<td>Connecting to a hub and viewing all network traffic</td>
+</tr>
+<tr>
+<td>Ping of death</td>
+<td>Oversized ICMP packet (&gt;64KB) crashing a system</td>
+</tr>
+<tr>
+<td>Replay attack</td>
+<td>Intercepting a packet and delaying/repeating it later</td>
+</tr>
+<tr>
+<td>Smurf attack</td>
+<td>Sniffing a user's IP and flooding it with ICMP packets</td>
+</tr>
+<tr>
+<td>SYN flood</td>
+<td>Simulated TCP connections flooding a server with SYN packets</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="module-4-security-hardening">Module 4: Security Hardening</h2>
+<p>Applies to: <strong>networks, devices, applications, cloud infrastructure</strong>. Core parts: <strong>patch updates</strong>, <strong>backups</strong>, plus <strong>physical security</strong>.</p>
+<blockquote>
+<p><strong>Security hardening</strong> — The process of strengthening a system to reduce its vulnerabilities and attack surface.</p>
+<p><strong>Attack surface</strong> — All the potential vulnerabilities a threat actor could exploit.</p>
+<p><strong>Penetration testing</strong> — A simulated attack that helps identify vulnerabilities in systems, networks, websites, applications, and processes.</p>
+</blockquote>
+<h3 id="os-hardening">OS hardening</h3>
+<blockquote>
+<p><strong>Operating system (OS)</strong> — The interface between computer hardware and the user.</p>
+<p><strong>Patch update</strong> — A software/OS update that addresses security vulnerabilities in a program or product.</p>
+<p><strong>Baseline configuration (baseline image)</strong> — A documented set of specifications used as the basis for future builds, releases, and updates.</p>
+<p><strong>MFA (Multi-factor authentication)</strong> — Verifying identity more than once to access a system/network.</p>
+</blockquote>
+<p><strong>MFA factor categories:</strong> something you know · something you have · something unique about you.</p>
+<h3 id="brute-force-attacks">Brute-force attacks</h3>
+<blockquote>
+<p><strong>Brute force attack</strong> — A trial-and-error process for discovering private information (typically credentials).</p>
+</blockquote>
+<ul>
+<li><strong>Simple brute force</strong> — trying combinations of usernames/passwords until one works.</li>
+<li><strong>Dictionary attack</strong> — using a list of common passwords / previously breached credentials (originally literal dictionary words, before complex password rules became standard).</li>
+</ul>
+<p><strong>Assessing vulnerabilities before an incident:</strong></p>
+<ul>
+<li><strong>Virtual machines (VMs)</strong> — software versions of physical computers; run code in isolation so malicious code can't touch the rest of the system; can be wiped and replaced with a pristine image after testing malware; small residual risk of malware escaping virtualization.</li>
+<li><strong>Sandboxes</strong> — testing environments separate from the network, used for testing patches, finding bugs, evaluating suspicious software/malware, and simulating attacks. Can be stand-alone offline machines or (more commonly) cloud-based VMs. Note: some malware is written to detect sandbox/VM environments and behave harmlessly there.</li>
+</ul>
+<p><strong>Prevention measures:</strong></p>
+<ul>
+<li><strong>Salting and hashing</strong> — hashing is a one-way conversion of data into a unique, non-decryptable value; salting adds random characters before hashing to increase length/complexity.</li>
+<li><strong>MFA / 2FA</strong> — 2FA uses exactly two verification factors; MFA uses two or more (password + fingerprint/face/OTP, etc.).</li>
+<li><strong>CAPTCHA / reCAPTCHA</strong> — proves the user is human, blocking automated brute-force attempts; reCAPTCHA is Google's free service for this.</li>
+<li><strong>Password policies</strong> — standardize complexity requirements, rotation frequency, reuse rules, and login attempt limits before lockout.</li>
+</ul>
+<h3 id="network-hardening">Network hardening</h3>
+<p><strong>Network security hardening components:</strong> port filtering · network access privilege · encryption.</p>
+<p><strong>Ongoing tasks:</strong> firewall rules maintenance · network log analysis · patch updates · server backups.</p>
+<blockquote>
+<p><strong>Network log analysis</strong> — Examining network logs to identify events of interest.</p>
+<p><strong>Port filtering</strong> — A firewall function that blocks/allows certain ports to limit unwanted communication.</p>
+</blockquote>
+<h3 id="network-security-appliances-defense-in-depth">Network security appliances (defense in depth)</h3>
+<p>Layering these tools progressively hardens a network — from a baseline of just a firewall, up to firewall + IDS/IPS + SIEM combined.</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+<th>Limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Firewall</strong></td>
+<td>Allows/blocks traffic based on rule sets, inspecting packet headers (port number). NGFWs also inspect payloads. Every system should have its own, regardless of a network firewall.</td>
+<td>Only sees what's in the packet header (unless NGFW).</td>
+</tr>
+<tr>
+<td><strong>IDS (Intrusion Detection System)</strong></td>
+<td>Monitors activity and alerts admins to possible intrusions based on known attack signatures (and sometimes anomalies). Sits behind the firewall, before the LAN, to reduce noise/false positives.</td>
+<td>Only catches known attacks/obvious anomalies; doesn't stop traffic itself — an admin has to act.</td>
+</tr>
+<tr>
+<td><strong>IPS (Intrusion Prevention System)</strong></td>
+<td>Same detection as IDS, but actively blocks the sender or drops suspect packets. Sits behind the firewall like an IDS.</td>
+<td>Inline — if it fails, the connection between the private network and internet breaks. Can produce false positives that drop legitimate traffic.</td>
+</tr>
+<tr>
+<td><strong>Full packet capture devices</strong></td>
+<td>Record and analyze all data transmitted over the network; useful for investigating IDS alerts.</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>SIEM (Security Information and Event Management)</strong></td>
+<td>Collects/analyzes log data in real time from IDS, IPS, firewalls, VPNs, proxies, DNS logs, etc. into one centralized dashboard ("single pane of glass"). Examples: Google Chronicle, Splunk (Enterprise / Cloud).</td>
+<td>Only reports — doesn't take action to stop/prevent events itself.</td>
+</tr>
+</tbody>
+</table>
+<p>Security analysts often work in a <strong>Security Operations Center (SOC)</strong>, using SIEM dashboards + their own expertise to decide when events need escalation.</p>
+<h3 id="cloud-hardening">Cloud hardening</h3>
+<blockquote>
+<p><strong>Cloud network</strong> — A collection of servers/computers storing data/resources in remote data centers, accessible via the internet.</p>
+</blockquote>
+<p><strong>Cloud security considerations:</strong></p>
+<ul>
+<li><strong>Identity Access Management (IAM)</strong> — manages digital identities and authorizes cloud resource access; loosely configured user roles are a common source of risk.</li>
+<li><strong>Configuration</strong> — every cloud service needs precise configuration for security/compliance; misconfiguration (especially during migrations) is a frequent breach cause.</li>
+<li><strong>Attack surface</strong> — every additional cloud service/application adds risk, but a well-designed network doesn't have to multiply entry points just because it uses more services. CSPs generally undergo more security scrutiny than typical on-prem setups.</li>
+<li><strong>Zero-day attacks</strong> — exploits previously unknown to defenders (&gt; <strong>Zero day</strong> — an exploit that was previously unknown). CSPs are often positioned to detect and patch these (patching hypervisors, migrating workloads) faster than a typical on-prem IT org.</li>
+<li><strong>Visibility and tracking</strong> — CSPs offer flow logs and tools like packet mirroring for visibility, but don't let customers directly monitor traffic on the CSP's own servers — a tradeoff vs. full on-prem visibility. CSPs undergo third-party audits to verify security posture.</li>
+<li><strong>Pace of change</strong> — CSPs update fast; organizations may need to adjust configurations and IT processes to keep up, and need dedicated personnel to monitor all cloud services in use.</li>
+</ul>
+<h3 id="shared-responsibility-model">Shared responsibility model</h3>
+<blockquote>
+<p><strong>Shared responsibility model</strong> — The CSP is responsible for security <em>of</em> the cloud (physical data centers, hypervisors, host OSes); the organization using the cloud is responsible for the assets/processes it runs <em>in</em> the cloud (e.g. correctly configuring applications and services).</p>
+</blockquote>
+<p>A common failure mode: an organization assumes the CSP is handling security it hasn't actually taken responsibility for (e.g. app-level configuration).</p>
+<h3 id="module-4-glossary">Module 4 glossary</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baseline configuration (baseline image)</td>
+<td>Documented specs used as the basis for future builds/releases/updates</td>
+</tr>
+<tr>
+<td>Hardware</td>
+<td>The physical components of a computer</td>
+</tr>
+<tr>
+<td>Multi-factor authentication (MFA)</td>
+<td>Verifying identity two or more ways to access a system/network</td>
+</tr>
+<tr>
+<td>Network log analysis</td>
+<td>Examining network logs to identify events of interest</td>
+</tr>
+<tr>
+<td>Operating system (OS)</td>
+<td>The interface between computer hardware and the user</td>
+</tr>
+<tr>
+<td>Patch update</td>
+<td>Software/OS update addressing security vulnerabilities</td>
+</tr>
+<tr>
+<td>Penetration testing (pen test)</td>
+<td>A simulated attack to identify vulnerabilities</td>
+</tr>
+<tr>
+<td>Security hardening</td>
+<td>Strengthening a system to reduce vulnerabilities and attack surface</td>
+</tr>
+<tr>
+<td>SIEM</td>
+<td>Application that collects/analyzes log data to monitor critical org activity</td>
+</tr>
+<tr>
+<td>World-writable file</td>
+<td>A file that can be altered by anyone in the world</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="module-1-glossary">Module 1 glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bandwidth</td>
+<td>Max data transmission capacity over a network, in bits per second</td>
+</tr>
+<tr>
+<td>Cloud computing</td>
+<td>Using remote servers, applications, and network services hosted on the internet instead of on local physical devices</td>
+</tr>
+<tr>
+<td>Cloud network</td>
+<td>A collection of servers/computers storing resources/data in remote data centers, accessed via the internet</td>
+</tr>
+<tr>
+<td>Data packet</td>
+<td>A basic unit of information traveling from one device to another within a network</td>
+</tr>
+<tr>
+<td>Hub</td>
+<td>A device that broadcasts information to every device on the network</td>
+</tr>
+<tr>
+<td>Internet Protocol (IP)</td>
+<td>Standards for routing and addressing data packets between devices</td>
+</tr>
+<tr>
+<td>IP address</td>
+<td>A unique string identifying the location of a device on the internet</td>
+</tr>
+<tr>
+<td>LAN</td>
+<td>A network spanning a small area (office, school, home)</td>
+</tr>
+<tr>
+<td>MAC address</td>
+<td>A unique alphanumeric identifier assigned to each physical device on a network</td>
+</tr>
+<tr>
+<td>Modem</td>
+<td>Connects your router to the internet, bringing internet access to the LAN</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>A group of connected devices</td>
+</tr>
+<tr>
+<td>OSI model</td>
+<td>Standardized concept describing the 7 layers computers use to communicate</td>
+</tr>
+<tr>
+<td>Packet sniffing</td>
+<td>The practice of capturing and inspecting data packets across a network</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>A software-based location organizing data sending/receiving between devices</td>
+</tr>
+<tr>
+<td>Router</td>
+<td>A network device that connects multiple networks together</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>The rate at which a device sends/receives data, in bits per second</td>
+</tr>
+<tr>
+<td>Switch</td>
+<td>Connects specific devices on a network by sending/receiving data between them</td>
+</tr>
+<tr>
+<td>TCP/IP model</td>
+<td>A framework for visualizing how data is organized and transmitted across a network</td>
+</tr>
+<tr>
+<td>TCP</td>
+<td>An internet communication protocol allowing two devices to form a connection and stream data</td>
+</tr>
+<tr>
+<td>UDP</td>
+<td>A connectionless protocol that doesn't establish a connection before transmission</td>
+</tr>
+<tr>
+<td>WAN</td>
+<td>A network spanning a large geographic area (city, state, country)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="module-2-glossary">Module 2 Glossary</h2>
+<p><strong>Address Resolution Protocol (ARP):</strong> A network protocol used to determine the MAC address of the next router or device on the path</p>
+<p><strong>Cloud-based firewalls:</strong> Software firewalls that are hosted by the cloud service provider</p>
+<p><strong>Controlled zone:</strong> A subnet that protects the internal network from the uncontrolled zone</p>
+<p><strong>Domain Name System (DNS):</strong> A networking protocol that translates internet domain names into IP addresses</p>
+<p><strong>Encapsulation:</strong> A process performed by a VPN service that protects your data by wrapping sensitive data in other data packets</p>
+<p><strong>Firewall:</strong> A network security device that monitors traffic to or from your network</p>
+<p><strong>Forward proxy server:</strong> A server that regulates and restricts a person’s access to the internet</p>
+<p><strong>Hypertext Transfer Protocol (HTTP):</strong> An application layer protocol that provides a method of communication between clients and website servers</p>
+<p><strong>Hypertext Transfer Protocol Secure (HTTPS):</strong> A network protocol that provides a secure method of communication between clients and servers</p>
+<p><strong>IEEE 802.11 (Wi-Fi):</strong> A set of standards that define communication for wireless LANs</p>
+<p><strong>Network protocols:</strong> A set of rules used by two or more devices on a network to describe the order of delivery of data and the structure of data</p>
+<p><strong>Network segmentation:</strong> A security technique that divides the network into segments</p>
+<p><strong>Port filtering:</strong> A firewall function that blocks or allows certain port numbers to limit unwanted communication</p>
+<p><strong>Proxy server:</strong> A server that fulfills the requests of its clients by forwarding them to other servers</p>
+<p><strong>Reverse proxy server:</strong> A server that regulates and restricts the internet's access to an internal server</p>
+<p><strong>Secure File Transfer Protocol (SFTP):</strong> A secure protocol used to transfer files from one device to another over a network</p>
+<p><strong>Secure shell (SSH):</strong> A security protocol used to create a shell with a remote system </p>
+<p><strong>Security zone:</strong> A segment of a company’s network that protects the internal network from the internet</p>
+<p><strong>Simple Network Management Protocol (SNMP):</strong> A network protocol used for monitoring and managing devices on a network</p>
+<p><strong>Stateful:</strong> A class of firewall that keeps track of information passing through it and proactively filters out threats </p>
+<p><strong>Stateless:</strong> A class of firewall that operates based on predefined rules and does not keep track of information from data packets</p>
+<p><strong>Subnetting:</strong> The subdivision of a network into logical groups called subnets</p>
+<p><strong>Transmission Control Protocol (TCP):</strong> An internet communication protocol that allows two devices to form a connection and stream data</p>
+<p><strong>Uncontrolled zone:</strong> The portion of the network outside the organization</p>
+<p><strong>Virtual private network (VPN):</strong> A network security service that changes your public IP address and masks your virtual location so that you can keep your data private when you are using a public network like the internet</p>
+<p><strong>Wi-Fi Protected Access (WPA):</strong> A wireless security protocol for devices to connect to the internet</p>
+<hr />
+<h2 id="module-3-glossary_1">Module 3 Glossary</h2>
+<p><strong>Active packet sniffing:</strong> A type of attack where data packets are manipulated in transit</p>
+<p><strong>Botnet:</strong> A collection of computers infected by malware that are under the control of a single threat actor, known as the “bot-herder"</p>
+<p><strong>Denial of service (DoS) attack:</strong> An attack that targets a network or server and floods it with network traffic</p>
+<p><strong>Distributed denial of service (DDoS) attack:</strong> A type of denial of service attack that uses multiple devices or servers located in different locations to flood the target network with unwanted traffic</p>
+<p><strong>Internet Control Message Protocol (ICMP):</strong> An internet protocol used by devices to tell each other about data transmission errors across the network</p>
+<p><strong>Internet Control Message Protocol (ICMP) flood:</strong> A type of DoS attack performed by an attacker repeatedly sending ICMP request packets to a network server</p>
+<p><strong>IP spoofing:</strong> A network attack performed when an attacker changes the source IP of a data packet to impersonate an authorized system and gain access to a network</p>
+<p><strong>On-path attack:</strong> An attack where a malicious actor places themselves in the middle of an authorized connection and intercepts or alters the data in transit</p>
+<p><strong>Packet sniffing:</strong> The practice of capturing and inspecting data packets across a network </p>
+<p><strong>Passive packet sniffing:</strong> A type of attack where a malicious actor connects to a network hub and looks at all traffic on the network</p>
+<p><strong>Ping of death:</strong> A type of DoS attack caused when a hacker pings a system by sending it an oversized ICMP packet that is bigger than 64KB</p>
+<p><strong>Replay attack:</strong> A network attack performed when a malicious actor intercepts a data packet in transit and delays it or repeats it at another time</p>
+<p><strong>Smurf attack:</strong> A network attack performed when an attacker sniffs an authorized user’s IP address and floods it with ICMP packets</p>
+<p><strong>Synchronize (SYN) flood attack:</strong> A type of DoS attack that simulates a TCP/IP connection and floods a server with SYN packets</p></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/course-2-play-it-safe-manage-security-risks/"><small>&larr; Previous</small><span>Course 2: Play It Safe, Manage Security Risks</span></a><a class="next" href="/blog/posts/course-4-linux-and-sql/"><small>Next &rarr;</small><span>Course 4: Linux and SQL</span></a></nav>
+  <section class="more">
+    <h2>More in Google Cybersecurity Course Notes</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/course-1-foundations-of-cybersecurity/"><span class="e-title">Course 1: Foundations of Cybersecurity</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/course-2-play-it-safe-manage-security-risks/"><span class="e-title">Course 2: Play It Safe, Manage Security Risks</span></a><time></time></li><li class="here" aria-current="page"><span class="num">03</span><a href="/blog/posts/course-3-networks-and-network-security/"><span class="e-title">Course 3: Networks and Network Security</span></a><time>Jul 24, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/course-4-linux-and-sql/"><span class="e-title">Course 4: Linux and SQL</span></a><time>Sep 8, 2026</time></li><li><span class="num">05</span><a href="/blog/posts/course-5-assets-threats-and-vulnerabilities/"><span class="e-title">Course 5: Assets, Threats, and Vulnerabilities</span></a><time></time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash | Brain Log</title>
+<meta name="description" content="After a crash I rebuilt the setup around the NVIDIA open driver, dropped the display manager, fixed a garbled TTY, and wrote down how to recover when it breaks.">
+<meta property="og:title" content="Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash | Brain Log">
+<meta property="og:description" content="After a crash I rebuilt the setup around the NVIDIA open driver, dropped the display manager, fixed a garbled TTY, and wrote down how to recover when it breaks.">
+<meta property="og:url" content="https://rydr.info/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/system-followups/">System Followups</a><i>/</i><span>Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/system-followups/">System Followups</a> &middot; Part 2 of 4</p>
+    <h1>Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</h1>
+    <p class="lede">After a crash I rebuilt the setup around the NVIDIA open driver, dropped the display manager, fixed a garbled TTY, and wrote down how to recover when it breaks.</p>
+    <p class="meta"><time>Apr 22, 2026</time> &middot; 3 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#the-hardware">The hardware</a></li><li><a href="#step-1-the-nvidia-driver">Step 1: The NVIDIA driver</a></li><li><a href="#step-2-tell-hyprland-to-use-the-nvidia-gpu">Step 2: Tell Hyprland to use the NVIDIA GPU</a></li><li><a href="#step-3-no-display-manager-boot-straight-to-a-tty">Step 3: No display manager, boot straight to a TTY</a></li><li><a href="#step-4-fix-the-garbled-tty-on-boot">Step 4: Fix the garbled TTY on boot</a></li><li><a href="#step-5-the-desktop-itself">Step 5: The desktop itself</a></li><li><a href="#when-it-breaks-my-recovery-checklist">When it breaks: my recovery checklist</a></li></ol></details>
+  <article class="prose"><h2 id="the-hardware">The hardware</h2>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Machine</td>
+<td>ASUS laptop, hybrid graphics</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>Intel Alder Lake-P</td>
+</tr>
+<tr>
+<td>GPU 1</td>
+<td>NVIDIA RTX 3050 Mobile (GA107M), PCI <code>0000:01:00.0</code></td>
+</tr>
+<tr>
+<td>GPU 2</td>
+<td>Intel Iris Xe</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>30 GB</td>
+</tr>
+<tr>
+<td>Disk</td>
+<td>476.9 GB Samsung NVMe</td>
+</tr>
+</tbody>
+</table>
+<p>Partitions:</p>
+<div class="hl"><pre><span></span><code>nvme0n1p1 → /boot  (512 MB)
+nvme0n1p2 → swap   (8 GB)
+nvme0n1p3 → /      (468 GB)
+</code></pre></div>
+
+<h2 id="step-1-the-nvidia-driver">Step 1: The NVIDIA driver</h2>
+<p>I use the open kernel module:</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nvidia-open</td>
+<td>595.58.03</td>
+</tr>
+<tr>
+<td>nvidia-utils</td>
+<td>595.58.03</td>
+</tr>
+<tr>
+<td>linux-firmware-nvidia</td>
+<td>20260309</td>
+</tr>
+<tr>
+<td>egl-wayland</td>
+<td>1.1.21</td>
+</tr>
+</tbody>
+</table>
+<p>What surprised me is how little config it needs:</p>
+<ul>
+<li><code>nvidia-drm.modeset=Y</code> is turned on automatically. No kernel parameter needed.</li>
+<li>The nouveau and nova drivers are blacklisted automatically by <code>/usr/lib/modprobe.d/nvidia-utils.conf</code>.</li>
+<li>No <code>/etc/modprobe.d/nvidia.conf</code> is needed.</li>
+<li>In <code>/etc/mkinitcpio.conf</code>, <code>MODULES=()</code> stays empty, because the <code>autodetect</code> hook loads NVIDIA.</li>
+</ul>
+<div class="hl"><pre><span></span><code>HOOKS=(base systemd autodetect microcode modconf kms keyboard keymap sd-vconsole block filesystems fsck)
+</code></pre></div>
+
+<p>Check that it loaded:</p>
+<div class="hl"><pre><span></span><code>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nvidia
+</code></pre></div>
+
+<p>You should see <code>nvidia_drm</code>, <code>nvidia_modeset</code>, <code>nvidia_uvm</code>, and <code>nvidia</code>.</p>
+<h2 id="step-2-tell-hyprland-to-use-the-nvidia-gpu">Step 2: Tell Hyprland to use the NVIDIA GPU</h2>
+<p>In <code>~/.config/hypr/env.conf</code>:</p>
+<div class="hl"><pre><span></span><code>env = LIBVA_DRIVER_NAME,nvidia
+env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+env = NVD_BACKEND,direct
+env = GBM_BACKEND,nvidia-drm
+env = AQ_DRM_DEVICES,/dev/dri/card0
+</code></pre></div>
+
+<aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Card numbers can swap between boots</div><div class="callout-body"><p><code>card0</code> is usually NVIDIA and <code>card1</code> is usually Intel, but not always. Check which is which:</p>
+<div class="hl"><pre><span></span><code>cat<span class="w"> </span>/sys/class/drm/card0/device/vendor<span class="w">   </span><span class="c1"># 0x10de = NVIDIA</span>
+cat<span class="w"> </span>/sys/class/drm/card1/device/vendor<span class="w">   </span><span class="c1"># 0x8086 = Intel</span>
+</code></pre></div>
+
+<p>The stable PCI path (<code>/dev/dri/by-path/pci-0000:01:00.0-card</code>) looks like the obvious fix, but it <strong>doesn't work</strong> in <code>AQ_DRM_DEVICES</code>: Hyprland's backend splits that variable on colons, and the PCI path is full of them. Use the card number, or leave the variable unset and let it auto-detect.</p></div></aside>
+
+<h2 id="step-3-no-display-manager-boot-straight-to-a-tty">Step 3: No display manager, boot straight to a TTY</h2>
+<p>I disabled both greetd and sddm. The laptop boots to a text login on TTY1, and I run <code>start-hyprland</code> after logging in. One less thing to break.</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>greetd</td>
+<td>disabled</td>
+</tr>
+<tr>
+<td>sddm</td>
+<td>disabled</td>
+</tr>
+<tr>
+<td>getty@tty1</td>
+<td>enabled</td>
+</tr>
+<tr>
+<td>chvt1 (below)</td>
+<td>enabled</td>
+</tr>
+</tbody>
+</table>
+<aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Note</div><div class="callout-body"><p>Hyprland has to start from a physical TTY. It can't be launched over SSH, because an SSH session has no seat.</p></div></aside>
+
+<h2 id="step-4-fix-the-garbled-tty-on-boot">Step 4: Fix the garbled TTY on boot</h2>
+<p>My TTY1 login banner came up garbled, because the display wasn't fully initialized yet when it was drawn. The fix is a tiny service that waits three seconds, then switches to TTY1, which forces a redraw.</p>
+<p><code>/etc/systemd/system/chvt1.service</code>:</p>
+<div class="hl"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Switch to TTY1 on boot after delay</span>
+<span class="na">After</span><span class="o">=</span><span class="s">getty@tty1.service</span>
+
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">oneshot</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/bin/sleep 3</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/chvt 1</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></div>
+
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>chvt1.service
+</code></pre></div>
+
+<h2 id="step-5-the-desktop-itself">Step 5: The desktop itself</h2>
+<p>Keybinds use <strong>Ctrl + Alt</strong> as the main modifier:</p>
+<table>
+<thead>
+<tr>
+<th>Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ctrl+Alt+Q</td>
+<td>Terminal (kitty)</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+C</td>
+<td>Close window</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+E</td>
+<td>Files (nautilus)</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+F</td>
+<td>Toggle floating</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+Space</td>
+<td>App launcher (wofi)</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+L</td>
+<td>Lock (hyprlock)</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+V</td>
+<td>Clipboard history</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+X / +Shift</td>
+<td>Region screenshot (copy / save)</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+1-0</td>
+<td>Switch workspace</td>
+</tr>
+<tr>
+<td>Ctrl+Alt+S</td>
+<td>Scratchpad</td>
+</tr>
+</tbody>
+</table>
+<p>Apps: kitty, nautilus, wofi, waybar, swaync, hypridle, hyprlock, hyprshot, cliphist, awww for wallpaper, and shikane for monitor layouts.</p>
+<p>Shell: zsh with Oh My Zsh and the Powerlevel10k theme.</p>
+<h2 id="when-it-breaks-my-recovery-checklist">When it breaks: my recovery checklist</h2>
+<p><strong>Hyprland won't start</strong></p>
+<ol>
+<li>Make sure you're on a physical TTY, not SSH.</li>
+<li><code>lsmod | grep nvidia</code> to confirm the driver loaded.</li>
+<li>Confirm <code>AQ_DRM_DEVICES</code> points at the NVIDIA card (see Step 2).</li>
+<li>Read the log: <code>cat /run/user/1000/hypr/*/hyprland.log | grep -i err</code></li>
+</ol>
+<p><strong>Blank screen at boot</strong></p>
+<p>The external monitor is unplugged, but the <code>video=eDP</code> parameters from Part 1 are still set. Remove them from <code>/boot/loader/entries/arch.conf</code>.</p>
+<p><strong>/boot is filling up</strong></p>
+<p>A 512 MB <code>/boot</code> fills after a few kernel updates. Clear old packages from the cache:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>paccache<span class="w"> </span>-rk1
+</code></pre></div>
+
+<p><strong>A known harmless crash</strong></p>
+<p><code>libaquamarine</code> can segfault when a display connector disconnects on greeter exit (upstream issue <code>hyprwm/aquamarine#219</code>). With no greeter, it doesn't apply.</p></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><small>&larr; Previous</small><span>Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></a><a class="next" href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><small>Next &rarr;</small><span>Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a></nav>
+  <section class="more">
+    <h2>More in System Followups</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><span class="e-title">Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></a><time></time></li><li class="here" aria-current="page"><span class="num">02</span><a href="/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/"><span class="e-title">Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></a><time>Apr 22, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><span class="e-title">Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a><time>May 9, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/arch-hyprland-part-4-moving-to-lua-config-and-a-bsod-lock-screen/"><span class="e-title">Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</span></a><time>Oct 4, 2026</time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

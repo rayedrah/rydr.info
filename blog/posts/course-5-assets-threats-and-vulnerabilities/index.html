@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course 5: Assets, Threats, and Vulnerabilities | Brain Log</title>
+<meta name="description" content="Asset security, risk planning, threat modeling, and the vulnerabilities attackers look for.">
+<meta property="og:title" content="Course 5: Assets, Threats, and Vulnerabilities | Brain Log">
+<meta property="og:description" content="Asset security, risk planning, threat modeling, and the vulnerabilities attackers look for.">
+<meta property="og:url" content="https://rydr.info/blog/posts/course-5-assets-threats-and-vulnerabilities/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a><i>/</i><span>Course 5: Assets, Threats, and Vulnerabilities</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a> &middot; Part 5 of 5</p>
+    <h1>Course 5: Assets, Threats, and Vulnerabilities</h1>
+    <p class="lede">Asset security, risk planning, threat modeling, and the vulnerabilities attackers look for.</p>
+    <p class="meta">7 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#the-what-why-and-how-of-asset-security">The what, why and how of asset security</a></li><li><a href="#understand-risks-threats-and-vulnerabilities">Understand Risks, THreats, and vulnerabilities</a></li><li><a href="#security-risk">Security risk</a></li><li><a href="#risk-factors">Risk factors</a><ol><li><a href="#categories-of-threat">Categories of threat</a></li><li><a href="#categories-of-vulnerability">Categories of vulnerability</a></li></ol></li><li><a href="#key-takeaways">Key takeaways</a></li><li><a href="#security-starts-with-asset-classification">Security Starts with Asset Classification</a></li><li><a href="#why-asset-management-matters">Why asset management matters</a></li><li><a href="#common-asset-classifications">Common asset classifications</a></li><li><a href="#challenges-of-classifying-information">Challenges of classifying information</a></li><li><a href="#key-takeaways_1">Key takeaways</a></li></ol></details>
+  <article class="prose"><h2 id="the-what-why-and-how-of-asset-security">The what, why and how  of asset security</h2>
+<p>Risk: Anything that can impact the confidentiality, integrity, or availability of an asset. </p>
+<p>Security Risk Planning </p>
+<ul>
+<li>Assets </li>
+<li>Threats </li>
+<li>Vulnerabilities</li>
+</ul>
+<p>Assets </p>
+<ul>
+<li>An item perceived as having value to an organization </li>
+</ul>
+<p>Threat</p>
+<ul>
+<li>Any circumstance or event that can negatively impact assets. </li>
+</ul>
+<p>Vulnerability </p>
+<ul>
+<li>A weakness that can be exploited by a threat</li>
+</ul>
+<h2 id="understand-risks-threats-and-vulnerabilities">Understand Risks, THreats, and vulnerabilities</h2>
+<p>When security events occur, you’ll need to work in close coordination with others to address the problem. Doing so quickly requires clear communication between you and your team to get the job done.</p>
+<p>Previously, you learned about three foundational security terms:</p>
+<ul>
+<li>
+<p><strong>Risk</strong>: Anything that can impact the confidentiality, integrity, or availability of an asset</p>
+</li>
+<li>
+<p><strong>Threat</strong>: Any circumstance or event that can negatively impact assets</p>
+</li>
+<li>
+<p><strong>Vulnerability</strong>: A weakness that can be exploited by a threat</p>
+</li>
+</ul>
+<p>These words tend to be used interchangeably in everyday life. But in security, they are used to describe very specific concepts when responding to and planning for security events. In this reading, you’ll identify what each term represents and how they are related.</p>
+<h2 id="security-risk">Security risk</h2>
+<p>Security plans are all about how an organization defines risk. However, this definition can vary widely by organization. As you may recall, a <strong>risk</strong> is anything that can impact the confidentiality, integrity, or availability of an asset. Since organizations have particular assets that they value, they tend to differ in how they interpret and approach risk.</p>
+<p>One way to interpret risk is to consider the potential effects that negative events can have on a business. Another way to present this idea is with this calculation:</p>
+<p><strong>Likelihood x Impact = Risk</strong></p>
+<p>For example, you risk being late when you drive a car to work. This negative event is more likely to happen if you get a flat tire along the way. And the impact could be serious, like losing your job. All these factors influence how you approach commuting to work every day. The same is true for how businesses handle security risks.</p>
+<p>In general, we calculate risk in this field to help:</p>
+<ul>
+<li>
+<p>Prevent costly and disruptive events</p>
+</li>
+<li>
+<p>Identify improvements that can be made to systems and processes</p>
+</li>
+<li>
+<p>Determine which risks can be tolerated</p>
+</li>
+<li>
+<p>Prioritize the critical assets that require attention</p>
+</li>
+</ul>
+<p>The business impact of a negative event will always depend on the asset and the situation. Your primary focus as a security professional will be to focus on the likelihood side of the equation by dealing with certain factors that increase the odds of a problem.</p>
+<h2 id="risk-factors">Risk factors</h2>
+<p>As you’ll discover throughout this course, there are two broad risk factors that you’ll be concerned with in the field:</p>
+<ul>
+<li>
+<p>Threats</p>
+</li>
+<li>
+<p>Vulnerabilities</p>
+</li>
+</ul>
+<p>The risk of an asset being harmed or damaged depends greatly on whether a threat takes advantage of vulnerabilities.</p>
+<p>Let’s apply this to the risk of being late to work. A threat would be a nail puncturing your tire, since tires are vulnerable to running over sharp objects. In terms of security planning, you would want to reduce the likelihood of this risk by driving on a clean road.</p>
+<h3 id="categories-of-threat"><strong>Categories of threat</strong></h3>
+<p><strong>Threats</strong> are circumstances or events that can negatively impact assets. There are many different types of threats. However, they are commonly categorized as two types: intentional and unintentional.</p>
+<p>For example, an <em>intentional</em> threat might be a malicious hacker who gains access to sensitive information by targeting a misconfigured application. An <em>unintentional</em> threat might be an employee who holds the door open for an unknown person and grants them access to a restricted area. Either one can cause an event that must be responded to.</p>
+<h3 id="categories-of-vulnerability"><strong>Categories of vulnerability</strong></h3>
+<p><strong>Vulnerabilities</strong> are weaknesses that can be exploited by threats. There’s a wide range of vulnerabilities, but they can be grouped into two categories: technical and human.</p>
+<p>For example, a <em>technical</em> vulnerability can be misconfigured software that might give an unauthorized person access to important data. A <em>human</em> vulnerability can be a forgetful employee who loses their access card in a parking lot. Either one can lead to risk.</p>
+<h2 id="key-takeaways">Key takeaways</h2>
+<p>Risks, threats, and vulnerabilities have very specific meanings in security. Knowing the relationship between them can help you build a strong foundation as you grow essential skills and knowledge as a security analyst. This can help you gain credibility in the industry by demonstrating that you have working knowledge of the field. And it signals to your future colleagues that you’re a member of the global security community.</p>
+<h2 id="security-starts-with-asset-classification">Security Starts with Asset Classification</h2>
+<p>Asset Management: The process of tracking assets and the risks that affect them. </p>
+<p>Asset Inventory: A catalog of assets that need to be protected</p>
+<p>Asset Classification: The practice of labeling assets based on sensitivity and importance to an organization. </p>
+<ul>
+<li>Public </li>
+<li>Internal-Only </li>
+<li>Confidential </li>
+<li>Restricted </li>
+</ul>
+<p><strong>Asset management</strong> is the process of tracking assets and the risks that affect them. The idea behind this process is simple: you can only protect what you know you have. </p>
+<p>Previously, you learned that identifying, tracking, and classifying assets are all important parts of asset management. In this reading, you’ll learn more about the purpose and benefits of asset classification, including common classification levels.</p>
+<h2 id="why-asset-management-matters">Why asset management matters</h2>
+<p>Keeping assets safe requires a workable system that helps businesses operate smoothly. Setting these systems up requires having detailed knowledge of the assets in an environment. For example, a bank needs to have money available each day to serve its customers. Equipment, devices, and processes need to be in place to ensure that money is available and secure from unauthorized access.</p>
+<p>Organizations protect a variety of different assets. Some examples might include:</p>
+<ul>
+<li>
+<p>Digital assets such as customer data or financial records.</p>
+</li>
+<li>
+<p>Information systems that process data, like networks or software.</p>
+</li>
+<li>
+<p>Physical assets which can include facilities, equipment, or supplies.</p>
+</li>
+<li>
+<p>Intangible assets such as brand reputation or intellectual property.</p>
+</li>
+</ul>
+<p>Regardless of its type, every asset should be classified and accounted for. As you may recall, <strong>asset classification</strong> is the practice of labeling assets based on sensitivity and importance to an organization. Determining each of those two factors varies, but the sensitivity and importance of an asset typically requires knowing the following:</p>
+<ul>
+<li>
+<p>What you have</p>
+</li>
+<li>
+<p>Where it is</p>
+</li>
+<li>
+<p>Who owns it, and</p>
+</li>
+<li>
+<p>How important it is</p>
+</li>
+</ul>
+<p>An organization that classifies its assets does so based on these characteristics. Doing so helps them determine the sensitivity and value of an asset.</p>
+<h2 id="common-asset-classifications">Common asset classifications</h2>
+<p>Asset classification helps organizations implement an effective risk management strategy. It also helps them prioritize security resources, reduce IT costs, and stay in compliance with legal regulations.</p>
+<p>The most common classification scheme is: restricted, confidential, internal-only, and public.</p>
+<ul>
+<li>
+<p><strong>Restricted</strong> is the highest level. This category is reserved for incredibly sensitive assets,  like need-to-know information.</p>
+</li>
+<li>
+<p><strong>Confidential</strong> refers to assets whose disclosure may lead to a significant negative impact on an organization.</p>
+</li>
+<li>
+<p><strong>Internal-only</strong> describes assets that are available to employees and business partners.</p>
+</li>
+<li>
+<p><strong>Public</strong> is the lowest level of classification. These assets have no negative consequences to the organization if they’re released.</p>
+</li>
+</ul>
+<p>How this scheme is applied depends greatly on the characteristics of an asset. It might surprise you to learn that identifying an asset’s owner is sometimes the most complicated characteristic to determine.</p>
+<p><strong>Note:</strong> Although many organizations adopt this classification scheme, there can be variability at the highest levels. For example, government organizations label their most sensitive assets as confidential instead of restricted.</p>
+<h2 id="challenges-of-classifying-information">Challenges of classifying information</h2>
+<p>Identifying the owner of certain assets is straightforward, like the owner of a building. Other types of assets can be trickier to identify. This is especially true when it comes to information.</p>
+<p>For example, a business might issue a laptop to one of its employees to allow them to work remotely. You might assume the business is the asset owner in this situation. But, what if the employee uses the laptop for personal matters, like storing their photos?</p>
+<p>Ownership is just one characteristic that makes classifying information a challenge. Another concern is that information can have multiple classification values at the same time. For example, consider a letter addressed to you in the mail. The letter contains some public information that’s okay to share, like your name. It also contains fairly confidential pieces of information that you’d rather only be available to certain people, like your address. You’ll learn more about how these challenges are addressed as you continue through the program.</p>
+<h2 id="key-takeaways_1">Key takeaways</h2>
+<p>Every business is different. Each business will have specific requirements to address when devising their security strategy. Knowing why and how businesses classify their assets is an important skill to have as a security professional. Information is one of the most important assets in the world. As a cybersecurity professional, you will be closely involved with protecting information from damage, disclosure, and misuse. Recognizing the challenges that businesses face classifying this type of asset is a key to helping them solve their security needs.</p></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/course-4-linux-and-sql/"><small>&larr; Previous</small><span>Course 4: Linux and SQL</span></a><span></span></nav>
+  <section class="more">
+    <h2>More in Google Cybersecurity Course Notes</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/course-1-foundations-of-cybersecurity/"><span class="e-title">Course 1: Foundations of Cybersecurity</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/course-2-play-it-safe-manage-security-risks/"><span class="e-title">Course 2: Play It Safe, Manage Security Risks</span></a><time></time></li><li><span class="num">03</span><a href="/blog/posts/course-3-networks-and-network-security/"><span class="e-title">Course 3: Networks and Network Security</span></a><time>Jul 24, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/course-4-linux-and-sql/"><span class="e-title">Course 4: Linux and SQL</span></a><time>Sep 8, 2026</time></li><li class="here" aria-current="page"><span class="num">05</span><a href="/blog/posts/course-5-assets-threats-and-vulnerabilities/"><span class="e-title">Course 5: Assets, Threats, and Vulnerabilities</span></a><time></time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

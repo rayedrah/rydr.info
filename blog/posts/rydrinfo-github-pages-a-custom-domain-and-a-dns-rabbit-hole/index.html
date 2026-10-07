@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole | Brain Log</title>
+<meta name="description" content="How I put a hand-written HTML/CSS/JS site on GitHub Pages under my own domain, and the two DNS problems on my own network that made it look broken.">
+<meta property="og:title" content="rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole | Brain Log">
+<meta property="og:description" content="How I put a hand-written HTML/CSS/JS site on GitHub Pages under my own domain, and the two DNS problems on my own network that made it look broken.">
+<meta property="og:url" content="https://rydr.info/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/projects/">Projects</a><i>/</i><span>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/projects/">Projects</a> &middot; Part 1 of 3</p>
+    <h1>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</h1>
+    <p class="lede">How I put a hand-written HTML/CSS/JS site on GitHub Pages under my own domain, and the two DNS problems on my own network that made it look broken.</p>
+    <p class="meta"><time>Apr 20, 2026</time> &middot; 4 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#what-this-is">What this is</a></li><li><a href="#the-stack">The stack</a></li><li><a href="#step-1-buy-the-domain">Step 1: Buy the domain</a></li><li><a href="#step-2-build-the-site-and-push-it">Step 2: Build the site and push it</a></li><li><a href="#step-3-point-the-domain-at-github">Step 3: Point the domain at GitHub</a></li><li><a href="#step-4-check-propagation-from-outside-your-network">Step 4: Check propagation from outside your network</a></li><li><a href="#the-rabbit-hole-live-for-everyone-but-me">The rabbit hole: live for everyone but me</a><ol><li><a href="#problem-1-tailscale-took-over-my-dns">Problem 1: Tailscale took over my DNS</a></li><li><a href="#problem-2-pi-hole-cached-the-doesnt-exist-answer">Problem 2: Pi-hole cached the &quot;doesn&#x27;t exist&quot; answer</a></li></ol></li><li><a href="#step-5-favicon-and-resume">Step 5: Favicon and resume</a></li><li><a href="#later-moving-dns-to-cloudflare">Later: moving DNS to Cloudflare</a></li><li><a href="#troubleshooting">Troubleshooting</a></li></ol></details>
+  <article class="prose"><h2 id="what-this-is">What this is</h2>
+<p>rydr.info is my personal site. It is plain HTML, CSS, and JavaScript with no framework, hosted for free on GitHub Pages, on a domain I bought from Spaceship. This walks through the whole setup in the order I did it, including the part where the site was live for everyone except me.</p>
+<h2 id="the-stack">The stack</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hosting</td>
+<td>GitHub Pages</td>
+</tr>
+<tr>
+<td>Registrar</td>
+<td>Spaceship</td>
+</tr>
+<tr>
+<td>Code</td>
+<td>HTML + CSS + JS, no framework</td>
+</tr>
+<tr>
+<td>Fonts</td>
+<td>Syne + Space Mono</td>
+</tr>
+<tr>
+<td>Local dev</td>
+<td>VS Code + the Live Server extension</td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-1-buy-the-domain">Step 1: Buy the domain</h2>
+<p>I registered <code>rydr.info</code> on Spaceship. By default it uses Spaceship's own nameservers (<code>launch1.spaceship.net</code> and <code>launch2.spaceship.net</code>), which is where you add DNS records later.</p>
+<h2 id="step-2-build-the-site-and-push-it">Step 2: Build the site and push it</h2>
+<p>Build the site locally, then push it to a public GitHub repo. Mine is <code>rayedrah/rydr.info</code>, with <code>index.html</code> at the repo root.</p>
+<p>Then in the repo: <strong>Settings → Pages → Deploy from a branch → <code>main</code> / root</strong>. The site goes live at <code>username.github.io</code> first.</p>
+<h2 id="step-3-point-the-domain-at-github">Step 3: Point the domain at GitHub</h2>
+<p>In Spaceship's <strong>Advanced DNS</strong>, add GitHub Pages' four IPs for the root, plus a <code>CNAME</code> for <code>www</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Host</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><code>@</code></td>
+<td><code>185.199.108.153</code></td>
+</tr>
+<tr>
+<td>A</td>
+<td><code>@</code></td>
+<td><code>185.199.109.153</code></td>
+</tr>
+<tr>
+<td>A</td>
+<td><code>@</code></td>
+<td><code>185.199.110.153</code></td>
+</tr>
+<tr>
+<td>A</td>
+<td><code>@</code></td>
+<td><code>185.199.111.153</code></td>
+</tr>
+<tr>
+<td>CNAME</td>
+<td><code>www</code></td>
+<td><code>rayedrah.github.io</code></td>
+</tr>
+</tbody>
+</table>
+<p>Back in <strong>Settings → Pages</strong>, enter <code>rydr.info</code> as the custom domain and save. Once GitHub verifies it, turn on <strong>Enforce HTTPS</strong>.</p>
+<aside class="callout callout-tip"><div class="callout-title"><span class="callout-icon">*</span>GitHub's DNS check is slow</div><div class="callout-body"><p>It kept showing <code>InvalidDNSError</code> for a while after the records had already propagated. The site worked anyway. Wait and retry.</p></div></aside>
+
+<h2 id="step-4-check-propagation-from-outside-your-network">Step 4: Check propagation from outside your network</h2>
+<p>Ask a public resolver directly, so your own network can't lie to you:</p>
+<div class="hl"><pre><span></span><code>dig<span class="w"> </span>rydr.info<span class="w"> </span>@8.8.8.8
+</code></pre></div>
+
+<p>If it returns the four GitHub IPs, the internet can see your site.</p>
+<h2 id="the-rabbit-hole-live-for-everyone-but-me">The rabbit hole: live for everyone but me</h2>
+<p><code>dig</code> returned the right IPs, but my browser kept showing <code>DNS_PROBE_FINISHED_NXDOMAIN</code>. There were two separate causes, both on my side.</p>
+<h3 id="problem-1-tailscale-took-over-my-dns">Problem 1: Tailscale took over my DNS</h3>
+<p>I run Tailscale, and it had rewritten <code>/etc/resolv.conf</code> to use its own resolver:</p>
+<div class="hl"><pre><span></span><code>nameserver 100.100.100.100   ← Tailscale DNS
+</code></pre></div>
+
+<p>The quick fix was pointing the system back at a public resolver:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">'echo -e "nameserver 8.8.8.8\nnameserver 8.8.4.4" &gt; /etc/resolv.conf'</span>
+</code></pre></div>
+
+<h3 id="problem-2-pi-hole-cached-the-doesnt-exist-answer">Problem 2: Pi-hole cached the "doesn't exist" answer</h3>
+<p>My home network runs RaspAP (a Raspberry Pi hotspot) with Pi-hole as the DNS server. Pi-hole had looked up <code>rydr.info</code> before the records existed, so it cached <code>NXDOMAIN</code> and kept serving it.</p>
+<p>Restart its DNS service to clear the cache:</p>
+<div class="hl"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>pihole-FTL
+</code></pre></div>
+
+<p>Or from the RaspAP web UI: <strong>DHCP → Restart dnsmasq</strong>.</p>
+<aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Note</div><div class="callout-body"><p><code>pihole restartdns</code> didn't work for me from kitty because of the <code>xterm-kitty</code> terminal type. The <code>systemctl</code> command above works everywhere.</p></div></aside>
+
+<h2 id="step-5-favicon-and-resume">Step 5: Favicon and resume</h2>
+<p>I generated a favicon pack at favicon.io, put the files in an <code>icon/</code> folder, and linked them in <code>&lt;head&gt;</code>:</p>
+<div class="hl"><pre><span></span><code><span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"apple-touch-icon"</span> <span class="na">sizes</span><span class="o">=</span><span class="s">"180x180"</span> <span class="na">href</span><span class="o">=</span><span class="s">"icon/apple-touch-icon.png"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"icon"</span> <span class="na">type</span><span class="o">=</span><span class="s">"image/png"</span> <span class="na">sizes</span><span class="o">=</span><span class="s">"32x32"</span> <span class="na">href</span><span class="o">=</span><span class="s">"icon/favicon-32x32.png"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"icon"</span> <span class="na">type</span><span class="o">=</span><span class="s">"image/png"</span> <span class="na">sizes</span><span class="o">=</span><span class="s">"16x16"</span> <span class="na">href</span><span class="o">=</span><span class="s">"icon/favicon-16x16.png"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"icon"</span> <span class="na">type</span><span class="o">=</span><span class="s">"image/x-icon"</span> <span class="na">href</span><span class="o">=</span><span class="s">"icon/favicon.ico"</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>The resume is just <code>resume.pdf</code> in the repo root, linked from a button. Updating it means replacing the file, no code changes.</p>
+<h2 id="later-moving-dns-to-cloudflare">Later: moving DNS to Cloudflare</h2>
+<p>When I needed subdomains served from my own machine (like the CTF platform from my internship), I moved <code>rydr.info</code>'s nameservers from Spaceship to Cloudflare so Cloudflare Tunnel could route them. The main site still lives on GitHub Pages; only the DNS moved.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DNS_PROBE_FINISHED_NXDOMAIN</code> in the browser</td>
+<td>Tailscale rewrote <code>/etc/resolv.conf</code></td>
+<td>Set <code>8.8.8.8</code> in <code>resolv.conf</code></td>
+</tr>
+<tr>
+<td>GitHub DNS check keeps failing</td>
+<td>GitHub's verifier lags</td>
+<td>Wait and retry</td>
+</tr>
+<tr>
+<td>Domain still "doesn't exist" at home</td>
+<td>Pi-hole cached <code>NXDOMAIN</code></td>
+<td>Restart <code>pihole-FTL</code> or dnsmasq</td>
+</tr>
+<tr>
+<td>Favicon not showing locally</td>
+<td>Browser cache</td>
+<td>Hard refresh (<code>Ctrl+Shift+R</code>)</td>
+</tr>
+<tr>
+<td>"Conflicting records" warning in Spaceship</td>
+<td>Duplicate A records</td>
+<td>Records were correct, dismissed it</td>
+</tr>
+</tbody>
+</table></article>
+  <nav class="pager"><span></span><a class="next" href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><small>Next &rarr;</small><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a></nav>
+  <section class="more">
+    <h2>More in Projects</h2>
+    <ol class="entries"><li class="here" aria-current="page"><span class="num">01</span><a href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><span class="e-title">rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><time>Apr 20, 2026</time></li><li><span class="num">02</span><a href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><span class="e-title">TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><time>Jul 7, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><span class="e-title">PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a><time></time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

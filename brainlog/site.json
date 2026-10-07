@@ -1,20 +1,15 @@
 {
   "title": "Brain Log",
   "short": "rydr/brain.log",
-  "hero_title": "RYDR",
-  "hero_accent": "Brain Log",
-  "tagline": "Everything I break, fix, and figure out gets written down here. Some entries are sparks, some are core. All of them are logged.",
-  "description": "Rayed Rahman's brain log: notes on Linux, home labs, security, and the things I build.",
+  "hero_title": "Brain Log",
+  "tagline": "Course notes, project write-ups, and system logs from Rayed Rahman. Each folder reads in order.",
+  "description": "Rayed Rahman's Brain Log: Google Cybersecurity course notes, project write-ups, AGS internship work, and Arch Linux system logs.",
   "author": "Rayed Rahman",
   "url": "https://rydr.info/blog",
   "nav": [
     {
-      "label": "Entries",
+      "label": "folders",
       "href": "/"
-    },
-    {
-      "label": "Tags",
-      "href": "/tags/"
     },
     {
       "label": "rydr.info",
@@ -27,14 +22,32 @@
       "href": "https://rydr.info"
     },
     {
-      "label": "GitHub",
+      "label": "github",
       "href": "https://github.com/rayedrah"
     },
     {
-      "label": "RSS",
+      "label": "rss",
       "href": "/rss.xml"
     }
   ],
   "base": "/blog",
-  "out": "../blog"
+  "out": "../blog",
+  "folders": [
+    {
+      "name": "Projects",
+      "description": "Things I built, how they work, and how to set them up yourself."
+    },
+    {
+      "name": "AGS Internship",
+      "description": "Work from my cybersecurity internship at AGS Quality Action: assessment scoping and the CTF platform."
+    },
+    {
+      "name": "System Followups",
+      "description": "My Arch Linux + Hyprland laptop, logged in order from first setup to the current config."
+    },
+    {
+      "name": "Google Cybersecurity Course Notes",
+      "description": "My notes from the Google Cybersecurity Certificate, one entry per course."
+    }
+  ]
 }

@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Build Brain Log (rydr.info/blog) from Obsidian notes.
 
+Notes are grouped into folders (see "folders" in site.json) and ordered
+inside each folder with `order:` in the frontmatter.
+
 Only notes with `publish: true` in their frontmatter are built.
 The build stops if a published note looks like it contains a secret.
 
@@ -30,8 +33,6 @@ ROOT_LINK = re.compile(r'(href|src)="/(?!/)')
 
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".avif"}
 FENCE_RE = re.compile(r"^(```|~~~)")
-# old garden-style names still work in frontmatter
-STATUS_ALIASES = {"seedling": "spark", "planted": "logged", "tended": "revised", "evergreen": "core", "decay": "fading"}
 BARE_URL = re.compile(r"""(?<![("'<=\]\w/])(https?://[^\s<>)\]"']+[^\s<>)\]"'.,;:!?])""")
 
 
@@ -209,8 +210,17 @@ class Builder:
         self.posts = []
         self.by_note = {}
         self.assets = {}
+        self.folders = [dict(f, slug=slugify(f["name"]), posts=[]) for f in SITE.get("folders", [])]
 
     # ---- discovery
+    def folder_for(self, name):
+        for f in self.folders:
+            if f["name"].lower() == name.lower() or f["slug"] == slugify(name):
+                return f
+        f = {"name": name, "slug": slugify(name), "description": "", "posts": []}
+        self.folders.append(f)
+        return f
+
     def collect(self):
         problems = []
         for p in sorted(self.vault.root.rglob("*.md")):
@@ -222,26 +232,23 @@ class Builder:
             if meta.get("draft") and not self.include_drafts:
                 continue
             body = re.sub(r"%%.*?%%", "", body, flags=re.S)  # Obsidian comments stay private
-            rel = p.relative_to(self.vault.root)
-            problems += scan_for_secrets(rel, body, meta)
+            problems += scan_for_secrets(p.relative_to(self.vault.root), body, meta)
             title = str(meta.get("title") or p.stem)
+            folder = self.folder_for(str(meta.get("folder") or "Notes"))
             post = {
                 "src": p,
-                "meta": meta,
                 "body": body,
                 "title": title,
                 "slug": slugify(str(meta.get("slug") or title)),
-                "date": as_date(meta.get("date"), dt.date.fromtimestamp(p.stat().st_mtime)),
-                "tags": [t.lstrip("#") for t in as_list(meta.get("tags"))],
+                "date": as_date(meta.get("date"), None),  # optional; undated entries just hide the date
                 "description": str(meta.get("description") or ""),
-                "category": str(meta.get("category") or (as_list(meta.get("tags")) or ["Misc"])[0]).strip(),
-                "status": STATUS_ALIASES.get(str(meta.get("status") or "logged").lower(),
-                                             str(meta.get("status") or "logged").lower()),
-                "audience": str(meta.get("audience") or ""),
+                "folder": folder,
+                "order": float(meta.get("order") or 999),
             }
-            post["updated"] = as_date(meta.get("updated"), post["date"])
             self.posts.append(post)
+            folder["posts"].append(post)
             self.by_note[p.stem.lower()] = post
+            self.by_note[title.lower()] = post
             for alias in as_list(meta.get("aliases")):
                 self.by_note[alias.lower()] = post
         if problems:
@@ -250,14 +257,180 @@ class Builder:
                   file=sys.stderr)
             print("\n".join(problems), file=sys.stderr)
             sys.exit(1)
-        slugs = {}
+        seen = set()
         for post in self.posts:
-            if post["slug"] in slugs:
-                post["slug"] += "-" + str(post["date"])
-            slugs[post["slug"]] = post
-        self.posts.sort(key=lambda x: (x["date"], x["title"]), reverse=True)
+            if post["slug"] in seen:
+                post["slug"] += "-" + post["folder"]["slug"]
+            seen.add(post["slug"])
+        for f in self.folders:
+            f["posts"].sort(key=lambda x: (x["order"], x["date"] or dt.date.min, x["title"]))
+            for i, post in enumerate(f["posts"], 1):
+                post["part"] = i
+        self.folders = [f for f in self.folders if f["posts"]]
+        self.posts.sort(key=lambda x: (x["date"] or dt.date.min, x["title"]), reverse=True)
 
     # ---- rendering
+    @staticmethod
+    def fmt(d):
+        return d.strftime("%b %-d, %Y") if d else ""
+
+    def page(self, title, content, description="", path="/", crumbs=None):
+        nav_links = "".join(
+            f'<a href="{html.escape(link["href"])}">{html.escape(link["label"])}</a>' for link in SITE["nav"]
+        )
+        full_title = title if title == SITE["title"] else f"{title} | {SITE['title']}"
+        desc = html.escape(description or SITE["description"])
+        crumb_html = ""
+        if crumbs:
+            items = [f'<a href="/">{html.escape(SITE["short"])}</a>']
+            for label, href in crumbs:
+                items.append(f'<a href="{href}">{html.escape(label)}</a>' if href else f"<span>{html.escape(label)}</span>")
+            crumb_html = '<nav class="crumbs" aria-label="Breadcrumb">' + '<i>/</i>'.join(items) + "</nav>"
+        return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(full_title)}</title>
+<meta name="description" content="{desc}">
+<meta property="og:title" content="{html.escape(full_title)}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{SITE['url']}{path}">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="{html.escape(SITE['title'])}" href="/rss.xml">
+<link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>{html.escape(SITE['short'])}</a>
+    <nav class="navlinks">{nav_links}</nav>
+  </div>
+</header>
+{crumb_html}
+{content}
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; {dt.date.today().year} {html.escape(SITE['author'])}</span>
+    <span class="foot-links">{"".join(f'<a href="{html.escape(l["href"])}">{html.escape(l["label"])}</a>' for l in SITE["footer"])}</span>
+  </div>
+</footer>
+</body>
+</html>
+"""
+
+    def entry_list(self, posts, numbered=True, current=None):
+        rows = []
+        for p in posts:
+            num = f'<span class="num">{p["part"]:02d}</span>' if numbered else ""
+            here = ' class="here" aria-current="page"' if p is current else ""
+            desc = f'<span class="e-desc">{html.escape(p["description"])}</span>' if p["description"] and current is None else ""
+            when = f'<time>{self.fmt(p["date"])}</time>' if p["date"] else "<time></time>"
+            rows.append(
+                f'<li{here}>{num}<a href="/posts/{p["slug"]}/"><span class="e-title">{html.escape(p["title"])}</span>{desc}</a>'
+                f'{when}</li>'
+            )
+        return '<ol class="entries">' + "".join(rows) + "</ol>"
+
+    def folder_block(self, f, link_title=True):
+        count = len(f["posts"])
+        name = html.escape(f["name"])
+        title = f'<a href="/folders/{f["slug"]}/">{name}</a>' if link_title else name
+        desc = f'<p class="f-desc">{html.escape(f.get("description", ""))}</p>' if f.get("description") else ""
+        return (f'<section class="folder" id="{f["slug"]}">'
+                f'<h2><span class="f-icon" aria-hidden="true"></span>{title}'
+                f'<span class="f-count">{count} {"entry" if count == 1 else "entries"}</span></h2>'
+                f'{desc}{self.entry_list(f["posts"])}</section>')
+
+    def build(self):
+        self.collect()
+        if self.out.exists():
+            shutil.rmtree(self.out)
+        self.out.mkdir(parents=True)
+
+        for post in self.posts:
+            post["html"] = self.render_body(post["body"])
+            post["toc"] = self.last_toc
+            words = len(re.sub(r"<[^>]+>", " ", post["html"]).split())
+            post["minutes"] = max(1, math.ceil(words / 220))
+            if not post["description"]:
+                plain = re.sub(r"<[^>]+>", " ", post["html"])
+                plain = re.sub(r"\s+", " ", html.unescape(plain)).strip()
+                post["description"] = (plain[:157] + "…") if len(plain) > 160 else plain
+
+        # home: one block per folder
+        home = f"""<main class="wrap">
+  <header class="intro">
+    <h1>{html.escape(SITE['hero_title'])}</h1>
+    <p>{html.escape(SITE['tagline'])}</p>
+  </header>
+  {"".join(self.folder_block(f) for f in self.folders)}
+</main>"""
+        self.write("index.html", self.page(SITE["title"], home))
+
+        # folder pages
+        for f in self.folders:
+            body = f'<main class="wrap">{self.folder_block(f, link_title=False)}</main>'
+            self.write(f"folders/{f['slug']}/index.html",
+                       self.page(f["name"], body, f.get("description", ""), f"/folders/{f['slug']}/",
+                                 crumbs=[(f["name"], None)]))
+
+        # posts
+        for post in self.posts:
+            f = post["folder"]
+            series = f["posts"]
+            i = series.index(post)
+            prev_p = series[i - 1] if i > 0 else None
+            next_p = series[i + 1] if i + 1 < len(series) else None
+            pager = '<nav class="pager">'
+            pager += (f'<a class="prev" href="/posts/{prev_p["slug"]}/"><small>&larr; Previous</small>'
+                      f'<span>{html.escape(prev_p["title"])}</span></a>') if prev_p else "<span></span>"
+            pager += (f'<a class="next" href="/posts/{next_p["slug"]}/"><small>Next &rarr;</small>'
+                      f'<span>{html.escape(next_p["title"])}</span></a>') if next_p else "<span></span>"
+            pager += "</nav>"
+            toc = self.toc_html(post["toc"])
+            content = f"""<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/folders/{f['slug']}/">{html.escape(f['name'])}</a> &middot; Part {post['part']} of {len(series)}</p>
+    <h1>{html.escape(post['title'])}</h1>
+    <p class="lede">{html.escape(post['description'])}</p>
+    <p class="meta">{(f"<time>{self.fmt(post['date'])}</time> &middot; ") if post['date'] else ''}{post['minutes']} min read</p>
+  </header>
+  {'<details class="toc"><summary>On this page</summary>' + toc + '</details>' if toc else ''}
+  <article class="prose">{post['html']}</article>
+  {pager}
+  <section class="more">
+    <h2>More in {html.escape(f['name'])}</h2>
+    {self.entry_list(series, current=post)}
+  </section>
+</main>"""
+            self.write(f"posts/{post['slug']}/index.html",
+                       self.page(post["title"], content, post["description"], f"/posts/{post['slug']}/",
+                                 crumbs=[(f["name"], f"/folders/{f['slug']}/"), (post["title"], None)]))
+
+        self.write("404.html", self.page("Not found", '<main class="wrap"><header class="intro"><h1>404</h1>'
+                                         '<p>No entry at this address. <a href="/">Back to the log</a></p></header></main>'))
+        self.write_rss()
+
+        media = self.out / "media"
+        media.mkdir(exist_ok=True)
+        for src, name in self.assets.items():
+            shutil.copy2(src, media / name)
+        static = ROOT / "static"
+        for f in static.rglob("*"):
+            if f.is_file():
+                dest = self.out / f.relative_to(static)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(f, dest)
+        with open(self.out / "style.css", "a", encoding="utf-8") as fh:
+            fh.write("\n/* syntax highlighting */\n" + HtmlFormatter(style="friendly").get_style_defs(".hl") + "\n")
+        if SITE.get("domain"):
+            (self.out / "CNAME").write_text(SITE["domain"] + "\n")
+        (self.out / ".nojekyll").write_text("")
+        print(f"Built {len(self.posts)} entries in {len(self.folders)} folder(s), {len(self.assets)} image(s) -> {self.out}")
+
     def asset_url(self, path):
         if path not in self.assets:
             name = slugify(path.stem) + path.suffix.lower()
@@ -304,6 +477,8 @@ class Builder:
 
         text = re.sub(r"!\[([^\]]*)\]\(([^)\s]+)\)", md_image, text)
         text = re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", text)
+        text = re.sub(r"(?m)^(\s*[-*+] )\[ \] ", r'\1<input type="checkbox" disabled> ', text)
+        text = re.sub(r"(?m)^(\s*[-*+] )\[[xX]\] ", r'\1<input type="checkbox" checked disabled> ', text)
         parts = re.split(r"(`[^`\n]*`)", text)
         for i in range(0, len(parts), 2):
             parts[i] = BARE_URL.sub(r"<\1>", parts[i])
@@ -337,90 +512,6 @@ class Builder:
                 parts.append(chunk)
         return self.md("".join(parts))
 
-    # ---- pages
-    STATUS_INFO = {
-        "spark": "Half-formed idea. Expect gaps.",
-        "logged": "Written up, not revisited yet.",
-        "revised": "Revisited and kept current.",
-        "core": "Stable reference I keep coming back to.",
-        "fading": "Probably out of date.",
-    }
-
-    def page(self, title, content, description="", path="/", crumbs=None):
-        nav_links = "".join(
-            f'<a href="{html.escape(link["href"])}">{html.escape(link["label"])}</a>' for link in SITE["nav"]
-        )
-        full_title = title if title == SITE["title"] else f"{title} | {SITE['title']}"
-        desc = html.escape(description or SITE["description"])
-        crumb_html = ""
-        if crumbs:
-            items = [f'<a href="/">{html.escape(SITE["short"])}</a>']
-            for label, href in crumbs:
-                items.append(f'<a href="{href}">{html.escape(label)}</a>' if href else f"<span>{html.escape(label)}</span>")
-            crumb_html = '<nav class="crumbs" aria-label="Breadcrumb">' + '<i>/</i>'.join(items) + "</nav>"
-        return f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(full_title)}</title>
-<meta name="description" content="{desc}">
-<meta property="og:title" content="{html.escape(full_title)}">
-<meta property="og:description" content="{desc}">
-<meta property="og:url" content="{SITE['url']}{path}">
-<meta name="theme-color" content="#f1efe8">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/rss+xml" title="{html.escape(SITE['title'])}" href="/rss.xml">
-<link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/style.css">
-<script>try{{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}}catch(e){{}}</script>
-</head>
-<body>
-<header class="bar">
-  <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>{html.escape(SITE['short'])}</a>
-  <nav class="navlinks">{nav_links}<button class="theme" type="button" aria-label="Toggle dark mode" onclick="toggleTheme()">◐</button></nav>
-</header>
-{crumb_html}
-{content}
-<footer class="foot">
-  <div class="foot-inner">
-    <span>© {dt.date.today().year} {html.escape(SITE['author'])}</span>
-    <span class="foot-links">{"".join(f'<a href="{html.escape(l["href"])}">{html.escape(l["label"])}</a>' for l in SITE["footer"])}</span>
-  </div>
-</footer>
-<script>
-function toggleTheme(){{var d=document.documentElement.classList.toggle("dark");try{{localStorage.setItem("theme",d?"dark":"light")}}catch(e){{}}}}
-</script>
-</body>
-</html>
-"""
-
-    @staticmethod
-    def fmt(d):
-        return d.strftime("%b %Y")
-
-    def status_pill(self, status):
-        return f'<span class="status status-{slugify(status)}">{html.escape(status)}</span>'
-
-    def tree(self, posts, current=None):
-        rows = []
-        for i, p in enumerate(posts):
-            branch = "└──" if i == len(posts) - 1 else "├──"
-            here = ' aria-current="page" class="row here"' if current is p else ' class="row"'
-            rows.append(
-                f'<li{here}><span class="branch" aria-hidden="true">{branch}</span>'
-                f'<a href="/posts/{p["slug"]}/">{html.escape(p["title"])}</a>'
-                f'<span class="dots" aria-hidden="true"></span>{self.status_pill(p["status"])}'
-                f'<time>{self.fmt(p["date"])}</time></li>'
-            )
-        return '<ul class="tree">' + "".join(rows) + "</ul>"
-
-    def categories(self):
-        cats = {}
-        for p in self.posts:
-            cats.setdefault(p["category"], []).append(p)
-        return dict(sorted(cats.items(), key=lambda kv: kv[0].lower()))
-
     def toc_html(self, tokens, depth=0):
         if not tokens:
             return ""
@@ -439,141 +530,11 @@ function toggleTheme(){{var d=document.documentElement.classList.toggle("dark");
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(text, encoding="utf-8")
 
-    def build(self):
-        self.collect()
-        if self.out.exists():
-            shutil.rmtree(self.out)
-        self.out.mkdir(parents=True)
-
-        for post in self.posts:
-            post["html"] = self.render_body(post["body"])
-            post["toc"] = self.last_toc
-            words = len(re.sub(r"<[^>]+>", " ", post["html"]).split())
-            post["minutes"] = max(1, math.ceil(words / 220))
-            if not post["description"]:
-                plain = re.sub(r"<[^>]+>", " ", post["html"])
-                plain = re.sub(r"\s+", " ", html.unescape(plain)).strip()
-                post["description"] = (plain[:157] + "…") if len(plain) > 160 else plain
-
-        cats = self.categories()
-        recent = self.posts[:5]
-        recent_html = "".join(
-            f'<li><a href="/posts/{p["slug"]}/"><span class="r-title">{html.escape(p["title"])}</span>'
-            f'<span class="r-desc">{html.escape(p["description"])}</span></a>'
-            f'<span class="r-meta">{self.status_pill(p["status"])}<time>{self.fmt(p["date"])}</time></span></li>'
-            for p in recent
-        )
-        sections = "".join(
-            f'<section class="cat" id="{slugify(c)}"><h3><span class="idx">{i:02d}</span>{html.escape(c)}'
-            f'<span class="count">{len(ps)}</span></h3>{self.tree(ps)}</section>'
-            for i, (c, ps) in enumerate(cats.items(), 1)
-        )
-        legend = "".join(
-            f'<li>{self.status_pill(k)}<span>{html.escape(v)}</span></li>' for k, v in self.STATUS_INFO.items()
-        )
-        home = f"""<main class="home">
-  <section class="lockup">
-    <div class="lockup-label"><span>fig. 01</span><span>{html.escape(SITE['short'])}</span></div>
-    <h1>{html.escape(SITE['hero_title'])}<br><span>{html.escape(SITE['hero_accent'])}</span></h1>
-    <p class="lede">{html.escape(SITE['tagline'])}</p>
-    <dl class="spec">
-      <div><dt>Author</dt><dd>{html.escape(SITE['author'])}</dd></div>
-      <div><dt>Entries</dt><dd>{len(self.posts)}</dd></div>
-      <div><dt>Last logged</dt><dd>{self.fmt(self.posts[0]['date']) if self.posts else '—'}</dd></div>
-    </dl>
-  </section>
-  <section class="block">
-    <h2 class="label">Latest entries</h2>
-    <ol class="recent">{recent_html or '<li class="empty">Nothing logged yet.</li>'}</ol>
-  </section>
-  <section class="block">
-    <h2 class="label">All entries</h2>
-    <div class="cats">{sections}</div>
-  </section>
-  <section class="block">
-    <h2 class="label">Entry status</h2>
-    <ul class="legend">{legend}</ul>
-  </section>
-</main>"""
-        self.write("index.html", self.page(SITE["title"], home))
-
-        tags = {}
-        for post in self.posts:
-            for t in post["tags"]:
-                tags.setdefault(t, []).append(post)
-
-        for post in self.posts:
-            tag_links = "".join(f'<a class="tag" href="/tags/{slugify(t)}/">#{html.escape(t)}</a>' for t in post["tags"])
-            siblings = cats[post["category"]]
-            toc = self.toc_html(post["toc"])
-            spec = [("Logged", self.fmt(post["date"])), ("Revised", self.fmt(post["updated"])),
-                    ("Status", self.status_pill(post["status"])), ("Read", f'{post["minutes"]} min')]
-            if post["audience"]:
-                spec.append(("Audience", html.escape(post["audience"])))
-            spec_html = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in spec)
-            content = f"""<main class="note">
-  <header class="note-head">
-    <h1>{html.escape(post['title'])}</h1>
-    <p class="lede">{html.escape(post['description'])}</p>
-    <dl class="spec">{spec_html}</dl>
-    <div class="tags">{tag_links}</div>
-  </header>
-  <div class="note-grid">
-    {'<aside class="toc"><h2 class="label">Contents</h2>' + toc + '</aside>' if toc else ''}
-    <article class="prose">{post['html']}</article>
-  </div>
-  <section class="next">
-    <h2 class="label">Where to next?</h2>
-    <p class="next-cat"><a href="/#{slugify(post['category'])}">{html.escape(post['category'])}</a></p>
-    {self.tree(siblings, current=post)}
-  </section>
-</main>"""
-            self.write(f"posts/{post['slug']}/index.html",
-                       self.page(post["title"], content, post["description"], f"/posts/{post['slug']}/",
-                                 crumbs=[("notes", "/"), (post["category"].lower(), f"/#{slugify(post['category'])}"),
-                                         (post["title"].lower(), None)]))
-
-        tag_index = "".join(
-            f'<a class="tag big" href="/tags/{slugify(t)}/">#{html.escape(t)} <b>{len(ps)}</b></a>'
-            for t, ps in sorted(tags.items())
-        )
-        self.write("tags/index.html", self.page(
-            "Tags", f'<main class="list"><h1 class="page-title">Tags</h1><div class="tagcloud">{tag_index}</div></main>',
-            path="/tags/", crumbs=[("tags", None)]))
-        for t, ps in tags.items():
-            self.write(f"tags/{slugify(t)}/index.html", self.page(
-                f"#{t}", f'<main class="list"><h1 class="page-title">#{html.escape(t)}</h1>{self.tree(ps)}</main>',
-                path=f"/tags/{slugify(t)}/", crumbs=[("tags", "/tags/"), (t, None)]))
-
-        self.write("404.html", self.page("Not found", '<main class="list"><h1 class="page-title">404</h1>'
-                                         '<p class="empty">No entry at this address. <a href="/">Back to the log</a></p></main>'))
-        self.write_rss()
-
-        media = self.out / "media"
-        media.mkdir(exist_ok=True)
-        for src, name in self.assets.items():
-            shutil.copy2(src, media / name)
-
-        static = ROOT / "static"
-        for f in static.rglob("*"):
-            if f.is_file():
-                dest = self.out / f.relative_to(static)
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(f, dest)
-        pyg = HtmlFormatter(style="default").get_style_defs(".hl")
-        pyg_dark = HtmlFormatter(style="monokai").get_style_defs(".dark .hl")
-        with open(self.out / "style.css", "a", encoding="utf-8") as fh:
-            fh.write("\n/* syntax highlighting */\n" + pyg + "\n" + pyg_dark + "\n")
-        if SITE.get("domain"):
-            (self.out / "CNAME").write_text(SITE["domain"] + "\n")
-        (self.out / ".nojekyll").write_text("")
-        print(f"Built {len(self.posts)} post(s), {len(tags)} tag(s), {len(self.assets)} image(s) -> {self.out}")
-
     def write_rss(self):
         items = "".join(
             f"<item><title>{html.escape(p['title'])}</title>"
             f"<link>{SITE['url']}/posts/{p['slug']}/</link><guid>{SITE['url']}/posts/{p['slug']}/</guid>"
-            f"<pubDate>{dt.datetime.combine(p['date'], dt.time()).strftime('%a, %d %b %Y 00:00:00 +0000')}</pubDate>"
+            + (f"<pubDate>{dt.datetime.combine(p['date'], dt.time()).strftime('%a, %d %b %Y 00:00:00 +0000')}</pubDate>" if p['date'] else "") +
             f"<description>{html.escape(p['description'])}</description></item>"
             for p in self.posts
         )

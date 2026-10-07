@@ -1,0 +1,1878 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course 4: Linux and SQL | Brain Log</title>
+<meta name="description" content="Operating systems, the Linux command line, permissions, and querying databases with SQL.">
+<meta property="og:title" content="Course 4: Linux and SQL | Brain Log">
+<meta property="og:description" content="Operating systems, the Linux command line, permissions, and querying databases with SQL.">
+<meta property="og:url" content="https://rydr.info/blog/posts/course-4-linux-and-sql/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a><i>/</i><span>Course 4: Linux and SQL</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/google-cybersecurity-course-notes/">Google Cybersecurity Course Notes</a> &middot; Part 4 of 5</p>
+    <h1>Course 4: Linux and SQL</h1>
+    <p class="lede">Operating systems, the Linux command line, permissions, and querying databases with SQL.</p>
+    <p class="meta"><time>Sep 8, 2026</time> &middot; 90 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#module-1-introduction-to-operating-systems">Module 1: Introduction to Operating Systems</a><ol><li><a href="#what-youll-learn">What you&#x27;ll learn</a></li><li><a href="#introduction-to-operating-system">Introduction to Operating System</a></li><li><a href="#compare-operating-systems">Compare Operating SYstems</a></li><li><a href="#common-operating-systems">Common operating systems</a></li><li><a href="#operating-systems-and-vulnerabilities">Operating systems and vulnerabilities</a></li><li><a href="#key-takeaways">Key takeaways</a></li><li><a href="#the-operating-system-at-work">The Operating system at work</a></li><li><a href="#booting-the-computer">Booting the computer</a></li><li><a href="#completing-a-task">Completing a task</a></li><li><a href="#the-os-at-work-behind-the-scenes">The OS at work behind the scenes</a></li><li><a href="#an-example-downloading-a-file-from-an-internet-browser">An example: Downloading a file from an internet browser</a></li><li><a href="#key-takeaways_1">Key takeaways</a></li><li><a href="#what-is-a-virtual-machine">What is a virtual machine?</a></li><li><a href="#benefits-of-virtual-machines">Benefits of virtual machines</a></li><li><a href="#managing-virtual-machines">Managing virtual machines</a></li><li><a href="#other-forms-of-virtualization">Other forms of virtualization</a></li><li><a href="#key-takeaways_2">Key takeaways</a></li><li><a href="#the-user-interface">The User Interface</a></li><li><a href="#more-flexible-and-more-powerful">- more flexible and more powerful</a></li><li><a href="#cli-vs-gui">CLI vs. GUI</a></li><li><a href="#advantages-of-a-cli-in-cybersecurity">Advantages of a CLI in cybersecurity</a></li><li><a href="#key-takeaways_3">Key takeaways</a></li><li><a href="#terms-and-definitions-from-course-4-module-1">Terms and definitions from Course 4, Module 1</a></li></ol></li><li><a href="#module-2-the-linux-operating-system">Module 2 : The Linux Operating System</a><ol><li><a href="#all-about-linux">All about Linux</a></li><li><a href="#user_1">User</a></li><li><a href="#applications">Applications</a></li><li><a href="#shell">Shell</a></li><li><a href="#filesystem-hierarchy-standard-fhs">Filesystem Hierarchy Standard (FHS)</a></li><li><a href="#kernel">Kernel</a></li><li><a href="#hardware_1">Hardware</a></li><li><a href="#key-takeaways_4">Key takeaways</a></li><li><a href="#kali-linux">KALI LINUX ™</a></li><li><a href="#ubuntu">Ubuntu</a></li><li><a href="#parrot">Parrot</a></li><li><a href="#red-hat-enterprise-linux">Red Hat® Enterprise Linux®</a></li><li><a href="#almalinux">AlmaLinux</a></li><li><a href="#key-takeaways_5">Key takeaways</a></li><li><a href="#terms-and-definitions-from-course-4-module-2">Terms and definitions from Course 4, Module 2</a></li></ol></li><li><a href="#linux-commands-in-bash-shell">Linux commands in bash shell</a><ol><li><a href="#what-is-argument-linux">What is Argument (Linux) ?</a></li><li><a href="#what-is-filesystem-hierarchy-system-fhs">What is Filesystem Hierarchy System (FHS)?</a></li><li><a href="#less">less</a></li><li><a href="#filesystem-hierarchy-standard-fhs_1">Filesystem Hierarchy Standard (FHS)</a></li><li><a href="#key-commands-for-navigating-the-file-system">Key commands for navigating the file system</a></li><li><a href="#common-commands-for-reading-file-content">Common commands for reading file content</a></li><li><a href="#key-takeaways_6">Key takeaways</a></li><li><a href="#manage-file-content-in-bash">Manage File Content in Bash</a></li><li><a href="#filter-content-in-linux">Filter content in Linux</a></li><li><a href="#filtering-for-information">Filtering for information</a></li><li><a href="#grep">grep</a></li><li><a href="#piping">Piping</a></li><li><a href="#find">find</a></li><li><a href="#key-takeaways_7">Key takeaways</a></li><li><a href="#make-directory">Make directory</a></li><li><a href="#file-permissions-and-ownership">File Permissions and ownership</a></li><li><a href="#reading-permissions">Reading permissions</a></li><li><a href="#exploring-existing-permissions">Exploring existing permissions</a></li><li><a href="#changing-permissions_1">Changing permissions</a></li><li><a href="#key-takeaways_8">Key takeaways</a></li><li><a href="#add-and-delete-users">Add and delete Users</a></li><li><a href="#responsible-use-of-sudo">Responsible use of sudo</a></li><li><a href="#authentication-and-authorization-with-sudo">Authentication and authorization with sudo</a></li><li><a href="#key-takeaways_9">Key takeaways</a></li><li><a href="#get-help-in-linux">GET HELP in LINUX</a></li><li><a href="#linux-community">Linux community</a></li><li><a href="#integrated-linux-support">Integrated Linux support</a></li><li><a href="#key-takeaways_10">Key takeaways</a></li><li><a href="#resources-for-more-information">Resources for more information</a></li><li><a href="#terms-and-definitions-from-course-4-module-3">Terms and definitions from Course 4, Module 3</a></li></ol></li><li><a href="#databases-and-sql">Databases and SQL</a><ol><li><a href="#query-databases-in-sql">Query databases in SQL</a></li><li><a href="#accessing-sql">Accessing SQL</a></li><li><a href="#differences-between-linux-and-sql-filtering">Differences between Linux and SQL filtering</a></li><li><a href="#key-takeaways_11">Key takeaways</a></li></ol></li><li><a href="#sql-queries">SQL Queries</a><ol><li><a href="#basic-sql-query">Basic SQL query</a></li><li><a href="#order-by">ORDER BY</a></li><li><a href="#key-takeaways_12">Key takeaways</a></li><li><a href="#how-filtering-helps">How filtering helps</a></li><li><a href="#where">WHERE</a></li><li><a href="#filtering-for-patterns">Filtering for patterns</a></li><li><a href="#key-takeaways_13">Key takeaways</a></li><li><a href="#apply-more-filters-in-sql">Apply more filters in SQL</a></li><li><a href="#numbers-dates-and-times-in-cybersecurity">Numbers, dates, and times in cybersecurity</a></li><li><a href="#comparison-operators">Comparison operators</a></li><li><a href="#key-takeaways_14">Key takeaways</a></li><li><a href="#more-on-filters-with-and-or-and-not">More on filters with AND, OR and NOT</a></li><li><a href="#logical-operators">Logical operators</a></li><li><a href="#combining-logical-operators">Combining logical operators</a></li><li><a href="#key-takeaways_15">Key takeaways</a></li><li><a href="#compare-types-of-joins">Compare types of joins</a></li><li><a href="#inner-joins">Inner joins</a></li><li><a href="#outer-joins">Outer joins</a></li><li><a href="#key-takeaways_16">Key takeaways</a></li><li><a href="#continuous-learning-in-sql">CONTINUOUS learning in SQL</a></li><li><a href="#refernce-guide-sql">REFERNCE GUIDE SQL</a></li><li><a href="#page-1-of-8">Page 1 of 8</a></li><li><a href="#page-2-of-8">Page 2 of 8</a></li><li><a href="#page-3-of-8">Page 3 of 8</a></li><li><a href="#page-4-of-8">Page 4 of 8</a></li><li><a href="#page-5-of-8">Page 5 of 8</a></li><li><a href="#page-6-of-8">Page 6 of 8</a></li><li><a href="#page-7-of-8">Page 7 of 8</a></li><li><a href="#page-8-of-8">Page 8 of 8</a></li><li><a href="#glossary-terms-from-module-4">GLOSSARY TERMS from module 4</a></li><li><a href="#terms-and-definitions-from-course-4-module-4">Terms and definitions from Course 4, Module 4</a></li><li><a href="#course-4-glossary">Course 4 glossary</a></li></ol></li></ol></details>
+  <article class="prose"><blockquote>
+<p>What you'll learn<br />
+- Operating Systems and how they relate to applications and hardware. <br />
+- The Linux Operating System<br />
+- The Linux Command Line <br />
+- SQL to query databases</p>
+</blockquote>
+<h1 id="module-1-introduction-to-operating-systems">Module 1: Introduction to Operating Systems</h1>
+<h4 id="what-youll-learn">What you'll learn</h4>
+<ul>
+<li>Common Operating Systems </li>
+<li>Main functions of an operating system</li>
+<li>Relationship between operating systems, applications, and hardware. </li>
+<li>Graphical user interfaces and command-line interfaces. </li>
+</ul>
+<h2 id="introduction-to-operating-system">Introduction to Operating System</h2>
+<blockquote>
+<p>Whart is Operating System ?<br />
+- The interface between computer hardware and the user. </p>
+</blockquote>
+<h2 id="compare-operating-systems">Compare Operating SYstems</h2>
+<ul>
+<li>Main content<br />
+You previously explored why operating systems are an important part of how a computer works.  In this reading, you’ll compare some popular operating systems used today. You’ll also focus on the risks of using legacy operating systems.</li>
+</ul>
+<h2 id="common-operating-systems">Common operating systems</h2>
+<p>The following operating systems are useful to know in the security industry: Windows, macOS®, Linux, ChromeOS, Android, and iOS.</p>
+<h3 id="windows-and-macos"><strong>Windows and macOS</strong></h3>
+<p>Windows and macOS are both common operating systems. The Windows operating system was introduced in 1985, and macOS was introduced in 1984. Both operating systems are used in personal and enterprise computers. </p>
+<p>Windows is a closed-source operating system, which means the source code is not shared freely with the public. macOS is partially open source. It has some open-source components, such as macOS’s kernel. macOS also has some closed-source components. </p>
+<h3 id="linux"><strong>Linux</strong></h3>
+<p>The first version of Linux was released in 1991, and other major releases followed in the early 1990s. Linux is a completely open-source operating system, which means that anyone can access Linux and its source code. The open-source nature of Linux allows developers in the Linux community to collaborate.</p>
+<p>Linux is particularly important to the security industry. There are some distributions that are specifically designed for security. Later in this course, you’ll learn about Linux and its importance to the security industry.</p>
+<h3 id="chromeos"><strong>ChromeOS</strong></h3>
+<p>ChromeOS launched in 2011. It’s partially open source and is derived from Chromium OS, which is completely open source. ChromeOS is frequently used in the education field.</p>
+<h3 id="android-and-ios"><strong>Android and iOS</strong></h3>
+<p>Android and iOS are both mobile operating systems. Unlike the other operating systems mentioned, mobile operating systems are typically used in mobile devices, such as phones, tablets, and watches. Android was introduced for public use in 2008, and iOS was introduced in 2007. Android is open source, and iOS is partially open source.</p>
+<h2 id="operating-systems-and-vulnerabilities">Operating systems and vulnerabilities</h2>
+<p>Security issues are inevitable with all operating systems. An important part of protecting an operating system is keeping the system and all of its components up to date.</p>
+<h3 id="legacy-operating-systems"><strong>Legacy operating systems</strong></h3>
+<p>A <strong>legacy operating system</strong> is an operating system that is outdated but still being used. Some organizations continue to use legacy operating systems because software they rely on is not compatible with newer operating systems. This can be more common in industries that use a lot of equipment that requires embedded software—software that’s placed inside components of the equipment.</p>
+<p>Legacy operating systems can be vulnerable to security issues because they’re no longer supported or updated. This means that legacy operating systems might be vulnerable to new threats. </p>
+<h3 id="other-vulnerabilities"><strong>Other vulnerabilities</strong></h3>
+<p>Even when operating systems are kept up to date, they can still become vulnerable to attack. Below are several resources that include information on operating systems and their vulnerabilities.</p>
+<ul>
+<li>
+<p><a href="https://msrc.microsoft.com/update-guide/vulnerability">Microsoft Security Response Center (MSRC)</a>: A list of known vulnerabilities affecting Microsoft products and services</p>
+</li>
+<li>
+<p><a href="https://support.apple.com/en-us/HT201222">Apple Security Updates</a>: A list of security updates and information for Apple® operating systems, including macOS and iOS, and other products</p>
+</li>
+<li>
+<p><a href="https://ubuntu.com/security/cves">Common Vulnerabilities and Exposures (CVE) Report for Ubuntu</a>: A list of known vulnerabilities affecting Ubuntu, which is a specific distribution of Linux</p>
+</li>
+<li>
+<p><a href="https://cloud.google.com/support/bulletins">Google Cloud Security Bulletin</a>: A list of known vulnerabilities affecting Google Cloud products and services</p>
+</li>
+</ul>
+<p>Keeping an operating system up to date is one key way to help the system stay secure. Because it can be difficult to keep all systems updated at all times, it’s important for security analysts to be knowledgeable about legacy operating systems and the risks they can create.</p>
+<h2 id="key-takeaways">Key takeaways</h2>
+<p>Windows, macOS, Linux, ChromeOS, Android, and iOS are all commonly used operating systems. Security analysts should be aware of vulnerabilities that affect operating systems. It’s especially important for security analysts to be familiar with legacy operating systems, which are systems that are outdated but still being used.</p>
+<h2 id="the-operating-system-at-work">The Operating system at work</h2>
+<p>{this are the course material, ends in ---}</p>
+<h3 id="inside-the-operating-system">Inside the Operating System</h3>
+<p>USER -&gt; Application -&gt; Operating System -&gt; Hardware</p>
+<h3 id="request-to-the-operating-system">Request to the Operating System</h3>
+<p>Operating systems are a critical component of a computer. They make connections between applications and hardware to allow users to perform tasks. In this reading, you’ll explore this complex process further and consider it using a new analogy and a new example.</p>
+<h2 id="booting-the-computer">Booting the computer</h2>
+<p>When you boot, or turn on, your computer, either a BIOS or UEFI microchip is activated. The <strong>Basic Input/Output System (BIOS)</strong> is a microchip that contains loading instructions for the computer and is prevalent in older systems. The <strong>Unified Extensible Firmware Interface (UEFI)</strong> is a microchip that contains loading instructions for the computer and replaces BIOS on more modern systems.</p>
+<p>The BIOS and UEFI chips both perform the same function for booting the computer. BIOS was the standard chip until 2007, when UEFI chips increased in use. Now, most new computers include a UEFI chip. UEFI provides enhanced security features.</p>
+<p>The BIOS or UEFI microchips contain a variety of loading instructions for the computer to follow. For example, one of the loading instructions is to verify the health of the computer’s hardware.</p>
+<p>The last instruction from the BIOS or UEFI activates the bootloader. The <strong>bootloader</strong> is a software program that boots the operating system. Once the operating system has finished booting, your computer is ready for use.</p>
+<h2 id="completing-a-task">Completing a task</h2>
+<p>As previously discussed, operating systems help us use computers more efficiently. Once a computer has gone through the booting process, completing a task on a computer is a four-part process.</p>
+<h3 id="user">User</h3>
+<p>The first part of the process is the user. The user initiates the process by having something they want to accomplish on the computer. Right now, you’re a user!  You’ve initiated the process of accessing this reading.</p>
+<h3 id="application">Application</h3>
+<p>The application is the software program that users interact with to complete a task. For example, if you want to calculate something, you would use the calculator application. If you want to write a report, you would use a word processing application. This is the second part of the process.</p>
+<h3 id="operating-system">Operating system</h3>
+<p>The operating system receives the user’s request from the application. It’s the operating system’s job to interpret the request and direct its flow. In order to complete the task, the operating system sends it on to applicable components of the hardware. </p>
+<h3 id="hardware">Hardware</h3>
+<p>The hardware is where all the processing is done to complete the tasks initiated by the user. For example, when a user wants to calculate a number, the CPU figures out the answer. As another example, when a user wants to save a file, another component of the hardware, the hard drive, handles this task. </p>
+<p>After the work is done by the hardware, it sends the output back through the operating system to the application so that it can display the results to the user.</p>
+<h2 id="the-os-at-work-behind-the-scenes">The OS at work behind the scenes</h2>
+<p>Consider once again how a computer is similar to a car. There are processes that someone won’t directly observe when operating a car, but they do feel it move forward when they press the gas pedal. It’s the same with a computer. Important work happens inside a computer that you don’t experience directly. This work involves the operating system.</p>
+<p>You can explore this through another analogy. The process of using an operating system is also similar to ordering at a restaurant. At a restaurant you place an order and get your food, but you don’t see what’s happening in the kitchen when the cooks prepare the food.</p>
+<p>Ordering food is similar to using an application on a computer. When you order your food, you make a specific request like “a small soup, very hot.” When you use an application, you also make specific requests like “print three double-sided copies of this document.” </p>
+<p>You can compare the food you receive to what happens when the hardware sends output. You receive the food that you ordered. You receive the document that you wanted to print. </p>
+<p>Finally, the kitchen is like the OS. You don’t know what happens in the kitchen, but it’s critical in interpreting the request and ensuring you receive what you ordered. Similarly, though the work of the OS is not directly transparent to you, it’s critical in completing your tasks.</p>
+<h2 id="an-example-downloading-a-file-from-an-internet-browser">An example: Downloading a file from an internet browser</h2>
+<p>Previously, you explored how operating systems, applications, and hardware work together by  examining a task involving a calculation. You can expand this understanding by exploring how the OS completes another task, downloading a file from an internet browser: </p>
+<ul>
+<li>
+<p>First, the user decides they want to download a file that they found online, so they click on a download button near the file in the internet browser application.</p>
+</li>
+<li>
+<p>Then, the internet browser communicates this action to the OS.</p>
+</li>
+<li>
+<p>The OS sends the request to download the file to the appropriate hardware for processing.</p>
+</li>
+<li>
+<p>The hardware begins downloading the file, and the OS sends this information to the internet browser application. The internet browser then informs the user when the file has been downloaded.</p>
+</li>
+</ul>
+<h2 id="key-takeaways_1">Key takeaways</h2>
+<p>Although it operates in the background, the operating system is an essential part of the process of using a computer. The operating system connects applications and hardware to allow users to complete a task.</p>
+<hr />
+<h3 id="resource-allocation-via-the-os">Resource allocation via the OS</h3>
+<blockquote>
+<p>The OS is the conductor of the orchestra. </p>
+</blockquote>
+<hr />
+<h3 id="virtualization-technology">Virtualization Technology</h3>
+<p>{this is the main course material, end in ---}</p>
+<p>You've explored a lot about operating systems. One more aspect to consider is that operating systems can run on virtual machines. In this reading, you’ll learn about virtual machines and the general concept of virtualization. You’ll explore how virtual machines work and the benefits of using them.</p>
+<h2 id="what-is-a-virtual-machine">What is a virtual machine?</h2>
+<p>A <strong>virtual machine (VM)</strong> is a virtual version of a physical computer. Virtual machines are one example of virtualization. Virtualization is the process of using software to create virtual representations of various physical machines. The term “virtual” refers to machines that don’t exist physically, but operate like they do because their software simulates physical hardware. Virtual systems don’t use dedicated physical hardware. Instead, they use software-defined versions of the physical hardware. This means that a single virtual machine has a virtual CPU, virtual storage, and other virtual hardware. Virtual systems are just code.</p>
+<p>You can run multiple virtual machines using the physical hardware of a single computer. This involves dividing the resources of the host computer to be shared across all physical and virtual components. For example, <strong>Random Access Memory (RAM)</strong> is a hardware component used for short-term memory. If a computer has 16GB of RAM, it can host three virtual machines so that the physical computer and virtual machines each have 4GB of RAM. Also, each of these virtual machines would have their own operating system and function similarly to a typical computer.</p>
+<h2 id="benefits-of-virtual-machines">Benefits of virtual machines</h2>
+<p>Security professionals commonly use virtualization and virtual machines. Virtualization can increase security for many tasks and can also increase efficiency.</p>
+<h3 id="security"><strong>Security</strong></h3>
+<p>One benefit is that virtualization can provide an isolated environment, or a sandbox, on the physical host machine. When a computer has multiple virtual machines, these virtual machines are “guests” of the computer. Specifically, they are isolated from the host computer and other guest virtual machines. This provides a layer of security, because virtual machines can be kept separate from the other systems. For example, if an individual virtual machine becomes infected with malware, it can be dealt with more securely because it’s isolated from the other machines. A security professional could also intentionally place malware on a virtual machine to examine it in a more secure environment.</p>
+<p><strong>Note:</strong> Although using virtual machines is useful when investigating potentially infected machines or running malware in a constrained environment, there are still some risks. For example, a malicious program can escape virtualization and access the host machine. This is why you should never completely trust virtualized systems.</p>
+<h3 id="efficiency"><strong>Efficiency</strong></h3>
+<p>Using virtual machines can also be an efficient and convenient way to perform security tasks. You can open multiple virtual machines at once and switch easily between them. This allows you to streamline security tasks, such as testing and exploring various applications.</p>
+<p>You can compare the efficiency of a virtual machine to a city bus. A single city bus has a lot of room and is an efficient way to transport many people simultaneously. If city buses didn’t exist, then everyone on the bus would have to drive their own cars. This uses more gas, cars, and other resources than riding the city bus. </p>
+<p>Similar to how many people can ride one bus, many virtual machines can be hosted on the same physical machine. That way, separate physical machines aren't needed to perform certain tasks.</p>
+<h2 id="managing-virtual-machines">Managing virtual machines</h2>
+<p>Virtual machines can be managed with a software called a hypervisor. Hypervisors help users manage multiple virtual machines and connect the virtual and physical hardware. Hypervisors also help with allocating the shared resources of the physical host machine to one or more virtual machines.</p>
+<p>One hypervisor that is useful for you to be familiar with is the Kernel-based Virtual Machine (KVM). KVM is an open-source hypervisor that is supported by most major Linux distributions. It is built into the Linux kernel, which means it can be used to create virtual machines on any machine running a Linux operating system without the need for additional software.</p>
+<h2 id="other-forms-of-virtualization">Other forms of virtualization</h2>
+<p>In addition to virtual machines, there are other forms of virtualization. Some of these virtualization technologies do not use operating systems. For example, multiple virtual servers can be created from a single physical server. Virtual networks can also be created to more efficiently use the hardware of a physical network. </p>
+<h2 id="key-takeaways_2">Key takeaways</h2>
+<p>Virtual machines are virtual versions of physical computers and are one example of virtualization. Virtualization is a key technology in the security industry, and it’s important for security analysts to understand the basics. There are many benefits to using virtual machines, such as isolation of malware and other security risks. However, it’s important to remember there’s still a risk of malicious software escaping their virtualized environments.</p>
+<hr />
+<h2 id="the-user-interface">The User Interface</h2>
+<blockquote>
+<p>User Interface: <br />
+  A program that allows the user to control the functions of the operating system. </p>
+</blockquote>
+<p>GUI and CLI </p>
+<p>GUI - Graphical User Interface <br />
+The operating system that uses icons on the screen to manage tasks in the computer </p>
+<ul>
+<li>Start Menu </li>
+<li>Task Bar</li>
+<li>Desktop with icons and shortcuts</li>
+</ul>
+<p>CLI - Command Line Interface <br />
+A text based user interface that uses commands to interact with the computer. </p>
+<h2 id="more-flexible-and-more-powerful">- more flexible and more powerful</h2>
+<p>The course content <br />
+Previously, you explored graphical user interfaces (GUI) and command-line interfaces (CLI). In this reading, you’ll compare these two interfaces and learn more about how they’re used in cybersecurity.  </p>
+<h2 id="cli-vs-gui">CLI vs. GUI</h2>
+<p>A <strong>graphical user</strong> <strong>interface (GUI)</strong> is a user interface that uses icons on the screen to manage different tasks on the computer. A <strong>command-line interface (CLI)</strong> is a text-based user interface that uses commands to interact with the computer.</p>
+<h3 id="display">Display</h3>
+<p>One notable difference between these two interfaces is how they appear on the screen. A GUI has graphics and icons, such as the icons on your desktop or taskbar for launching programs. In contrast, a CLI only has text. It looks similar to lines of code.</p>
+<h3 id="function"><strong>Function</strong></h3>
+<p>These two interfaces also differ in how they function. A GUI is an interface that only allows you to make one request at a time. However, a CLI allows you to make multiple requests at a time. </p>
+<h2 id="advantages-of-a-cli-in-cybersecurity">Advantages of a CLI in cybersecurity</h2>
+<p>The choice between using a GUI or CLI is partly based on personal preference, but security analysts should be able to use both interfaces. Using a CLI can provide certain advantages.</p>
+<h3 id="efficiency_1">Efficiency</h3>
+<p>Some prefer the CLI because it can be used more quickly when you know how to manage this interface. For a new user, a GUI might be more efficient because they’re easier for beginners to navigate.</p>
+<p>Because a CLI can accept multiple requests at one time, it’s more powerful when you need to perform multiple tasks efficiently. For example, if you had to create multiple new files in your system, you could quickly perform this task in a CLI. If you were using a GUI, this could take much longer, because you have to repeat the same steps for each new file.</p>
+<h3 id="history-file">History file</h3>
+<p>For security analysts, using the Linux CLI is helpful because it records a history file of all the commands and actions in the CLI. If you were using a GUI, your actions are not necessarily saved in a history file.</p>
+<p>For example, you might be in a situation where you’re responding to an incident using a playbook. The playbook’s instructions require you to run a series of different commands. If you used a CLI, you’d be able to go back to the history and ensure all of the commands were correctly used. This could be helpful if there were issues using the playbook and you had to review the steps you performed in the command line.</p>
+<p>Additionally, if you suspect an attacker has compromised your system, you might be able to trace their actions using the history file.</p>
+<h2 id="key-takeaways_3">Key takeaways</h2>
+<p>GUIs and CLIs are two types of user interfaces that security analysts should be familiar with. There are multiple differences between a GUI and a CLI, including their displays and how they function. When working in cybersecurity, a CLI is often preferred over a GUI because it can handle multiple tasks simultaneously and it includes a history file.</p>
+<hr />
+<p>Glossary </p>
+<h2 id="terms-and-definitions-from-course-4-module-1"><strong>Terms and definitions from Course 4, Module 1</strong></h2>
+<p><strong>Application:</strong> A program that performs a specific task</p>
+<p><strong>Basic Input/Output System (BIOS):</strong> A microchip that contains loading instructions for the computer and is prevalent in older systems </p>
+<p><strong>Bootloader:</strong> A software program that boots the operating system</p>
+<p><strong>Command-line interface (CLI):</strong> A text-based user interface that uses commands to interact with the computer</p>
+<p><strong>Graphical user interface (GUI):</strong> A user interface that uses icons on the screen to manage different tasks on the computer</p>
+<p><strong>Hardware:</strong> The physical components of a computer</p>
+<p><strong>Legacy operating system:</strong> An operating system that is outdated but still being used</p>
+<p><strong>Operating system (OS)</strong>: The interface between computer hardware and the user</p>
+<p><strong>Random Access Memory (RAM):</strong> A hardware component used for short-term memory</p>
+<p><strong>Unified Extensible Firmware Interface (UEFI):</strong> A microchip that contains loading instructions for the computer and replaces BIOS on more modern systems</p>
+<p><strong>User interface:</strong> A program that allows the user to control the functions of the operating system</p>
+<p><strong>Virtual machine (VM)</strong>: A virtual version of a physical computer</p>
+<hr />
+<h1 id="module-2-the-linux-operating-system">Module 2 : The Linux Operating System</h1>
+<p>What we will learn: </p>
+<ul>
+<li>The architecture of Linux </li>
+<li>Different Distributions of Linux </li>
+<li>The Shell </li>
+</ul>
+<h2 id="all-about-linux">All about Linux</h2>
+<p>Linux is an open source Operating System</p>
+<p>The work on the Linux Kernel by Linus Torvalds was revolutionary </p>
+<ul>
+<li>Richard Stallman started working on GNU <br />
+ Both Linux and GNU was operating system based on UNIX </li>
+</ul>
+<p>the missing part of the GNU was the kernel, thus along with Richard Stallman , Linus Torvalds made LINUX. </p>
+<p>Linux is licensed by the GNU public license. thus everyone can share it and use it. Thus, Open-Source. </p>
+<ul>
+<li>600 distributions</li>
+</ul>
+<p><strong>Components of Linux</strong></p>
+<ul>
+<li>User </li>
+<li>Applications </li>
+<li>Shell </li>
+<li>Filesystem Hierarchy Standard </li>
+<li>Kernel </li>
+<li>Hardware</li>
+</ul>
+<p>USER<br />
+The person interacting with the computer</p>
+<p>APPLICATION <br />
+A program that performs a specific task </p>
+<p>SHELL <br />
+ It is the command-line interpreter. </p>
+<p>FIle System Hierarchy Standard (FHS)<br />
+the componenet of the linux OS that organizes data. </p>
+<ul>
+<li>more like filing cabinet of data </li>
+<li>this is how data is stored and accessed by the system</li>
+</ul>
+<p>KERNEL <br />
+the component of the linux OS that manages processes and memory. </p>
+<ul>
+<li>it communicates with the hardware to run the commands in the shell </li>
+<li>kernel uses drivers to execute tasks</li>
+</ul>
+<p>HARDWARE<br />
+the physical components of a computer</p>
+<p>A <strong>package manager</strong> is a tool that helps users install, manage, and remove packages or applications. A <strong>package</strong> is a piece of software that can be combined with other packages to form an application.</p>
+<p>A <strong>directory</strong> is a file that organizes where other files are stored.</p>
+<p>The <strong>kernel</strong> is the component of the Linux OS that manages processes and memory</p>
+<p><strong>Peripheral devices</strong> are hardware components that are attached and controlled by the computer system.</p>
+<hr />
+<p>Course Content <br />
+Understanding the Linux architecture is important for a security analyst. When you understand how a system is organized, it makes it easier to understand how it functions. In this reading, you’ll learn more about the individual components in the Linux architecture. A request to complete a task starts with the user and then flows through applications, the shell, the Filesystem Hierarchy Standard, the kernel, and the hardware.</p>
+<h2 id="user_1">User</h2>
+<p>The <strong>user</strong> is the person interacting with a computer. They initiate and manage computer tasks. Linux is a multi-user system, which means that multiple users can use the same resources at the same time.</p>
+<h2 id="applications">Applications</h2>
+<p>An <strong>application</strong> is a program that performs a specific task. There are many different applications on your computer. Some applications typically come pre-installed on your computer, such as calculators or calendars. Other applications might have to be installed, such as some web browsers or email clients. In Linux, you'll often use a package manager to install applications. A <strong>package manager</strong> is a tool that helps users install, manage, and remove packages or applications. A <strong>package</strong> is a piece of software that can be combined with other packages to form an application.</p>
+<h2 id="shell">Shell</h2>
+<p>The <strong>shell</strong> is the command-line interpreter. Everything entered into the shell is text based. The shell allows users to give commands to the kernel and receive responses from it. You can think of the shell as a translator between you and your computer. The shell translates the commands you enter so that the computer can perform the tasks you want.</p>
+<h2 id="filesystem-hierarchy-standard-fhs">Filesystem Hierarchy Standard (FHS)</h2>
+<p>The <strong>Filesystem Hierarchy Standard (FHS)</strong> is the component of the Linux OS that organizes data. It specifies the location where data is stored in the operating system. </p>
+<p>A <strong>directory</strong> is a file that organizes where other files are stored. Directories are sometimes called “folders,” and they can contain files or other directories. The FHS defines how directories, directory contents, and other storage is organized so the operating system knows where to find specific data. </p>
+<h2 id="kernel">Kernel</h2>
+<p>The <strong>kernel</strong> is the component of the Linux OS that manages processes and memory. It communicates with the applications to route commands. The Linux kernel is unique to the Linux OS and is critical for allocating resources in the system. The kernel controls all major functions of the hardware, which can help get tasks expedited more efficiently.</p>
+<h2 id="hardware_1">Hardware</h2>
+<p>The <strong>hardware</strong> is the physical components of a computer. You might be familiar with some hardware components, such as hard drives or CPUs. Hardware is categorized as either peripheral or internal.</p>
+<h3 id="peripheral-devices"><strong>Peripheral devices</strong></h3>
+<p><strong>Peripheral devices</strong> are hardware components that are attached and controlled by the computer system. They are not core components needed to run the computer system. Peripheral devices can be added or removed freely. Examples of peripheral devices include monitors, printers, the keyboard, and the mouse.</p>
+<h3 id="internal-hardware"><strong>Internal hardware</strong></h3>
+<p><strong>Internal hardware</strong> are the components required to run the computer. Internal hardware includes a main circuit board and all components attached to it. This main circuit board is also called the motherboard. Internal hardware includes the following: </p>
+<ul>
+<li>
+<p>The <strong>Central Processing Unit (CPU)</strong> is a computer’s main processor, which is used to perform general computing tasks on a computer. The CPU executes the instructions provided by programs, which enables these programs to run. </p>
+</li>
+<li>
+<p><strong>Random Access Memory (RAM)</strong> is a hardware component used for short-term memory. It’s where data is stored temporarily as you perform tasks on your computer. For example, if you’re writing a report on your computer, the data needed for this is stored in RAM. After you’ve finished writing the report and closed down that program, this data is deleted from RAM. Information in RAM cannot be accessed once the computer has been turned off. The CPU takes the data from RAM to run programs. </p>
+</li>
+<li>
+<p>The <strong>hard drive</strong> is a hardware component used for long-term memory. It’s where programs and files are stored for the computer to access later. Information on the hard drive can be accessed even after a computer has been turned off and on again. A computer can have multiple hard drives.</p>
+</li>
+</ul>
+<h2 id="key-takeaways_4">Key takeaways</h2>
+<p>It’s important for security analysts to understand the Linux architecture and how these components are organized. The components of the Linux architecture are the user, applications, shell, Filesystem Hierarchy Standard, kernel, and hardware. Each of these components is important in how Linux functions.</p>
+<hr />
+<p>Linux Distribution</p>
+<ul>
+<li>Different versions of linux </li>
+<li>Distros or Flavors of Linux</li>
+</ul>
+<p>If the operating system is a vehicle, the kernel is the engine. different distros are like different vehicles. different purpose. </p>
+<p>Parent Distributions </p>
+<ul>
+<li>Red Hat Enterprise Linux (CentOS)</li>
+<li>Slackware (SUSE)</li>
+<li>Debian (Ubuntu and Kali Linux)</li>
+</ul>
+<p>KALI LINUX </p>
+<ul>
+<li>debian based </li>
+<li>build for pentesting and cyberforensics </li>
+<li>should be used in a vm</li>
+</ul>
+<p><strong>Penetration Testing</strong><br />
+A simulated attack that helps identify vulnerabilities in systems, networks, websites, application and processes. </p>
+<p>Pentesting Tools in Kali </p>
+<ul>
+<li>Metasploit </li>
+<li>Burpsuite </li>
+<li>John the Ripper </li>
+</ul>
+<p>DIGITAL FORENSICS </p>
+<ul>
+<li>The practice of collecting and analyzing data to determine what has happened after the attack. </li>
+</ul>
+<p>Digital forensics tools in kali </p>
+<ul>
+<li>tcpdump </li>
+<li>Wireshark </li>
+<li>Autopsy </li>
+</ul>
+<hr />
+<p>Course Content </p>
+<p>Previously, you were introduced to the different distributions of Linux. This included KALI LINUX ™. (KALI LINUX ™ is a trademark of OffSec.) In addition to KALI LINUX ™, there are multiple other Linux distributions that security analysts should be familiar with. In this reading, you’ll learn about additional Linux distributions.</p>
+<h2 id="kali-linux">KALI LINUX ™</h2>
+<p><strong>KALI LINUX ™</strong> is an open-source distribution of Linux that is widely used in the security industry. This is because KALI LINUX ™, which is Debian-based, is pre-installed with many useful tools for penetration testing and digital forensics. A <strong>penetration test</strong> is a simulated attack that helps identify vulnerabilities in systems, networks, websites, applications, and processes. <strong>Digital forensics</strong> is the practice of collecting and analyzing data to determine what has happened after an attack. These are key activities in the security industry. </p>
+<p>However, KALI LINUX ™ is not the only Linux distribution that is used in cybersecurity. </p>
+<h2 id="ubuntu">Ubuntu</h2>
+<p><strong>Ubuntu</strong> is an open-source, user-friendly distribution that is widely used in security and other industries. It has both a command-line interface (CLI) and a graphical user interface (GUI). Ubuntu is also Debian-derived and includes common applications by default. Users can also download many more applications from a package manager, including security-focused tools. Because of its wide use, Ubuntu has an especially large number of community resources to support users.</p>
+<p>Ubuntu is also widely used for cloud computing. As organizations migrate to cloud servers, cybersecurity work may more regularly involve Ubuntu derivatives.</p>
+<h2 id="parrot">Parrot</h2>
+<p><strong>Parrot</strong> is an open-source distribution that is commonly used for security. Similar to KALI LINUX ™, Parrot comes with pre-installed tools related to penetration testing and digital forensics. Like both KALI LINUX ™ and Ubuntu, it is based on Debian.</p>
+<p>Parrot is also considered to be a user-friendly Linux distribution. This is because it has a GUI that many find easy to navigate. This is in addition to Parrot’s CLI.</p>
+<h2 id="red-hat-enterprise-linux">Red Hat® Enterprise Linux®</h2>
+<p><strong>Red Hat Enterprise Linux</strong> is a subscription-based distribution of Linux built for enterprise use. Red Hat is not free, which is a major difference from the previously mentioned distributions. Because it’s built and supported for enterprise use, Red Hat also offers a dedicated support team for customers to call about issues.</p>
+<h2 id="almalinux">AlmaLinux</h2>
+<p><strong>AlmaLinux</strong> is a community-driven Linux distribution that was created as a stable replacement for CentOS. CentOS was an open-source distribution that is closely related to Red Hat, and its final stable release, CentOS 8, was in December 2021. CentOS used source code published by Red Hat to provide a similar platform. AlmaLinux is designed to be a drop-in replacement for CentOS 8. This ensures that applications and configurations that worked on CentOS will continue to function on AlmaLinux.</p>
+<h2 id="key-takeaways_5">Key takeaways</h2>
+<p>KALI LINUX ™, Ubuntu, Parrot, Red Hat, and CentOS are all widely used Linux distributions. It’s important for security analysts to be aware of these distributions that they might encounter in their career.</p>
+<hr />
+<p>A <strong>package</strong> is a piece of software that can be combined with other packages to form an application. Some packages may be large enough to form applications on their own. </p>
+<p>Packages contain the files necessary for an application to be installed. These files include dependencies, which are supplemental files used to run an application. </p>
+<p>Package managers can help resolve any issues with dependencies and perform other management tasks. A <strong>package manager</strong> is a tool that helps users install, manage, and remove packages or applications. Linux uses multiple package managers.</p>
+<p><strong>SHELL</strong><br />
+the shell is the command line interpreter. </p>
+<ul>
+<li>the shell provides the cli </li>
+<li>the shell communicates with the kernel to execute this commands </li>
+<li>we will work with the Bash shell </li>
+</ul>
+<p>Types of Shell </p>
+<ul>
+<li>Bourne Again Shell (bash)</li>
+<li>C shell (csh)</li>
+<li>Z shell (zsh)</li>
+<li>Korn Shell (ksh)</li>
+<li>Enhanced C shell (tcsh)</li>
+</ul>
+<p>ksh and bash use the dollar sign to show where users type commands <br />
+zsh uses the percentage sign </p>
+<p>Bash is the most common and used shell </p>
+<p><strong>Standard Input</strong><br />
+Information received by the OS via the command line. </p>
+<p><strong>Standard Output</strong><br />
+Information returned by the OS through the shell. </p>
+<p><strong>Standard Error</strong><br />
+Error messages returned by the OS through the shell. </p>
+<hr />
+<p>Glossary of this section</p>
+<h2 id="terms-and-definitions-from-course-4-module-2"><strong>Terms and definitions from Course 4, Module 2</strong></h2>
+<p><strong>Application:</strong> A program that performs a specific task</p>
+<p><strong>Bash:</strong> The default shell in most Linux distributions</p>
+<p><strong>CentOS:</strong> An open-source distribution that is closely related to Red Hat</p>
+<p><strong>Central Processing Unit (CPU):</strong> A computer’s main processor, which is used to perform general computing tasks on a computer</p>
+<p><strong>Command:</strong> An instruction telling the computer to do something</p>
+<p><strong>Digital forensics:</strong> The practice of collecting and analyzing data to determine what has happened after an attack</p>
+<p><strong>Directory:</strong> A file that organizes where other files are stored</p>
+<p><strong>Distributions:</strong> The different versions of Linux</p>
+<p><strong>File path:</strong> The location of a file or directory</p>
+<p><strong>Filesystem Hierarchy Standard (FHS):</strong> The component of the Linux OS that organizes data</p>
+<p><strong>Graphical user interface (GUI):</strong> A user interface that uses icons on the screen to manage different tasks on the computer</p>
+<p><strong>Hard drive:</strong> A hardware component used for long-term memory</p>
+<p><strong>Hardware</strong>: The physical components of a computer</p>
+<p><strong>Internal hardware:</strong> The components required to run the computer</p>
+<p><strong>Kali Linux ™</strong>: An open-source distribution of Linux that is widely used in the security industry</p>
+<p><strong>Kernel:</strong> The component of the Linux OS that manages processes and memory</p>
+<p><strong>Linux:</strong> An open source operating system</p>
+<p><strong>Package:</strong> A piece of software that can be combined with other packages to form an application</p>
+<p><strong>Package manager:</strong> A tool that helps users install, manage, and remove packages or applications</p>
+<p><strong>Parrot:</strong> An open-source distribution that is commonly used for security</p>
+<p><strong>Penetration test (pen test):</strong> A simulated attack that helps identify vulnerabilities in systems, networks, websites, applications, and processes</p>
+<p><strong>Peripheral devices:</strong> Hardware components that are attached and controlled by the computer system</p>
+<p><strong>Random Access Memory (RAM):</strong> A hardware component used for short-term memory</p>
+<p><strong>Red Hat® Enterprise Linux®</strong> (also referred to simply as Red Hat in this course)<strong>:</strong> A subscription-based distribution of Linux built for enterprise use</p>
+<p><strong>Shell:</strong> The command-line interpreter </p>
+<p><strong>Standard error:</strong> An error message returned by the OS through the shell</p>
+<p><strong>Standard input:</strong> Information received by the OS via the command line</p>
+<p><strong>Standard output:</strong> Information returned by the OS through the shell</p>
+<p><strong>String data:</strong> Data consisting of an ordered sequence of characters</p>
+<p><strong>Ubuntu:</strong> An open-source, user-friendly distribution that is widely used in security and other industries</p>
+<p><strong>User:</strong> The person interacting with a computer</p>
+<hr />
+<h1 id="linux-commands-in-bash-shell">Linux commands in bash shell</h1>
+<p>Things to do as a Security Analyst</p>
+<ul>
+<li>Has to work with server logs </li>
+<li>Navigate, manage, and analyze files remotely</li>
+<li>Verify and configure users and group access. </li>
+<li>Give authorization and set file permissions. </li>
+</ul>
+<p>BASH</p>
+<ul>
+<li>basic shell linux distros </li>
+</ul>
+<h4 id="what-is-argument-linux">What is Argument (Linux) ?</h4>
+<ul>
+<li>Specific Information needed by command.</li>
+</ul>
+<h4 id="what-is-filesystem-hierarchy-system-fhs">What is Filesystem Hierarchy System (FHS)?</h4>
+<ul>
+<li>
+<p>The component of the linux file system that organizes data.</p>
+</li>
+<li>
+<p>The root directory is the highest level directory in Linux</p>
+</li>
+</ul>
+<p>COMMANDS</p>
+<ul>
+<li>pwd </li>
+<li>ls</li>
+<li>cd</li>
+<li>cat</li>
+<li>head </li>
+</ul>
+<p><strong>Pro Tip</strong>: You can use the man hier command to learn more about the FHS and its standard directories.</p>
+<p>You can navigate to specific subdirectories using their absolute or relative file paths. The <strong>absolute file path</strong> is the full file path, which starts from the root. For example, /home/analyst/projects is an absolute file path. The <strong>relative file path</strong> is the file path that starts from a user's current directory.</p>
+<p><strong>Note:</strong> Relative file paths can use a dot (.) to represent the current directory, or two dots (..) to represent the parent of the current directory. An example of a relative file path could be ../projects.</p>
+<p><strong>Pro Tip</strong>: If you want to change the number of lines returned by head, you can specify the number of lines by including -n. For example, if you only want to display the first five lines of the updates.txt file, enter head -n 5 updates.txt.</p>
+<p><strong>Pro Tip</strong>: You can use tail to read the most recent information in a log file.</p>
+<h3 id="less"><strong>less</strong></h3>
+<p>The less command returns the content of a file one page at a time. For example, entering less updates.txt changes the terminal window to display the contents of updates.txt one page at a time. This allows you to easily move forward and backward through the content. </p>
+<p>Once you’ve accessed your content with the less command, you can use several keyboard controls to move through the file:</p>
+<ul>
+<li>
+<p>Space bar: Move forward one page</p>
+</li>
+<li>
+<p>b: Move back one page</p>
+</li>
+<li>
+<p>Down arrow: Move forward one line</p>
+</li>
+<li>
+<p>Up arrow: Move back one line</p>
+</li>
+<li>
+<p>q: Quit and return to the previous terminal window</p>
+</li>
+</ul>
+<hr />
+<p>The content of the course</p>
+<p>In this reading, you’ll review how to navigate the file system using Linux commands in Bash. You’ll further explore the organization of the Linux Filesystem Hierarchy Standard, review several common Linux commands for navigation and reading file content, and learn a couple of new commands.</p>
+<h2 id="filesystem-hierarchy-standard-fhs_1">Filesystem Hierarchy Standard (FHS)</h2>
+<p>Previously, you learned that the <strong>Filesystem Hierarchy Standard</strong> <strong>(FHS)</strong> is the component of Linux that organizes data. The FHS is important because it defines how directories, directory contents, and other storage is organized in the operating system.</p>
+<p>This diagram illustrates the hierarchy of relationships under the FHS:</p>
+<p>Under the FHS, a file’s location can be described by a file path. A <strong>file path</strong> is the location of a file or directory. In the file path, the different levels of the hierarchy are separated by a forward slash (/).</p>
+<h3 id="root-directory"><strong>Root directory</strong></h3>
+<p>The <strong>root directory</strong> is the highest-level directory in Linux, and it’s always represented with a forward slash (/).  All subdirectories branch off the root directory. Subdirectories can continue branching out to as many levels as necessary.</p>
+<h3 id="standard-fhs-directories">Standard FHS directories</h3>
+<p>Directly below the root directory, you’ll find standard FHS directories. In the diagram, home, bin, and etc are standard FHS directories. Here are a few examples of what standard directories contain:</p>
+<ul>
+<li>
+<p>/home: Each user in the system gets their own home directory.</p>
+</li>
+<li>
+<p>/bin: This directory stands for “binary” and contains binary files and other executables. Executables are files that contain a series of commands a computer needs to follow to run programs and perform other functions.</p>
+</li>
+<li>
+<p>/etc: This directory stores the system’s configuration files.</p>
+</li>
+<li>
+<p>/tmp: This directory stores many temporary files. The /tmp directory is commonly used by attackers because anyone in the system can modify data in these files.</p>
+</li>
+<li>
+<p>/mnt: This directory stands for “mount” and stores media, such as USB drives and hard drives.</p>
+</li>
+</ul>
+<p><strong>Pro Tip</strong>: You can use the man hier command to learn more about the FHS and its standard directories.</p>
+<h3 id="user-specific-subdirectories"><strong>User-specific subdirectories</strong></h3>
+<p>Under home are subdirectories for specific users. In the diagram, these users are  analyst and analyst2. Each user has their own personal subdirectories, such as projects, logs, or reports.</p>
+<p><strong>Note:</strong> When the path leads to a subdirectory below the user’s home directory, the user’s home directory can be represented as the tilde (~). For example, /home/analyst/logs can also be represented as ~/logs.</p>
+<p>You can navigate to specific subdirectories using their absolute or relative file paths. The <strong>absolute file path</strong> is the full file path, which starts from the root. For example, /home/analyst/projects is an absolute file path. The <strong>relative file path</strong> is the file path that starts from a user's current directory.</p>
+<p><strong>Note:</strong> Relative file paths can use a dot (.) to represent the current directory, or two dots (..) to represent the parent of the current directory. An example of a relative file path could be ../projects.</p>
+<h2 id="key-commands-for-navigating-the-file-system">Key commands for navigating the file system</h2>
+<p>The following Linux commands can be used to navigate the file system: pwd, ls, and cd.</p>
+<h3 id="pwd"><strong>pwd</strong></h3>
+<p>The pwd command prints the working directory to the screen. Or in other words, it returns the directory that you’re currently in. </p>
+<p>The output gives you the absolute path to this directory. For example, if you’re in your home directory and your username is analyst, entering pwd returns /home/analyst. </p>
+<p><strong>Pro Tip</strong>: To learn what your username is, use the whoami command. The whoami command returns the username of the current user. For example, if your username is analyst, entering whoami returns analyst.</p>
+<h3 id="ls"><strong>ls</strong></h3>
+<p>The ls command displays the names of the files and directories in the current working directory. For example, in the video, ls returned directories such as logs, and a file called updates.txt. </p>
+<p><strong>Note</strong>: If you want to return the contents of a directory that’s not your current working directory, you can add an argument after ls with the absolute or relative file path to the desired directory. For example, if you’re in the /home/analyst directory but want to list the contents of its projects subdirectory, you can enter ls /home/analyst/projects or just ls projects.</p>
+<h3 id="cd"><strong>cd</strong></h3>
+<p>The cd command navigates between directories. When you need to change directories, you should use this command.</p>
+<p>To navigate to a subdirectory of the current directory, you can add an argument after cd with the subdirectory name. For example, if you’re in the /home/analyst directory and want to navigate to its projects subdirectory, you can enter cd projects.</p>
+<p>You can also navigate to any specific directory by entering the absolute file path. For example, if you’re in /home/analyst/projects, entering cd /home/analyst/logs changes your current directory to /home/analyst/logs.</p>
+<p><strong>Pro Tip</strong>: You can use the relative file path and enter cd .. to go up one level in the file structure. For example, if the current directory is /home/analyst/projects, entering cd .. would change your working directory to /home/analyst. </p>
+<h2 id="common-commands-for-reading-file-content">Common commands for reading file content</h2>
+<p>The following Linux commands are useful for reading file content: cat, head, tail, and less.</p>
+<h3 id="cat"><strong>cat</strong></h3>
+<p>The cat command displays the content of a file. For example, entering cat updates.txt returns everything in the updates.txt file.</p>
+<h3 id="head"><strong>head</strong></h3>
+<p>The head command displays just the beginning of a file, by default 10 lines. The head command can be useful when you want to know the basic contents of a file but don’t need the full contents. Entering head updates.txt returns only the first 10 lines of the updates.txt file.</p>
+<p><strong>Pro Tip</strong>: If you want to change the number of lines returned by head, you can specify the number of lines by including -n. For example, if you only want to display the first five lines of the updates.txt file, enter head -n 5 updates.txt.</p>
+<h3 id="tail"><strong>tail</strong></h3>
+<p>The tail command does the opposite of head. This command can be used to display just the end of a file, by default 10 lines. Entering tail updates.txt returns only the last 10 lines of the updates.txt file.</p>
+<p><strong>Pro Tip</strong>: You can use tail to read the most recent information in a log file.</p>
+<h3 id="less_1"><strong>less</strong></h3>
+<p>The less command returns the content of a file one page at a time. For example, entering less updates.txt changes the terminal window to display the contents of updates.txt one page at a time. This allows you to easily move forward and backward through the content. </p>
+<p>Once you’ve accessed your content with the less command, you can use several keyboard controls to move through the file:</p>
+<ul>
+<li>
+<p>Space bar: Move forward one page</p>
+</li>
+<li>
+<p>b: Move back one page</p>
+</li>
+<li>
+<p>Down arrow: Move forward one line</p>
+</li>
+<li>
+<p>Up arrow: Move back one line</p>
+</li>
+<li>
+<p>q: Quit and return to the previous terminal window</p>
+</li>
+</ul>
+<h2 id="key-takeaways_6">Key takeaways</h2>
+<p>It’s important for security analysts to be able to navigate Linux and the file system of the FHS. Some key commands for navigating the file system include pwd, ls, and cd. Reading file content is also an important skill in the security profession. This can be done with commands such as cat, head, tail, and less.</p>
+<hr />
+<h2 id="manage-file-content-in-bash">Manage File Content in Bash</h2>
+<p>Commands:<br />
+ grep -&gt; Searches a specified file and returns all lines in the file containing a specified string. </p>
+<p>| (piping) -&gt; sends the standard out of one command to the standard input of another command for further processing. </p>
+<hr />
+<p>this is the actual course content</p>
+<h2 id="filter-content-in-linux">Filter content in Linux</h2>
+<p>In this reading, you’ll continue exploring Linux commands, which can help you filter for the information you need. You’ll learn a new Linux command, find, which can help you search files and directories for specific information.</p>
+<h2 id="filtering-for-information">Filtering for information</h2>
+<p>You previously explored how filtering for information is an important skill for security analysts. <strong>Filtering</strong> is selecting data that match a certain condition. For example, if you had a virus in your system that only affected the .txt files, you could use filtering to find these files quickly. Filtering allows you to search based on specific criteria, such as file extension or a string of text.</p>
+<h2 id="grep">grep</h2>
+<p>The <strong>grep</strong> command searches a specified file and returns all lines in the file containing a specified string or text. The <strong>grep</strong> command commonly takes two arguments: a specific string to search for and a specific file to search through.</p>
+<p>For example, entering <strong>grep</strong> <strong>OS</strong> <strong>updates</strong>.<strong>txt</strong> returns all lines containing <strong>OS</strong> in the <strong>updates</strong>.<strong>txt</strong> file. In this example, <strong>OS</strong> is the specific string to search for, and <strong>updates.txt</strong> is the specific file to search through.</p>
+<p>Let’s look at another example: <strong>grep error time_logs.txt</strong>. Here grep is used to search for the text pattern. <strong>error</strong> is the term you are looking for in the <strong>time_logs.txt</strong> file. When you run this command, grep will scan the time_logs.txt file and print only the lines containing the word <strong>error</strong>.</p>
+<h2 id="piping">Piping</h2>
+<p>The pipe command is accessed using the pipe character (|). <strong>Piping</strong> sends the standard output of one command as standard input to another command for further processing. As a reminder, <strong>standard output</strong> is information returned by the OS through the shell, and <strong>standard input</strong> is information received by the OS via the command line. </p>
+<p>The pipe character (|) is located in various places on a keyboard. On many keyboards, it’s located on the same key as the backslash character (). On some keyboards, the | can look different and have a small space through the middle of the line. If you can’t find the |, search online for its location on your particular keyboard.</p>
+<p>When used with grep, the pipe can help you find directories and files containing a specific word in their names. For example, ls /home/analyst/reports | grep users returns the file and directory names in the reports directory that contain users. Before the pipe, ls indicates to list the names of the files and directories in reports. Then, it sends this output to the command after the pipe. In this case, grep users returns all of the file or directory names containing users from the input it received.</p>
+<p><strong>Note:</strong> Piping is a general form of redirection in Linux and can be used for multiple tasks other than filtering. You can think of piping as a general tool that you can use whenever you want the output of one command to become the input of another command.</p>
+<h2 id="find">find</h2>
+<p>The find command searches for directories and files that meet specified criteria. There’s a wide range of criteria that can be specified with find. For example, you can search for files and directories that</p>
+<ul>
+<li>
+<p>Contain a specific string in the name,</p>
+</li>
+<li>
+<p>Are a certain file size, or</p>
+</li>
+<li>
+<p>Were last modified within a certain time frame.</p>
+</li>
+</ul>
+<p>When using find, the first argument after find indicates where to start searching. For example, entering find /home/analyst/projects searches for everything starting at the projects directory.</p>
+<p>After this first argument, you need to indicate your criteria for the search. If you don’t include a specific search criteria with your second argument, your search will likely return a lot of directories and files. </p>
+<p>Specifying criteria involves options. <strong>Options</strong> modify the behavior of a command and commonly begin with a hyphen (-). </p>
+<h3 id="name-and-iname"><strong>-name and -iname</strong></h3>
+<p>One key criteria analysts might use with find is to find file or directory names that contain a specific string. The specific string you’re searching for must be entered in quotes after the -name or -iname options. The difference between these two options is that -name is case-sensitive, and -iname is not. </p>
+<p>For example, you might want to find all files in the projects directory that contain the word “log” in the file name. To do this, you’d enter find /home/analyst/projects -name "<em>log</em>". You could also enter find /home/analyst/projects -iname "<em>log</em>".</p>
+<p>In these examples, the output would be all files in the projects directory that contain log surrounded by zero or more characters. The "<em>log</em>" portion of the command is the search criteria that indicates to search for the string “log”. When -name is the option, files with names that include Log or LOG, for example, wouldn’t be returned because this option is case-sensitive. However, they would be returned when -iname is the option.</p>
+<p><strong>Note</strong>: An asterisk (*) is used as a wildcard to represent zero or more unknown characters.</p>
+<h3 id="mtime"><strong>-mtime</strong></h3>
+<p>Security analysts might also use find to find files or directories last modified within a certain time frame. The -mtime option can be used for this search. For example, entering find /home/analyst/projects -mtime -3 returns all files and directories in the projects directory that have been modified within the past three days. </p>
+<p>The -mtime option search is based on days, so entering -mtime +1 indicates all files or directories last modified more than one day ago, and entering -mtime -1 indicates all files or directories last modified less than one day ago. </p>
+<p><strong>Note:</strong> The option -mmin can be used instead of -mtime if you want to base the search on minutes rather than days.</p>
+<h2 id="key-takeaways_7">Key takeaways</h2>
+<p>Filtering for information using Linux commands is an important skill for security analysts so that they can customize data to fit their needs. Three key Linux commands for this are grep, piping (|), and find. These commands can be used to navigate and filter for information in the file system.</p>
+<ul>
+<li><strong>Consider the privacy and security implications of using AI</strong>. Consider how using AI tools may affect the security of other people or organizations.</li>
+</ul>
+<p>Yo AI focus on the Find tool </p>
+<hr />
+<h2 id="make-directory">Make directory</h2>
+<ul>
+<li>mkdir</li>
+<li>rmdir</li>
+<li>touch (creates a file)</li>
+<li>rm (removes a file)</li>
+<li>mv </li>
+<li>cp </li>
+</ul>
+<h2 id="file-permissions-and-ownership">File Permissions and ownership</h2>
+<p>Permission: The type of access granted for a file or directory. </p>
+<p>Authorization: The concept of granting access to specific resources in a system. </p>
+<p>3 types of permissions: </p>
+<ul>
+<li>Read </li>
+<li>Write </li>
+<li>Execute</li>
+</ul>
+<p>Types of Owners: </p>
+<ul>
+<li>User </li>
+<li>Group </li>
+<li>Other</li>
+</ul>
+<p>A file with the highest level of permissions would look like <br />
+    drwxrwxrwx</p>
+<p>| d - directory , rwx - read, write, execute for USER. rwx - read, write, execute for GROUPS, rwx - read, write, execute for OTHERS. </p>
+<p>A file that everyone can write is called <strong>World-writable file</strong></p>
+<ul>
+<li>poses security risk</li>
+</ul>
+<p>Options</p>
+<ul>
+<li>Modify the behavior of the command. </li>
+</ul>
+<p>Commands: <br />
+<strong>ls -l</strong>  -&gt; Displays permissions to files and directories. </p>
+<p><strong>ls -a</strong> -&gt; Displays hidden files </p>
+<p><strong>ls -la</strong>  -&gt; Displays both hidden files and shows the permission to files and directories</p>
+<h3 id="changing-permissions">Changing Permissions</h3>
+<p>commands: </p>
+<p><strong>chmod g+w, o-r access.txt</strong></p>
+<p>access.txt - Filename</p>
+<p>g+w, o-r - Symbolic Mode | user = u . group = g, other = o</p>
+<p>g+w means ADDING WRITE PERMISSION TO GROUP</p>
+<ul>
+<li>separated by comma </li>
+</ul>
+<p>o-w means REMOVING READ PERMISSION to Other </p>
+<p><strong>chmod u=r,g=r,o=r login_sessions.txt</strong></p>
+<hr />
+<p>course content </p>
+<p>Previously, you explored file permissions and the commands that you can use to display and change them.  In this reading, you’ll review these concepts and also focus on an example of how these commands work together when putting the principle of least privilege into practice.</p>
+<h2 id="reading-permissions">Reading permissions</h2>
+<p>In Linux, permissions are represented with a 10-character string. Permissions include:</p>
+<ul>
+<li>
+<p><strong>read</strong>: for files, this is the ability to read the file contents; for directories, this is the ability to read all contents in the directory including both files and subdirectories</p>
+</li>
+<li>
+<p><strong>write</strong>: for files, this is the ability to make modifications on the file contents; for directories, this is the ability to create new files in the directory</p>
+</li>
+<li>
+<p><strong>execute</strong>: for files, this is the ability to execute the file if it’s a program; for directories, this is the ability to enter the directory and access its files</p>
+</li>
+</ul>
+<p>These permissions are given to these types of owners:</p>
+<ul>
+<li>
+<p><strong>user</strong>: the owner of the file</p>
+</li>
+<li>
+<p><strong>group</strong>: a larger group that the owner is a part of</p>
+</li>
+<li>
+<p><strong>other</strong>: all other users on the system</p>
+</li>
+</ul>
+<p>Each character in the 10-character string conveys different information about these permissions. The following table describes the purpose of each character:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Character</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1st</td>
+<td><strong>d</strong>rwxrwxrwx</td>
+<td>file type<br><br>- d for directory<br>    <br>- - for a regular file</td>
+</tr>
+<tr>
+<td>2nd</td>
+<td>d<strong>r</strong>wxrwxrwx</td>
+<td>read permissions for the user<br><br>- r if the user has read permissions<br>    <br>- - if the user lacks read permissions</td>
+</tr>
+<tr>
+<td>3rd</td>
+<td>dr<strong>w</strong>xrwxrwx</td>
+<td>write permissions for the user<br><br>- w if the user has write permissions<br>    <br>- - if the user lacks write permissions</td>
+</tr>
+<tr>
+<td>4th</td>
+<td>drw<strong>x</strong>rwxrwx</td>
+<td>execute permissions for the user<br><br>- x if the user has execute permissions<br>    <br>- - if the user lacks execute permissions</td>
+</tr>
+<tr>
+<td>5th</td>
+<td>drwx<strong>r</strong>wxrwx</td>
+<td>read permissions for the group<br><br>- r if the group has read permissions<br>    <br>- - if the group lacks read permissions</td>
+</tr>
+<tr>
+<td>6th</td>
+<td>drwxr<strong>w</strong>xrwx</td>
+<td>write permissions for the group<br><br>- w if the group has write permissions<br>    <br>- - if the group lacks write permissions</td>
+</tr>
+<tr>
+<td>7th</td>
+<td>drwxrw<strong>x</strong>rwx</td>
+<td>execute permissions for the group<br><br>- x if the group has execute permissions<br>    <br>- - if the group lacks execute permissions</td>
+</tr>
+<tr>
+<td>8th</td>
+<td>drwxrwx<strong>r</strong>wx</td>
+<td>read permissions for other<br><br>- r if the other owner type has read permissions<br>    <br>- - if the other owner type lacks read permissions</td>
+</tr>
+<tr>
+<td>9th</td>
+<td>drwxrwxr<strong>w</strong>x</td>
+<td>write permissions for other<br><br>- w if the other owner type has write permissions<br>    <br>- - if the other owner type lacks write permissions</td>
+</tr>
+<tr>
+<td>10th</td>
+<td>drwxrwxrw<strong>x</strong></td>
+<td>execute permissions for other<br><br>- x if the other owner type has execute permissions<br>    <br>- - if the other owner type lacks execute permissions</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exploring-existing-permissions">Exploring existing permissions</h2>
+<p>You can use the ls command to investigate who has permissions on files and directories. Previously, you learned that ls displays the names of files in directories in the current working directory.</p>
+<p>There are additional options you can add to the ls command to make your command more specific. Some of these options provide details about permissions. Here are a few important ls options for security analysts:</p>
+<ul>
+<li>
+<p>ls -a: Displays hidden files. Hidden files start with a period (.) at the beginning.</p>
+</li>
+<li>
+<p>ls -l: Displays permissions to files and directories. Also displays other additional information, including owner name, group, file size, and the time of last modification.</p>
+</li>
+<li>
+<p>ls -la: Displays permissions to files and directories, including hidden files. This is a combination of the other two options.</p>
+</li>
+</ul>
+<h2 id="changing-permissions_1">Changing permissions</h2>
+<p>The <strong>principle of least privilege</strong> is the concept of granting only the minimal access and authorization required to complete a task or function. In other words, users should not have privileges that are beyond what is necessary. Not following the principle of least privilege can create security risks.</p>
+<p>The chmod  command can help you manage this authorization. The chmod command changes permissions on files and directories.</p>
+<h3 id="using-chmod"><strong>Using chmod</strong></h3>
+<p>The chmod command requires two arguments. The first argument indicates how to change permissions, and the second argument indicates the file or directory that you want to change permissions for.  For example, the following command would add all permissions to login_sessions.txt:</p>
+<p>chmod u+rwx,g+rwx,o+rwx login_sessions.txt</p>
+<p>If you wanted to take all the permissions away, you could use</p>
+<p>chmod u-rwx,g-rwx,o-rwx login_sessions.txt</p>
+<p>Another way to assign these permissions is to use the equals sign (=) in this first argument. Using = with chmod sets, or assigns, the permissions exactly as specified. For example, the following command would set read permissions for login_sessions.txt for user, group, and other:</p>
+<p>chmod u=r,g=r,o=r login_sessions.txt</p>
+<p>This command overwrites existing permissions. For instance, if the user previously had write permissions, these write permissions are removed after you specify only read permissions with =.</p>
+<p>The following table reviews how each character is used within the first argument of chmod:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Character</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>u</td>
+<td>indicates changes will be made to user permissions</td>
+</tr>
+<tr>
+<td>g</td>
+<td>indicates changes will be made to group permissions</td>
+</tr>
+<tr>
+<td>o</td>
+<td>indicates changes will be made to other permissions</td>
+</tr>
+<tr>
+<td>+</td>
+<td>adds permissions to the user, group, or other</td>
+</tr>
+<tr>
+<td>-</td>
+<td>removes permissions from the user, group, or other</td>
+</tr>
+<tr>
+<td>=</td>
+<td>assigns permissions for the user, group, or other</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> When there are permission changes to more than one owner type, commas are needed to separate changes for each owner type. You should not add spaces after those commas.</p>
+<h3 id="the-principle-of-least-privilege-in-action"><strong>The principle of least privilege in action</strong></h3>
+<p>As a security analyst, you may encounter a situation like this one: There’s a file called bonuses.txt within a compensation directory. The owner of this file is a member of the Human Resources department with a username of hrrep1. It has been decided that hrrep1 needs access to this file. But, since this file contains confidential information, no one else in the hr group needs access.</p>
+<p>You run ls -l to check the permissions of files in the compensation directory and discover that the permissions for bonuses.txt are -rw-rw----. The group owner type has read and write permissions that do not align with the principle of least privilege.  </p>
+<p>To remedy the situation, you input chmod g-rw bonuses.txt. Now, only the user who needs to access this file to carry out their job responsibilities can access this file.</p>
+<h2 id="key-takeaways_8">Key takeaways</h2>
+<p>Managing directory and file permissions may be a part of your work as a security analyst. Using ls with the -l and -la options allows you to investigate directory and file permissions. Using chmod allows you to change user permissions and ensure they are aligned with the principle of least privilege.</p>
+<hr />
+<h2 id="add-and-delete-users">Add and delete Users</h2>
+<p><strong>Root User (SuperUser)</strong></p>
+<ul>
+<li>A user with elevated privileges to modify the system. </li>
+</ul>
+<p>Problems with logging in as root </p>
+<ul>
+<li>Security Risks </li>
+<li>Irreversible Mistakes </li>
+<li>Accountability </li>
+</ul>
+<p><strong>Sudo</strong><br />
+Temporarily grants elevated permissions to specific users. </p>
+<ul>
+<li>Not everyone can use sudo, you need to be in the sudoers file. </li>
+</ul>
+<p><strong>Useradd</strong></p>
+<ul>
+<li>People with root and sudo can use this command </li>
+</ul>
+<p><strong>userdel</strong></p>
+<ul>
+<li>Deletes a user from the system. </li>
+</ul>
+<h3 id="usermod"><strong>usermod</strong></h3>
+<p>The usermod command modifies existing user accounts. The same -g and -G options from the useradd command can be used with usermod if a user already exists. </p>
+<p>To change the primary group of an existing user, you need the -g option. For example, entering sudo usermod -g executive fgarcia would change fgarcia’s primary group to the executive group.</p>
+<p>To add a supplemental group for an existing user, you need the -G option. You also need a -a option, which appends the user to an existing group and is only used with the -G option. For example, entering sudo usermod -a -G marketing fgarcia would add the existing fgarcia user to the supplemental marketing group.</p>
+<p><strong>Note:</strong> When changing the supplemental group of an existing user, if you don't include the -a option, -G will replace any existing supplemental groups with the groups specified after usermod.  Using -a with -G ensures that the new groups are added but existing groups are not replaced.</p>
+<p>There are other options you can use with usermod to specify how you want to modify the user, including:</p>
+<ul>
+<li>
+<p>-d: Changes the user’s home directory.</p>
+</li>
+<li>
+<p>-l: Changes the user’s login name.</p>
+</li>
+<li>
+<p>-L: Locks the account so the user can’t log in.</p>
+</li>
+</ul>
+<p>Entering sudo userdel -r fgarcia would delete fgarcia as a user and delete all files in their home directory. Before deleting any user files, you should ensure you have backups in case you need them later.</p>
+<p><strong>Note</strong>: Instead of deleting the user, you could consider deactivating their account with usermod -L. This prevents the user from logging in while still giving you access to their account and associated permissions. For example, if a user left an organization, this option would allow you to identify which files they have ownership over, so you could move this ownership to other users.</p>
+<p><strong>sudo chown fgarcia access.txt</strong></p>
+<p>To change the group owner of access.txt to security, enter sudo chown :security access.txt. You must enter a colon (:) before security to designate it as a group name.</p>
+<hr />
+<p>Course COntent</p>
+<p>Previously, you explored authorization, authentication, and Linux commands with sudo, useradd, and userdel. The sudo command is important for security analysts because it allows users to have elevated permissions without risking the system by running commands as the root user. You’ll continue exploring authorization, authentication, and Linux commands in this reading and learn two more commands that can be used with sudo: usermod and chown. </p>
+<h2 id="responsible-use-of-sudo">Responsible use of sudo</h2>
+<p>To manage authorization and authentication, you need to be a <strong>root user,</strong> or a user with elevated privileges to modify the system. The root user can also be called the “super user.” You become a root user by logging in as the root user. However, running commands as the root user is not recommended in Linux because it can create security risks if malicious actors compromise that account. It’s also easy to make irreversible mistakes, and the system can’t track who ran a command. For these reasons, rather than logging in as the root user, it’s recommended you use sudo in Linux when you need elevated privileges.</p>
+<p>The sudo command temporarily grants elevated permissions to specific users. The name of this command comes from “super user do.” Users must be given access in a configuration file to use sudo. This file is called the “sudoers file.” Although using sudo is preferable to logging in as the root user, it's important to be aware that users with the elevated permissions to use sudo might be more at risk in the event of an attack.</p>
+<p>You can compare this to a hotel with a master key. The master key can be used to access any room in the hotel. There are some workers at the hotel who need this key to perform their work. For example, to clean all the rooms, the janitor would scan their ID badge and then use this master key. However, if someone outside the hotel’s network gained access to the janitor’s ID badge and master key, they could access any room in the hotel. In this example, the janitor with the master key represents a user using sudo for elevated privileges. Because of the dangers of sudo, only users who really need to use it should have these permissions.</p>
+<p>Additionally, even if you need access to sudo, you should be careful about using it with only the commands you need and nothing more. Running commands with sudo allows users to bypass the typical security controls that are in place to prevent elevated access to an attacker.</p>
+<p><strong>Note</strong>: Be aware of sudo if copying commands from an online source. It’s important you don’t use sudo accidentally. </p>
+<h2 id="authentication-and-authorization-with-sudo">Authentication and authorization with sudo</h2>
+<p>You can use sudo with many authentication and authorization management tasks. As a reminder, <strong>authentication</strong> is the process of verifying who someone is, and <strong>authorization</strong> is the concept of granting access to specific resources in a system. Some of the key commands used for these tasks include the following:</p>
+<h3 id="useradd"><strong>useradd</strong></h3>
+<p>The useradd command adds a user to the system. To add a user with the username of fgarcia with sudo, enter sudo useradd fgarcia. There are additional options you can use with useradd:</p>
+<ul>
+<li>
+<p>-g: Sets the user’s default group, also called their primary group</p>
+</li>
+<li>
+<p>-G: Adds the user to additional groups, also called supplemental or secondary groups</p>
+</li>
+</ul>
+<p>To use the -g option, the primary group must be specified after -g. For example, entering sudo useradd -g security fgarcia adds fgarcia as a new user and assigns their primary group to be security.</p>
+<p>To use the -G option, the supplemental group must be passed into the command after -G. You can add more than one supplemental group at a time with the -G option. Entering sudo useradd -G finance,admin fgarcia adds fgarcia as a new user and adds them to the existing finance and admin groups.</p>
+<h3 id="usermod_1"><strong>usermod</strong></h3>
+<p>The usermod command modifies existing user accounts. The same -g and -G options from the useradd command can be used with usermod if a user already exists. </p>
+<p>To change the primary group of an existing user, you need the -g option. For example, entering sudo usermod -g executive fgarcia would change fgarcia’s primary group to the executive group.</p>
+<p>To add a supplemental group for an existing user, you need the -G option. You also need a -a option, which appends the user to an existing group and is only used with the -G option. For example, entering sudo usermod -a -G marketing fgarcia would add the existing fgarcia user to the supplemental marketing group.</p>
+<p><strong>Note:</strong> When changing the supplemental group of an existing user, if you don't include the -a option, -G will replace any existing supplemental groups with the groups specified after usermod.  Using -a with -G ensures that the new groups are added but existing groups are not replaced.</p>
+<p>There are other options you can use with usermod to specify how you want to modify the user, including:</p>
+<ul>
+<li>
+<p>-d: Changes the user’s home directory.</p>
+</li>
+<li>
+<p>-l: Changes the user’s login name.</p>
+</li>
+<li>
+<p>-L: Locks the account so the user can’t log in.</p>
+</li>
+</ul>
+<p>The option always goes after the usermod command. For example, to change fgarcia’s home directory to /home/garcia_f, enter sudo usermod -d /home/garcia_f fgarcia. The option -d directly follows the command usermod before the other two needed arguments.</p>
+<h3 id="userdel"><strong>userdel</strong></h3>
+<p>The userdel command deletes a user from the system. For example, entering sudo userdel fgarcia deletes fgarcia as a user. Be careful before you delete a user using this command.</p>
+<p>The userdel command doesn’t delete the files in the user’s home directory unless you use the -r option. Entering sudo userdel -r fgarcia would delete fgarcia as a user and delete all files in their home directory. Before deleting any user files, you should ensure you have backups in case you need them later.</p>
+<p><strong>Note</strong>: Instead of deleting the user, you could consider deactivating their account with usermod -L. This prevents the user from logging in while still giving you access to their account and associated permissions. For example, if a user left an organization, this option would allow you to identify which files they have ownership over, so you could move this ownership to other users.</p>
+<h3 id="chown"><strong>chown</strong></h3>
+<p>The chown command changes ownership of a file or directory. You can use chown to change user or group ownership. To change the user owner of the access.txt file to fgarcia, enter sudo chown fgarcia access.txt. To change the group owner of access.txt to security, enter sudo chown :security access.txt. You must enter a colon (:) before security to designate it as a group name.</p>
+<p>Similar to useradd, usermod, and userdel, there are additional options that can be used with chown. </p>
+<h2 id="key-takeaways_9">Key takeaways</h2>
+<p>Authentication is the process of a user verifying their identity, and authorization is the process of determining what they have access to. You can use the sudo command to temporarily run commands with elevated privileges to complete authentication and authorization management tasks. Specifically, useradd, userdel, usermod, and chown can be used to manage users and file ownership.</p>
+<hr />
+<h2 id="get-help-in-linux">GET HELP in LINUX</h2>
+<p>man </p>
+<ul>
+<li>Displays information on other commands and how they work</li>
+</ul>
+<p>whatis</p>
+<ul>
+<li>Displays a description of a command on a single line </li>
+</ul>
+<p>apropos</p>
+<ul>
+<li>Searches the manual PAGE descriptions for a specified spring </li>
+<li>apropos -a change password <br />
+        - gives out put with the words seperately, thus searching as a string and giving commands for changing paswords</li>
+</ul>
+<hr />
+<p>Course Content </p>
+<p>Previously, you were introduced to the Linux community and some resources that exist to help Linux users. Linux has many options available to give users the information they need. This reading will review these resources. When you’re aware of the resources available to you, you can continue to learn Linux independently. You can also discover even more ways that Linux can support your work as a security analyst.</p>
+<h2 id="linux-community">Linux community</h2>
+<p>Linux has a large online community, and this is a huge resource for Linux users of all levels. You can likely find the answers to your questions with a simple online search. Troubleshooting issues by searching and reading online is an effective way to discover how others approached your issue. It’s also a great way for beginners to learn more about Linux.</p>
+<p>The <a href="https://unix.stackexchange.com/">UNIX and Linux Stack Exchange</a> is a trusted resource for troubleshooting Linux issues. The Unix and Linux Stack Exchange is a question and answer website where community members can ask and answer questions about Linux. Community members vote on answers, so the higher quality answers are displayed at the top. Many of the questions are related to specific topics from advanced users, and the topics might help you troubleshoot issues as you continue using Linux.</p>
+<h2 id="integrated-linux-support">Integrated Linux support</h2>
+<p>Linux also has several commands that you can use for support.</p>
+<h3 id="man"><strong>man</strong></h3>
+<p>The man command displays information on other commands and how they work. It’s short for “manual.” To search for information on a command, enter the command after man. For example, entering man chown returns detailed information about chown, including the various options you can use with it. The output of the man command is also called a “man page.”</p>
+<h3 id="apropos"><strong>apropos</strong></h3>
+<p>The apropos command searches the man page descriptions for a specified string. Man pages can be lengthy and difficult to search through if you’re looking for a specific keyword. To use apropos, enter the keyword after apropos. </p>
+<p>You can also include the -a option to search for multiple words. For example, entering apropos -a graph editor outputs man pages that contain both the words “graph" and "editor” in their descriptions.</p>
+<h3 id="whatis"><strong>whatis</strong></h3>
+<p>The whatis command displays a description of a command on a single line. For example, entering whatis nano outputs the description of nano. This command is useful when you don't need a detailed description, just a general idea of the command. This might be as a reminder. Or, it might be after you discover a new command through a colleague or online resource and want to know more. </p>
+<h2 id="key-takeaways_10">Key takeaways</h2>
+<p>There are many resources available for troubleshooting issues or getting support for Linux. Linux has a large global community of users who ask and answer questions on online resources, such as the Unix and Linux Stack Exchange. You can also use integrated support commands in Linux, such as man, apropos, and whatis.</p>
+<h2 id="resources-for-more-information">Resources for more information</h2>
+<p>There are many resources available online that can help you learn new Linux concepts, review topics, or ask and answer questions with the global Linux community. The <a href="https://unix.stackexchange.com/" title="This resource is a great place to ask and answer questions about Linux with the online community.">Unix and Linux Stack Exchange</a> is one example, and you can search online to find others.</p>
+<hr />
+<h2 id="terms-and-definitions-from-course-4-module-3"><strong>Terms and definitions from Course 4, Module 3</strong></h2>
+<p><strong>Absolute file path:</strong> The full file path, which starts from the root</p>
+<p><strong>Argument (Linux):</strong> Specific information needed by a command</p>
+<p><strong>Authentication:</strong> The process of verifying who someone is</p>
+<p><strong>Authorization:</strong> The concept of granting access to specific resources in a system</p>
+<p><strong>Bash:</strong> The default shell in most Linux distributions</p>
+<p><strong>Command:</strong> An instruction telling the computer to do something</p>
+<p><strong>File path:</strong> The location of a file or directory</p>
+<p><strong>Filesystem Hierarchy Standard (FHS):</strong> The component of the Linux OS that organizes data</p>
+<p><strong>Filtering:</strong> Selecting data that match a certain condition</p>
+<p><strong>nano:</strong> A command-line file editor that is available by default in many Linux distributions</p>
+<p><strong>Options:</strong> Input that modifies the behavior of a command</p>
+<p><strong>Permissions:</strong> The type of access granted for a file or directory</p>
+<p><strong>Principle of least privilege:</strong> The concept of granting only the minimal access and authorization required to complete a task or function</p>
+<p><strong>Relative file path:</strong> A file path that starts from the user's current directory</p>
+<p><strong>Root directory:</strong> The highest-level directory in Linux</p>
+<p><strong>Root user (or superuser):</strong> A user with elevated privileges to modify the system</p>
+<p><strong>Standard input:</strong> Information received by the OS via the command line</p>
+<p><strong>Standard output:</strong> Information returned by the OS through the shell</p>
+<h1 id="databases-and-sql">Databases and SQL</h1>
+<p>What we'll learn </p>
+<div class="hl"><pre><span></span><code>- Relational Databases 
+- SQL querier
+- SQL filters 
+- SQL joins
+</code></pre></div>
+
+<p>Databases: <br />
+ An organized collection of information or data</p>
+<p>Spreadsheet: </p>
+<ul>
+<li>Designed for a single user or a small team </li>
+<li>Store Less Data</li>
+</ul>
+<p>What is the advantage of using a Database? </p>
+<ul>
+<li>Accessed by multiple people simultaneously </li>
+<li>Store massive amounts of data</li>
+<li>Perform complex task while accessing data</li>
+</ul>
+<p>WE will be using RELATIONAL DATABASES</p>
+<p>Relational Database: <br />
+A structured database containing tables that are related to each other. </p>
+<p>Relational database might have more than one database </p>
+<ul>
+<li>we establish a relationship between them with a common variable. </li>
+</ul>
+<p>There are 2 types of keys </p>
+<ul>
+<li>
+<p>Primary Keys : A column where every row has a unique entry</p>
+<ul>
+<li>The primary key must not have any duplicate values</li>
+<li>A table can have only 1 primary key<br />
+Example: Employee ID </li>
+</ul>
+</li>
+<li>
+<p>Foreign Key: A column in a table that is a primary key in another table </p>
+<ul>
+<li>Can have empty value or duplicates. </li>
+<li>this key lets us connect two tables</li>
+</ul>
+</li>
+</ul>
+<h2 id="query-databases-in-sql">Query databases in SQL</h2>
+<p>What is SQL (Structured Query Language)</p>
+<ul>
+<li>A programming Language used to create. interact with, and request information from a database. </li>
+</ul>
+<p>What is a Query? </p>
+<ul>
+<li>A request for data from a database table or a combination of tables. </li>
+</ul>
+<p>SQl is used to retrieve logs | also used for basic data analytics </p>
+<p>What is Log? </p>
+<ul>
+<li>A record of events that occur within a organization's systems. </li>
+</ul>
+<p>We can use SQl in the linux command line. </p>
+<ul>
+<li>sqlite3 (if SQLite)</li>
+</ul>
+<hr />
+<p>Course Content <br />
+In this reading, you'll explore the differences between the two tools as they relate to filtering. You'll also learn that one way to access SQL is through the Linux command line.</p>
+<h2 id="accessing-sql"><strong>Accessing SQL</strong></h2>
+<p>There are many interfaces for accessing SQL and many different versions of SQL. One way to access SQL is through the Linux command line.</p>
+<p>To access SQL from Linux, you need to type in a command for the version of SQL that you want to use. For example, if you want to access SQLite, you can enter the command <strong>sqlite3</strong> in the command line.</p>
+<p>After this, any commands typed in the command line will be directed to SQL instead of Linux commands.</p>
+<h2 id="differences-between-linux-and-sql-filtering"><strong>Differences between Linux and SQL filtering</strong></h2>
+<p>Although both Linux and SQL allow you to filter through data, there are some differences that affect which one you should choose.</p>
+<h3 id="purpose"><strong>Purpose</strong></h3>
+<p>Linux filters data in the context of files and directories on a computer system. It’s used for tasks like searching for specific files, manipulating file permissions, or managing processes. </p>
+<p>SQL is used to filter data within a database management system. It’s used for querying and manipulating data stored in tables and retrieving specific information based on defined criteria. </p>
+<h3 id="syntax"><strong>Syntax</strong></h3>
+<p>Linux uses various commands and command-line options specific to each filtering tool. Syntax varies depending on the tool and purpose. Some examples of Linux commands are find, sed, cut, e grep</p>
+<p>SQL uses the Structured Query Language (SQL), a standardized language with specific keywords and clauses for filtering data across different SQL databases. Some examples of SQL keywords and clauses are WHERE, SELECT, JOIN</p>
+<h3 id="structure"><strong>Structure</strong></h3>
+<p>SQL offers a lot more structure than Linux, which is more free-form and not as tidy.</p>
+<p>For example, if you wanted to access a log of employee log-in attempts, SQL would have each record separated into columns. Linux would print the data as a line of text without this organization. As a result, selecting a specific column to analyze would be easier and more efficient in SQL.</p>
+<p>In terms of structure, SQL provides results that are more easily readable and that can be adjusted more quickly than when using Linux.</p>
+<h3 id="joining-tables"><strong>Joining tables</strong></h3>
+<p>Some security-related decisions require information from different tables. SQL allows the analyst to join multiple tables together when returning data. Linux doesn’t have that same functionality; it doesn’t allow data to be connected to other information on your computer. This is more restrictive for an analyst going through security logs.</p>
+<h3 id="best-uses"><strong>Best uses</strong></h3>
+<p>As a security analyst, it’s important to understand when you can use which tool. Although SQL has a more organized structure and allows you to join tables, this doesn’t mean that there aren’t situations that would require you to filter data in Linux.</p>
+<p>A lot of data used in cybersecurity will be stored in a database format that works with SQL. However, other logs might be in a format that is not compatible with SQL. For instance, if the data is stored in a text file, you cannot search through it with SQL. In those cases, it is useful to know how to filter in Linux. </p>
+<h2 id="key-takeaways_11"><strong>Key takeaways</strong></h2>
+<p>Linux filtering focuses on managing files and directories on a system, while SQL filtering focuses on structured data manipulation within databases. To work with SQL, you can access it from multiple different interfaces, such as the Linux command line. Both SQL and Linux allow you to filter for specific data, but SQL offers the advantages of structuring the data and allowing you to join data from multiple tables.</p>
+<hr />
+<h1 id="sql-queries">SQL Queries</h1>
+<p>Query Commands: </p>
+<p><strong>-&gt; SELECT: Indicates which column to return</strong> <br />
+<strong>-&gt; FROM: Indicates which table to query</strong></p>
+<ul>
+<li>Syntax in SQL is not case-sensitive </li>
+<li>There should be a colon at the end</li>
+</ul>
+<div class="hl"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">employee_id</span><span class="p">,</span><span class="w"> </span><span class="n">device_id</span>
+<span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="p">;</span><span class="w"> </span>
+</code></pre></div>
+
+<p>FOR Seeing everything in the table</p>
+<div class="hl"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="p">;</span>
+</code></pre></div>
+
+<p>-&gt; ORDER BY: sequences the records returned by a query based on a specified column or columns. This can be in either ascending or descending order.</p>
+<div class="hl"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">exployees</span>
+<span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">city</span><span class="p">;</span>
+</code></pre></div>
+
+<p>By default the order is Ascending , for descending we do: </p>
+<div class="hl"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">customerId</span><span class="p">,</span><span class="w"> </span><span class="n">city</span><span class="p">,</span><span class="w"> </span><span class="n">country</span>
+<span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customers</span>
+<span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">city</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre></div>
+
+<hr />
+<p>Course Content </p>
+<p>In this reading, you’ll review those basic SQL queries and learn a new keyword that will help you organize your output. You'll also learn about the Chinook database, which this course uses for queries in readings and quizzes.</p>
+<p><strong>Why We Use a Ready-Made Database:</strong> Creating youYou've explored a lot about SQL, including applying filters to SQL queries and joining multiple tables together in a query.  There's still more that you can do with SQL. This reading will explore an example of something new you can add to your SQL toolbox: aggregate functions. You'll then focus on how you can continue learning about this and other SQL topics on your own.</p>
+<p>Aggregate functions<br />
+In SQL, aggregate functions are functions that perform a calculation over multiple data points and return the result of the calculation. The actual data is not returned. </p>
+<p>There are various aggregate functions that perform different calculations:</p>
+<p>COUNT returns a single number that represents the number of rows returned from your query.</p>
+<p>AVG returns a single number that represents the average of the numerical data in a column.</p>
+<p>SUM returns a single number that represents the sum of the numerical data in a column. </p>
+<p>Aggregate function syntax<br />
+To use an aggregate function, place the keyword for it after the SELECT keyword, and then in parentheses, indicate the column you want to perform the calculation on.</p>
+<p>For example, when working with the customers table, you can use aggregate functions to summarize important information about the table. If you want to find out how many customers there are in total, you can use the COUNT function on any column, and SQL will return the total number of records, excluding NULL values. You can run this query and explore its output:</p>
+<p>12<br />
+SELECT COUNT(firstname)<br />
+FROM customers;<br />
+Reset<br />
+The result is a table with one column titled COUNT(firstname) and one row that indicates the count. </p>
+<p>If you want to find the number of customers from a specific country, you can add a filter to your query:</p>
+<p>123<br />
+SELECT COUNT(firstname)<br />
+FROM customers<br />
+WHERE country = 'USA';<br />
+Reset<br />
+With this filter, the count is lower because it only includes the records where the country column contains a value of 'USA'.</p>
+<p>There are a lot of other aggregate functions in SQL. The syntax of placing them after SELECT is exactly the same as the COUNT function.</p>
+<p>Continuing to learn SQL<br />
+SQL is a widely used querying language, with many more keywords and applications. You can continue to learn more about aggregate functions and other aspects of using SQL on your own.</p>
+<p>Most importantly, approach new tasks with curiosity and a willingness to find new ways to apply SQL to your work as a security analyst. Identify the data results that you need and try to use SQL to obtain these results.</p>
+<p>Fortunately, SQL is one of the most important tools for working with databases and analyzing data, so you'll find a lot of support in trying to learn SQL online. First, try searching for the concepts you've already learned and practiced to find resources that have accurate easy-to-follow explanations. When you identify these resources, you can use them to extend your knowledge.</p>
+<p>Continuing your practical experience with SQL is also important. You can also search for new databases that allow you to perform SQL queries using what you've learned.</p>
+<p>Key takeaways<br />
+Aggregate functions like COUNT, SUM, and AVG allow you to work with SQL in new ways. There are many other additional aspects of SQL that could be useful to you as an analyst. By continuing to explore SQL on your own, you can expand the ways you can apply SQL in a cybersecurity context.r own database from scratch is a lot like building a car instead of just learning how to drive one. It is a difficult process because you have to manually set up all the rules for how information is stored, how to keep it from getting lost, and how to make sure the computer can find specific data quickly. Instead of spending weeks building that complicated "engine," we use the <strong>Chinook database</strong> so you can get straight to the important part: learning how to ask questions and get answers from data.</p>
+<h2 id="basic-sql-query">Basic SQL query</h2>
+<p>There are two essential keywords in any SQL query: SELECT and FROM. You will use these keywords every time you want to query a SQL database. Using them together helps SQL identify what data you need from a database and the table you are returning it from.</p>
+<p>The video demonstrated this SQL query:</p>
+<p>SELECT employee_id, device_id</p>
+<p>FROM employees;</p>
+<p>In readings and quizzes, this course uses a sample database called the Chinook database to run queries. The Chinook database includes data that might be created at a digital media company. A security analyst employed by this company might need to query this data.  For example, the database contains eleven tables, including an employees table, a customers table, and an invoices table. These tables include data such as names and addresses.  </p>
+<p>As an example, you can run this query to return data from the customers table of the Chinook database:</p>
+<p>1</p>
+<p>2</p>
+<p>Reset</p>
+<p>+------------+---------------------+----------------+</p>
+<p>| CustomerId | City                | Country        |<br />
++------------+---------------------+----------------+</p>
+<p>|          1 | São José dos Campos | Brazil         |<br />
+|          2 | Stuttgart           | Germany        |<br />
+|          3 | Montréal            | Canada         |<br />
+|          4 | Oslo                | Norway         |<br />
+|          5 | Prague              | Czech Republic |<br />
+|          6 | Prague              | Czech Republic |<br />
+|          7 | Vienne              | Austria        |<br />
+|          8 | Brussels            | Belgium        |<br />
+|          9 | Copenhagen          | Denmark        |<br />
+|         10 | São Paulo           | Brazil         |<br />
+|         11 | São Paulo           | Brazil         |<br />
+|         12 | Rio de Janeiro      | Brazil         |<br />
+|         13 | Brasília            | Brazil         |<br />
+|         14 | Edmonton            | Canada         |<br />
+|         15 | Vancouver           | Canada         |<br />
+|         16 | Mountain View       | USA            |<br />
+|         17 | Redmond             | USA            |<br />
+|         18 | New York            | USA            |<br />
+|         19 | Cupertino           | USA            |<br />
+|         20 | Mountain View       | USA            |<br />
+|         21 | Reno                | USA            |<br />
+|         22 | Orlando             | USA            |<br />
+|         23 | Boston              | USA            |<br />
+|         24 | Chicago             | USA            |<br />
+|         25 | Madison             | USA            |<br />
++------------+---------------------+----------------+<br />
+(Output limit exceeded, 25 of 59 total rows shown)</p>
+<h3 id="select"><strong>SELECT</strong></h3>
+<p>The SELECT keyword indicates which columns to return. For example, you can return the customerid column from the Chinook database with</p>
+<p>SELECT customerid</p>
+<p>You can also select multiple columns by separating them with a comma. For example, if you want to return both the customerid and city columns, you should write SELECT customerid, city.</p>
+<p>If you want to return all columns in a table, you can follow the SELECT keyword with an asterisk (<em>). The first line in the query will be SELECT </em>.</p>
+<p><strong>Note:</strong> Although the tables you're querying in this course are relatively small, using SELECT * may not be advisable when working with large databases and tables; in those cases, the final output may be difficult to understand and might be slow to run. </p>
+<h3 id="from"><strong>FROM</strong></h3>
+<p>The SELECT keyword always comes with the FROM keyword. FROM indicates which table to query. To use the FROM keyword, you should write it after the SELECT keyword, often on a new line, and follow it with the name of the table you’re querying. If you want to return all columns from the customers table, you can write:</p>
+<p>SELECT *</p>
+<p>FROM customers;</p>
+<p>When you want to end the query here, you put a semicolon (;) at the end to tell SQL that this is the entire query.</p>
+<p><strong>Note:</strong> Line breaks are not necessary in SQL queries, but are often used to make the query easier to understand. If you prefer, you can also write the previous query on one line as</p>
+<p>SELECT * FROM customers;</p>
+<h2 id="order-by">ORDER BY</h2>
+<p>Database tables are often very complicated, and this is where other SQL keywords come in handy. ORDER BY is an important keyword for organizing the data you extract from a table.</p>
+<p>ORDER BY sequences the records returned by a query based on a specified column or columns. This can be in either ascending or descending order.</p>
+<h3 id="sorting-in-ascending-order"><strong>Sorting in ascending order</strong></h3>
+<p>To use the ORDER BY keyword, write it at the end of the query and specify a column to base the sort on. In this example, SQL will return the customerid, city, and country columns from the customers table, and the records will be sequenced by the city column:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>+------------+--------------+----------------+</p>
+<p>| CustomerId | City         | Country        |<br />
++------------+--------------+----------------+</p>
+<p>|         48 | Amsterdam    | Netherlands    |<br />
+|         59 | Bangalore    | India          |<br />
+|         36 | Berlin       | Germany        |<br />
+|         38 | Berlin       | Germany        |<br />
+|         42 | Bordeaux     | France         |<br />
+|         23 | Boston       | USA            |<br />
+|         13 | Brasília     | Brazil         |<br />
+|          8 | Brussels     | Belgium        |<br />
+|         45 | Budapest     | Hungary        |<br />
+|         56 | Buenos Aires | Argentina      |<br />
+|         24 | Chicago      | USA            |<br />
+|          9 | Copenhagen   | Denmark        |<br />
+|         19 | Cupertino    | USA            |<br />
+|         58 | Delhi        | India          |<br />
+|         43 | Dijon        | France         |<br />
+|         46 | Dublin       | Ireland        |<br />
+|         54 | Edinburgh    | United Kingdom |<br />
+|         14 | Edmonton     | Canada         |<br />
+|         26 | Fort Worth   | USA            |<br />
+|         37 | Frankfurt    | Germany        |<br />
+|         31 | Halifax      | Canada         |<br />
+|         44 | Helsinki     | Finland        |<br />
+|         34 | Lisbon       | Portugal       |<br />
+|         52 | London       | United Kingdom |<br />
+|         53 | London       | United Kingdom |<br />
++------------+--------------+----------------+<br />
+(Output limit exceeded, 25 of 59 total rows shown)</p>
+<p>The ORDER BY keyword sorts the records based on the column specified after this keyword. By default, as shown in this example, the sequence will be in ascending order. This means</p>
+<ul>
+<li>
+<p>if you choose a column containing numeric data, it sorts the output from the smallest to largest. For example, if sorting on customerid, the ID numbers are sorted from smallest to largest.</p>
+</li>
+<li>
+<p>if the column contains alphabetic characters, such as in the example with the city column, it orders the records from the beginning of the alphabet to the end. </p>
+</li>
+</ul>
+<h3 id="sorting-in-descending-order"><strong>Sorting in descending order</strong></h3>
+<p>You can also use the ORDER BY with the DESC keyword to sort in descending order. The DESC keyword is short for "descending" and tells SQL to sort numbers from largest to smallest, or alphabetically from Z to A. This can be done by following ORDER BY with the DESC keyword. For example, you can run this query to examine how the results differ when DESC is applied: </p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>+------------+---------------------+----------------+</p>
+<p>| CustomerId | City                | Country        |<br />
++------------+---------------------+----------------+</p>
+<p>|         33 | Yellowknife         | Canada         |<br />
+|         32 | Winnipeg            | Canada         |<br />
+|         49 | Warsaw              | Poland         |<br />
+|          7 | Vienne              | Austria        |<br />
+|         15 | Vancouver           | Canada         |<br />
+|         27 | Tucson              | USA            |<br />
+|         29 | Toronto             | Canada         |<br />
+|         10 | São Paulo           | Brazil         |<br />
+|         11 | São Paulo           | Brazil         |<br />
+|          1 | São José dos Campos | Brazil         |<br />
+|          2 | Stuttgart           | Germany        |<br />
+|         51 | Stockholm           | Sweden         |<br />
+|         55 | Sidney              | Australia      |<br />
+|         57 | Santiago            | Chile          |<br />
+|         28 | Salt Lake City      | USA            |<br />
+|         47 | Rome                | Italy          |<br />
+|         12 | Rio de Janeiro      | Brazil         |<br />
+|         21 | Reno                | USA            |<br />
+|         17 | Redmond             | USA            |<br />
+|          5 | Prague              | Czech Republic |<br />
+|          6 | Prague              | Czech Republic |<br />
+|         35 | Porto               | Portugal       |<br />
+|         39 | Paris               | France         |<br />
+|         40 | Paris               | France         |<br />
+|         30 | Ottawa              | Canada         |<br />
++------------+---------------------+----------------+<br />
+(Output limit exceeded, 25 of 59 total rows shown)</p>
+<p>Now, cities at the end of the alphabet are listed first.</p>
+<h3 id="sorting-based-on-multiple-columns"><strong>Sorting based on multiple columns</strong></h3>
+<p>You can also choose multiple columns to order by. For example, you might first choose the country and then the city column. SQL then sorts the output by country, and for rows with the same country, it sorts them based on city. You can run this to explore how SQL displays this:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>+------------+---------------------+----------------+</p>
+<p>| CustomerId | City                | Country        |<br />
++------------+---------------------+----------------+</p>
+<p>|         56 | Buenos Aires        | Argentina      |<br />
+|         55 | Sidney              | Australia      |<br />
+|          7 | Vienne              | Austria        |<br />
+|          8 | Brussels            | Belgium        |<br />
+|         13 | Brasília            | Brazil         |<br />
+|         12 | Rio de Janeiro      | Brazil         |<br />
+|          1 | São José dos Campos | Brazil         |<br />
+|         10 | São Paulo           | Brazil         |<br />
+|         11 | São Paulo           | Brazil         |<br />
+|         14 | Edmonton            | Canada         |<br />
+|         31 | Halifax             | Canada         |<br />
+|          3 | Montréal            | Canada         |<br />
+|         30 | Ottawa              | Canada         |<br />
+|         29 | Toronto             | Canada         |<br />
+|         15 | Vancouver           | Canada         |<br />
+|         32 | Winnipeg            | Canada         |<br />
+|         33 | Yellowknife         | Canada         |<br />
+|         57 | Santiago            | Chile          |<br />
+|          5 | Prague              | Czech Republic |<br />
+|          6 | Prague              | Czech Republic |<br />
+|          9 | Copenhagen          | Denmark        |<br />
+|         44 | Helsinki            | Finland        |<br />
+|         42 | Bordeaux            | France         |<br />
+|         43 | Dijon               | France         |<br />
+|         41 | Lyon                | France         |<br />
++------------+---------------------+----------------+<br />
+(Output limit exceeded, 25 of 59 total rows shown)</p>
+<h2 id="key-takeaways_12">Key takeaways</h2>
+<p>SELECT and FROM are important keywords in SQL queries. You use SELECT to indicate which columns to return and FROM to indicate which table to query. You can also include ORDER BY in your query to organize the output. These foundational SQL skills will support you as you move into more advanced queries.</p>
+<hr />
+<h3 id="basic-filters-on-sql-query">Basic Filters on SQL Query</h3>
+<p>Filtering : <br />
+Selecting data that match a certain condition </p>
+<p>Operator: <br />
+A Symbol or keyword that represents an operation. </p>
+<p><strong>WHERE -&gt; Indicates the condition for a filter</strong></p>
+<p>the SQL command will look like : </p>
+<div class="hl"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">log_in_attempts</span><span class="w"> </span>
+<span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">country</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'USA'</span><span class="p">;</span><span class="w"> </span>
+</code></pre></div>
+
+<p>More Complex Filters: </p>
+<ul>
+<li>Filter for 'East%'<br />
+        This would return: <br />
+            East-120 <br />
+            East-290<br />
+            Everything with the word EAST </li>
+</ul>
+<p><strong>LIKE -&gt; Used with where</strong></p>
+<h3 id="the-where-clause-and-basic-operator">The WHERE clause and basic operator</h3>
+<p>Previously, you focused on how to refine your SQL queries by using the WHERE clause to filter results. In this reading, you’ll further explore how to use the WHERE clause, the LIKE operator and the percentage sign (%) wildcard. You’ll also be introduced to the underscore (_), another wildcard that can help you filter queries.</p>
+<h2 id="how-filtering-helps">How filtering helps</h2>
+<p>As a security analyst, you'll often be responsible for working with very large and complicated security logs. To find the information you need, you'll often need to use SQL to filter the logs.</p>
+<p>In a cybersecurity context, you might use filters to find the login attempts of a specific user or all login attempts made at the time of a security issue. As another example, you might filter to find the devices that are running a specific version of an application.</p>
+<h2 id="where">WHERE</h2>
+<p>To create a filter in SQL, you need to use the keyword WHERE. WHERE indicates the condition for a filter.</p>
+<p>If you needed to email employees with a title of IT Staff, you might use a query like the one in the following example. You can run this example to examine what it returns: </p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>Rather than returning all records in the employees table, this WHERE clause instructs SQL to return only those that contain 'IT Staff' in the title column. It uses the equals sign (=) operator to set this condition.</p>
+<p><strong>Note:</strong> You should place the semicolon (;) where the query ends. When you add a filter to a basic query, the semicolon is after the filter. </p>
+<h2 id="filtering-for-patterns">Filtering for patterns</h2>
+<p>You can also filter based on a pattern. For example, you can identify entries that start or end with a certain character or characters. Filtering for a pattern requires incorporating two more elements into your WHERE clause:</p>
+<ul>
+<li>
+<p>a wildcard </p>
+</li>
+<li>
+<p>the LIKE operator</p>
+</li>
+</ul>
+<h3 id="wildcards"><strong>Wildcards</strong></h3>
+<p>A <strong>wildcard</strong> is a special character that can be substituted with any other character. Two of the most useful wildcards are the percentage sign (%) and the underscore (_):</p>
+<ul>
+<li>
+<p>The percentage sign substitutes for any number of other characters. </p>
+</li>
+<li>
+<p>The underscore symbol only substitutes for one other character.</p>
+</li>
+</ul>
+<p>These wildcards can be placed after a string, before a string, or in both locations depending on the pattern you’re filtering for.</p>
+<p>The following table includes these wildcards applied to the string 'a' and examples of what each pattern would return.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Pattern</strong></th>
+<th><strong>Results that could be returned</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>'a%'</td>
+<td>apple123, art, a</td>
+</tr>
+<tr>
+<td>'a_'</td>
+<td>as, an, a7</td>
+</tr>
+<tr>
+<td>'a__'</td>
+<td>ant, add, a1c</td>
+</tr>
+<tr>
+<td>'%a'</td>
+<td>pizza, Z6ra, a</td>
+</tr>
+<tr>
+<td>'_a'</td>
+<td>ma, 1a, Ha</td>
+</tr>
+<tr>
+<td>'%a%'</td>
+<td>Again, back, a</td>
+</tr>
+<tr>
+<td>'<em>a</em>'</td>
+<td>Car, ban, ea7</td>
+</tr>
+</tbody>
+</table>
+<h3 id="like"><strong>LIKE</strong></h3>
+<p>To apply wildcards to the filter, you need to use the LIKE operator instead of an equals sign (=). LIKE is used with WHERE to search for a pattern in a column. </p>
+<p>For instance, if you want to email employees with a title of either 'IT Staff' or 'IT Manager', you can use LIKE operator combined with the % wildcard:  </p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>This query returns all records with values in the title column that start with the pattern of 'IT'. This means both 'IT Staff' and 'IT Manager' are returned.</p>
+<p>As another example, if you want to search through the invoices table to find all customers located in states with an abbreviation of 'NY', 'NV', 'NS' or 'NT', you can use the 'N_' pattern on the state column:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>This returns all the records with state abbreviations that follow this pattern.</p>
+<h2 id="key-takeaways_13">Key takeaways</h2>
+<p>Filters are important when refining what your query returns. WHERE is an essential keyword for adding a filter to your query.  You can also filter for patterns by combining the LIKE operator with the percentage sign (%) and the underscore (_) wildcards.</p>
+<hr />
+<h2 id="apply-more-filters-in-sql">Apply more filters in SQL</h2>
+<p>Previously, you examined operators like less than (&lt;) or greater than (&gt;) and explored how they can be used in filtering numeric and date and time data types. This reading summarizes what you learned and provides new examples of using operators in filters.</p>
+<h2 id="numbers-dates-and-times-in-cybersecurity">Numbers, dates, and times in cybersecurity</h2>
+<p>Security analysts work with more than just <strong>string data</strong>, or data consisting of an ordered sequence of characters. </p>
+<p>They also frequently work with <strong>numeric data</strong>, or data consisting of numbers. A few examples of numeric data that you might encounter in your work as a security analyst include:</p>
+<ul>
+<li>
+<p>the number of login attempts</p>
+</li>
+<li>
+<p>the count of a specific type of log entry</p>
+</li>
+<li>
+<p>the volume of data being sent from a source</p>
+</li>
+<li>
+<p>the volume of data being sent to a destination</p>
+</li>
+</ul>
+<p>You'll also encounter <strong>date and time data</strong>, or data representing a date and/or time. As a first example, logs will generally timestamp every record. Other time and date data might include:</p>
+<ul>
+<li>
+<p>login dates</p>
+</li>
+<li>
+<p>login times</p>
+</li>
+<li>
+<p>dates for patches </p>
+</li>
+<li>
+<p>the duration of a connection</p>
+</li>
+</ul>
+<h2 id="comparison-operators">Comparison operators</h2>
+<p>In SQL, filtering numeric and date and time data often involves operators. You can use the following operators in your filters to make sure you return only the rows you need:</p>
+<table>
+<thead>
+<tr>
+<th><strong>operator</strong></th>
+<th><strong>use</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;</td>
+<td>less than</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>greater than</td>
+</tr>
+<tr>
+<td>=</td>
+<td>equal to</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>less than or equal to</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>greater than or equal to</td>
+</tr>
+<tr>
+<td>&lt;&gt;</td>
+<td>not equal to</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> You can also use != as an alternative operator for not equal to.</p>
+<h3 id="incorporating-operators-into-filters">Incorporating operators into filters</h3>
+<p>These comparison operators are used in the WHERE clause at the end of a query. The following query uses the &gt; operator to filter the birthdate column. You can run this query to explore its output:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>This query returns the first and last names of employees born after, but not on, '1970-01-01' (or January 1, 1970). If you were to use the &gt;= operator instead, the results would also include results on exactly '1970-01-01'.</p>
+<p>In other words, the &gt; operator is exclusive and the &gt;= operator is inclusive.  An <strong>exclusive operator</strong> is an operator that does not include the value of comparison. An <strong>inclusive operator</strong> is an operator that includes the value of comparison.</p>
+<h3 id="between"><strong>BETWEEN</strong></h3>
+<p>Another operator used for numeric data as well as date and time data is the BETWEEN operator. BETWEEN filters for numbers or dates within a range. For example, if you want to find the first and last names of all employees hired between January 1, 2002 and January 1, 2003, you can use the BETWEEN operator as follows:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p><strong>Note:</strong> The BETWEEN operator is inclusive. This means records with a hiredate of January 1, 2002 or January 1, 2003 are included in the results of the previous query.</p>
+<h2 id="key-takeaways_14">Key takeaways</h2>
+<p>Operators are important when filtering numeric and date and time data. These include exclusive operators such as &lt; and inclusive operators such as  &lt;=. The BETWEEN operator, another inclusive operator, helps you return the data you need within a range.</p>
+<hr />
+<h2 id="more-on-filters-with-and-or-and-not">More on filters with AND, OR and NOT</h2>
+<p>Previously, you explored how to add filters containing the AND, OR, and NOT operators to your SQL queries. In this reading, you'll continue to explore how these operators can help you refine your queries.</p>
+<h2 id="logical-operators">Logical operators</h2>
+<p>AND, OR, and NOT allow you to filter your queries to return the specific information that will help you in your work as a security analyst. They are all considered logical operators.</p>
+<h3 id="and">AND</h3>
+<p>First, AND is used to filter on two conditions. AND specifies that both conditions must be met simultaneously. </p>
+<p>As an example, a cybersecurity concern might affect only those customer accounts that meet both the condition of being handled by a support representative with an ID of 5 and the condition of being located in the USA. To find the names and emails of those specific customers, you should place the two conditions on either side of the AND operator in the WHERE clause:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>Running this query returns four rows of information about the customers. You can use this information to contact them about the security concern.</p>
+<h3 id="or">OR</h3>
+<p>The OR operator also connects two conditions, but OR specifies that either condition can be met. It returns results where the first condition, the second condition, or both are met.</p>
+<p>For example, if you are responsible for finding all customers who are either in the USA or Canada so that you can communicate information about a security update, you can use an OR operator to find all the needed records. As the following query demonstrates, you should place the two conditions on either side of the OR operator in the WHERE clause:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>The query returns all customers in either the US or Canada.</p>
+<p><strong>Note:</strong> Even if both conditions are based on the same column, you need to write out both full conditions. For instance, the query in the previous example contains the filter WHERE country = 'Canada' OR country = 'USA'.</p>
+<h3 id="not">NOT</h3>
+<p>Unlike the previous two operators, the NOT operator only works on a single condition, and not on multiple ones. The NOT operator negates a condition. This means that SQL returns all records that don’t match the condition specified in the query. </p>
+<p>For example, if a cybersecurity issue doesn't affect customers in the USA but might affect those in other countries, you can return all customers who are not in the USA. This would be more efficient than creating individual conditions for all of the other countries. To use the NOT operator for this task, write the following query and place NOT directly after WHERE:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<p>SQL returns every entry where the customers are not from the USA.</p>
+<p><strong>Pro tip:</strong> Another way of finding values that are not equal to a certain value is by using the &lt;&gt; operator or the != operator. For example, WHERE country &lt;&gt; 'USA' and WHERE country != 'USA' are the same filters as WHERE NOT country = 'USA'.</p>
+<h2 id="combining-logical-operators">Combining logical operators</h2>
+<p>Logical operators can be combined in filters. For example, if you know that both the USA and Canada are not affected by a cybersecurity issue, you can combine operators to return customers in all countries besides these two. In the following query, NOT is placed before the first condition, it's joined to a second condition with AND, and then NOT is also placed before that second condition. You can run it to explore what it returns:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>Reset</p>
+<h2 id="key-takeaways_15">Key takeaways</h2>
+<p>Logical operators allow you to create more specific filters that target the security-related information you need. The AND operator requires two conditions to be true simultaneously, the OR operator requires either one or both conditions to be true, and the NOT operator negates a condition. Logical operators can be combined together to create even more specific queries.</p>
+<hr />
+<h2 id="compare-types-of-joins">Compare types of joins</h2>
+<p>Previously, you explored SQL joins and how to use them to join data from multiple tables when these tables share a common column. You also examined how there are different types of joins, and each of them returns different rows from the tables being joined. In this reading, you'll review these concepts and more closely analyze the syntax needed for each type of join.</p>
+<h2 id="inner-joins">Inner joins</h2>
+<p>The first type of join that you might perform is an inner join. INNER JOIN returns rows matching on a specified column that exists in more than one table.</p>
+<p>It only returns the rows where there is a match, but like other types of joins, it returns all specified columns from all joined tables. For example, if the query joins two tables with SELECT *, all columns in both of the tables are returned.</p>
+<p><strong>Note:</strong> If a column exists in both of the tables, it is returned twice when SELECT * is used.</p>
+<h3 id="the-syntax-of-an-inner-join">The syntax of an inner join</h3>
+<p>To write a query using INNER JOIN, you can use the following syntax:</p>
+<p>SELECT *</p>
+<p>FROM employees</p>
+<p>INNER JOIN machines ON employees.device_id = machines.device_id;</p>
+<p>You must specify the two tables to join by including the first or left table after FROM and the second or right table after INNER JOIN.</p>
+<p>After the name of the right table, use the ON keyword and the = operator to indicate the column you are joining the tables on. It's important that you specify both the table and column names in this portion of the join by placing a period (.) between the table and the column.  </p>
+<p>In addition to selecting all columns, you can select only certain columns.  For example, if you only want the join to return the username, operating_system and device_id columns, you can write this query:</p>
+<p>SELECT username, operating_system, employees.device_id</p>
+<p>FROM  employees</p>
+<p>INNER JOIN machines ON employees.device_id = machines.device_id;</p>
+<p><strong>Note</strong>: In the example query, username and operating_system only appear in one of the two tables, so they are written with just the column name. On the other hand, because device_id appears in both tables, it's necessary to indicate which one to return by specifying both the table and column name (employees.device_id).</p>
+<h2 id="outer-joins">Outer joins</h2>
+<p>Outer joins expand what is returned from a join. Each type of outer join returns all rows from either one table or both tables.</p>
+<h3 id="left-joins">Left joins</h3>
+<p>When joining two tables, LEFT JOIN returns all the records of the first table, but only returns rows of the second table that match on a specified column. </p>
+<p>The syntax for using LEFT JOIN is demonstrated in the following query:</p>
+<p>SELECT *</p>
+<p>FROM employees</p>
+<p>LEFT JOIN machines ON employees.device_id = machines.device_id;</p>
+<p>As with all joins, you should specify the first or left table as the table that comes after FROM and the second or right table as the table that comes after LEFT JOIN. In the example query, because employees is the left table, all of its records are returned. Only records that match on the device_id column are returned from the right table, machines. </p>
+<h3 id="right-joins">Right joins</h3>
+<p>When joining two tables, RIGHT JOIN returns all of the records of the second table, but only returns rows from the first table that match on a specified column.</p>
+<p>The following query demonstrates the syntax for RIGHT JOIN:</p>
+<p>SELECT *</p>
+<p>FROM employees</p>
+<p>RIGHT JOIN machines ON employees.device_id = machines.device_id;</p>
+<p>RIGHT JOIN has the same syntax as LEFT JOIN, with the only difference being the keyword RIGHT JOIN instructs SQL to produce different output. The query returns all records from machines, which is the second or right table. Only matching records are returned from employees, which is the first or left table.</p>
+<p><strong>Note:</strong>  You can use LEFT JOIN and RIGHT JOIN and return the exact same results if you use the tables in reverse order. The following RIGHT JOIN query returns the exact same result as the LEFT JOIN query demonstrated in the previous section:</p>
+<p>SELECT *</p>
+<p>FROM machines</p>
+<p>RIGHT JOIN employees ON employees.device_id = machines.device_id;</p>
+<p>All that you have to do is switch the order of the tables that appear before and after the keyword used for the join, and you will have swapped the left and right tables.</p>
+<h3 id="full-outer-joins">Full outer joins</h3>
+<p>FULL OUTER JOIN returns all records from both tables. You can think of it as a way of completely merging two tables.</p>
+<p>You can review the syntax for using FULL OUTER JOIN in the following query:</p>
+<p>SELECT *</p>
+<p>FROM employees</p>
+<p>FULL OUTER JOIN machines ON employees.device_id = machines.device_id;</p>
+<p>The results of a FULL OUTER JOIN query include all records from both tables. Similar to INNER JOIN, the order of tables does not change the results of the query.</p>
+<h2 id="key-takeaways_16">Key takeaways</h2>
+<p>When working in SQL, there are multiple ways to join tables.  All joins return the records that match on a specified column. INNER JOIN will return only these records. Outer joins also return all other records from one or both of the tables. LEFT JOIN returns all records from the first or left table, RIGHT JOIN returns all records from the second or right table, and FULL OUTER JOIN returns all records from both tables.</p>
+<hr />
+<h2 id="continuous-learning-in-sql">CONTINUOUS learning in SQL</h2>
+<p>You've explored a lot about SQL, including applying filters to SQL queries and joining multiple tables together in a query.  There's still more that you can do with SQL. This reading will explore an example of something new you can add to your SQL toolbox: aggregate functions. You'll then focus on how you can continue learning about this and other SQL topics on your own.</p>
+<p>Aggregate functions<br />
+In SQL, aggregate functions are functions that perform a calculation over multiple data points and return the result of the calculation. The actual data is not returned. </p>
+<p>There are various aggregate functions that perform different calculations:</p>
+<p>COUNT returns a single number that represents the number of rows returned from your query.</p>
+<p>AVG returns a single number that represents the average of the numerical data in a column.</p>
+<p>SUM returns a single number that represents the sum of the numerical data in a column. </p>
+<p>Aggregate function syntax<br />
+To use an aggregate function, place the keyword for it after the SELECT keyword, and then in parentheses, indicate the column you want to perform the calculation on.</p>
+<p>For example, when working with the customers table, you can use aggregate functions to summarize important information about the table. If you want to find out how many customers there are in total, you can use the COUNT function on any column, and SQL will return the total number of records, excluding NULL values. You can run this query and explore its output:</p>
+<p>12<br />
+SELECT COUNT(firstname)<br />
+FROM customers;<br />
+Reset<br />
+The result is a table with one column titled COUNT(firstname) and one row that indicates the count. </p>
+<p>If you want to find the number of customers from a specific country, you can add a filter to your query:</p>
+<p>123<br />
+SELECT COUNT(firstname)<br />
+FROM customers<br />
+WHERE country = 'USA';<br />
+Reset<br />
+With this filter, the count is lower because it only includes the records where the country column contains a value of 'USA'.</p>
+<p>There are a lot of other aggregate functions in SQL. The syntax of placing them after SELECT is exactly the same as the COUNT function.</p>
+<p>Continuing to learn SQL<br />
+SQL is a widely used querying language, with many more keywords and applications. You can continue to learn more about aggregate functions and other aspects of using SQL on your own.</p>
+<p>Most importantly, approach new tasks with curiosity and a willingness to find new ways to apply SQL to your work as a security analyst. Identify the data results that you need and try to use SQL to obtain these results.</p>
+<p>Fortunately, SQL is one of the most important tools for working with databases and analyzing data, so you'll find a lot of support in trying to learn SQL online. First, try searching for the concepts you've already learned and practiced to find resources that have accurate easy-to-follow explanations. When you identify these resources, you can use them to extend your knowledge.</p>
+<p>Continuing your practical experience with SQL is also important. You can also search for new databases that allow you to perform SQL queries using what you've learned.</p>
+<p>Key takeaways<br />
+Aggregate functions like COUNT, SUM, and AVG allow you to work with SQL in new ways. There are many other additional aspects of SQL that could be useful to you as an analyst. By continuing to explore SQL on your own, you can expand the ways you can apply SQL in a cybersecurity context.</p>
+<h2 id="refernce-guide-sql">REFERNCE GUIDE SQL</h2>
+<p>Page</p>
+<p>/</p>
+<p>8</p>
+<h2 id="page-1-of-8">Page 1 of 8</h2>
+<p>Reference guide: SQL</p>
+<p>Google Cybersecurity Certificate</p>
+<p>Table of contents</p>
+<p>Query a database</p>
+<p>Apply filters to SQL queries</p>
+<p>Join tables</p>
+<p>Perform calculations</p>
+<p>Query a database</p>
+<p>The SELECT, FROM, and ORDER BY keywords are used when retrieving information</p>
+<p>from a database.</p>
+<p>FROM</p>
+<p>Indicates which table to query; required to perform a query</p>
+<p>FROM employees</p>
+<p>Indicates to query the employees table</p>
+<p>ORDER BY</p>
+<p>Sequences the records returned by a query based on a specified column or columns</p>
+<p>ORDER BY department</p>
+<p>Sorts the records in ascending order by the department column; ORDER BY</p>
+<p>department ASC also sorts the records in ascending order by the</p>
+<p>department column</p>
+<p>ORDER BY city DESC</p>
+<p>Sorts the records in descending order by the city column</p>
+<p><img alt="Page 1 of 8" src="blob:&lt;https://docs.google.com/f0b0cc51-c4b3-4516-a9e4-d7adbc519005&gt;" /></p>
+<h2 id="page-2-of-8">Page 2 of 8</h2>
+<p>ORDER BY country, city</p>
+<p>Sorts the records in ascending order by multiple columns; first sorts the output</p>
+<p>by country, and for records with the same country, sorts them based on</p>
+<p>city</p>
+<p>SELECT</p>
+<p>Indicates which columns to return; required to perform a query</p>
+<p>SELECT employee_id</p>
+<p>Returns the employee_id column</p>
+<p>SELECT *</p>
+<p>Returns all columns in a table</p>
+<p>Apply filters to SQL queries</p>
+<p>WHERE and the other SQL keywords and characters that follow are used when applying</p>
+<p>filters to SQL queries.</p>
+<p>AND</p>
+<p>Specifies that both conditions must be met simultaneously in a filter that contains two</p>
+<p>conditions</p>
+<p>WHERE region = 5 AND country = 'USA'</p>
+<p>Returns all records with a value in the region column of 5 and a value in the</p>
+<p>country column of 'USA'</p>
+<p>BETWEEN</p>
+<p>Filters for numbers or dates within a range; BETWEEN is followed by the first value to</p>
+<p>include in the range, the AND operator, and the last value to include in the range</p>
+<p>WHERE hiredate BETWEEN '2002-01-01' AND '2003-01-01'</p>
+<p>Returns all records with a value in the hiredate column that is between</p>
+<p>'2002-01-01' and '2003-01-01'</p>
+<p><img alt="Page 2 of 8" src="blob:&lt;https://docs.google.com/67db67ba-72fb-4628-8ebc-f5fda2d729e7&gt;" /></p>
+<h2 id="page-3-of-8">Page 3 of 8</h2>
+<p>= (equal to)</p>
+<p>Used in filters to return only the records that contain a value in a specified column that</p>
+<p>is equal to a particular value</p>
+<p>WHERE birthdate = '1980-05-15'</p>
+<p>Returns all records with a value in the birthdate column that equals</p>
+<p>'1980-05-15'</p>
+<blockquote>
+<p>(greater than)</p>
+</blockquote>
+<p>Used in filters to return only the records that contain a value in a specified column that</p>
+<p>is greater than a particular value</p>
+<p>WHERE birthdate &gt; '1970-01-01'</p>
+<p>Returns all records with a value in the birthdate column that is greater than</p>
+<p>'1970-01-01'</p>
+<blockquote>
+<p>= (greater than or equal to)</p>
+</blockquote>
+<p>Used in filters to return only the records that contain a value in a specified column that</p>
+<p>is greater than or equal to a particular value</p>
+<p>WHERE birthdate &gt;= '1965-06-30'</p>
+<p>Returns all records with a value in the birthdate column that is greater than or</p>
+<p>equal to '1965-06-30'</p>
+<p>&lt; (less than)</p>
+<p>Used in filters to return only the records that contain a value in a specified column that</p>
+<p>is less than a particular value</p>
+<p>WHERE date &lt; '2023-01-31'</p>
+<p>Returns all records with a value in the date column that is less than</p>
+<p>'2023-01-31'</p>
+<p><img alt="Page 3 of 8" src="blob:&lt;https://docs.google.com/966503e7-0174-45df-9dd6-ed535c4d183d&gt;" /></p>
+<h2 id="page-4-of-8">Page 4 of 8</h2>
+<p>&lt;= (less than or equal to)</p>
+<p>Used in filters to return only the records that contain a value in a specified column that</p>
+<p>is less than or equal to a particular value</p>
+<p>WHERE date &lt;= '2020-12-31'</p>
+<p>Returns all records with a value in the date column that is less than or equal to</p>
+<p>'2020-12-31'</p>
+<p>LIKE</p>
+<p>Used with WHERE to search for a pattern in a column</p>
+<p>WHERE title LIKE 'IT%'</p>
+<p>Returns all records with a value in the title column that matches the pattern of</p>
+<p>'IT%'</p>
+<p>WHERE state LIKE 'N_'</p>
+<p>Returns all records with a value in the state column that matches the pattern of</p>
+<p>'N_'</p>
+<p>NOT</p>
+<p>Negates a condition</p>
+<p>WHERE NOT country = 'Mexico'</p>
+<p>Returns all records with a value in the country column that is not 'Mexico'</p>
+<p>&lt;&gt; (not equal to)</p>
+<p>Used in filters to return only the records that contain a value in a specified column that</p>
+<p>is not equal to a particular value; != also used as an operator for not equal to</p>
+<p>WHERE date &lt;&gt; '2023-02-28'</p>
+<p>Returns all records with a value in the date column that is not equal to</p>
+<p>'2023-02-28'</p>
+<p><img alt="Page 4 of 8" src="blob:&lt;https://docs.google.com/cf9e72f5-c274-4d6c-ab62-fcb1d73a1420&gt;" /></p>
+<h2 id="page-5-of-8">Page 5 of 8</h2>
+<p>!= (not equal to)</p>
+<p>Used in filters to return only the records that contain a value in a specified column that</p>
+<p>is not equal to a particular value; &lt;&gt; also used as an operator for not equal to</p>
+<p>WHERE date != '2023-05-14'</p>
+<p>Returns all records with a value in the date column that is not equal to</p>
+<p>'2023-05-14'</p>
+<p>OR</p>
+<p>Specifies that either condition can be met in a filter that contains two conditions</p>
+<p>WHERE country = 'Canada' OR country = 'USA'</p>
+<p>Returns all records with a value in the country column of either 'Canada' or</p>
+<p>'USA'</p>
+<p>% (percentage sign)</p>
+<p>Substitutes for any number of other characters; used as a wildcard in a pattern that</p>
+<p>follows LIKE</p>
+<p>'a%'</p>
+<p>Represents a pattern consisting of the letter 'a' followed by zero or more</p>
+<p>characters</p>
+<p>'%a'</p>
+<p>Represents a pattern consisting of zero or more characters followed by the</p>
+<p>letter 'a'</p>
+<p>'%a%'</p>
+<p>Represents a pattern consisting of the letter 'a' surrounded by zero or more</p>
+<p>characters on each side</p>
+<p>_ (underscore)</p>
+<p>Substitutes for one other character; used as a wildcard in a pattern that follows LIKE</p>
+<p><img alt="Page 5 of 8" src="blob:&lt;https://docs.google.com/ae42bd87-eb87-40b4-90b9-853893374411&gt;" /></p>
+<h2 id="page-6-of-8">Page 6 of 8</h2>
+<p>'a_'</p>
+<p>Represents a pattern consisting of the letter 'a' followed by one character</p>
+<p>'a__'</p>
+<p>Represents a pattern consisting of the letter 'a' followed by two characters</p>
+<p>'_a'</p>
+<p>Represents a pattern consisting of one character followed by the letter 'a'</p>
+<p>'<em>a</em>'</p>
+<p>Represents a pattern consisting of the letter 'a' surrounded by one character</p>
+<p>on each side</p>
+<p>WHERE</p>
+<p>Indicates the condition for a filter; must be used to begin a filter</p>
+<p>WHERE title = 'IT Staff'</p>
+<p>Returns all records that contain 'IT Staff' in the title column; WHERE is</p>
+<p>placed before the condition of title = 'IT Staff' to create the filter</p>
+<p>Join tables</p>
+<p>The following SQL keywords are used to join tables.</p>
+<p>FULL OUTER JOIN</p>
+<p>Returns all records from both tables; the column used to join the tables is specified</p>
+<p>following FULL OUTER JOIN with syntax that includes ON and equal to (=)</p>
+<p>SELECT *</p>
+<p>FROM employees</p>
+<p>FULL OUTER JOIN machines ON employees.device_id =</p>
+<p>machines.device_id;</p>
+<p>Returns all records from the employees table and machines table; uses the</p>
+<p>device_id column to join the two tables</p>
+<p><img alt="Page 6 of 8" src="blob:&lt;https://docs.google.com/5117a7be-9ff8-41c9-8c89-c658ab66ada7&gt;" /></p>
+<h2 id="page-7-of-8">Page 7 of 8</h2>
+<p>INNER JOIN</p>
+<p>Returns records matching on a specified column that exists in more than one table; the</p>
+<p>column used to join the tables is specified following INNER JOIN with syntax that</p>
+<p>includes ON and equal to (=)</p>
+<p>SELECT *</p>
+<p>FROM employees</p>
+<p>INNER JOIN machines ON employees.device_id =</p>
+<p>machines.device_id;</p>
+<p>Returns all records that have a value in the device_id column in the</p>
+<p>employees table that matches a value in the device_id column in the</p>
+<p>machines table</p>
+<p>LEFT JOIN</p>
+<p>Returns all the records of the first table, but only returns records of the second table</p>
+<p>that match on a specified column; the first (or left) table appears directly after the</p>
+<p>keyword FROM; the column used to join the tables is specified following LEFT JOIN</p>
+<p>with syntax that includes ON and equal to (=)</p>
+<p>SELECT *</p>
+<p>FROM employees</p>
+<p>LEFT JOIN machines ON employees.device_id =</p>
+<p>machines.device_id;</p>
+<p>Returns all records from the employees table but only the records from the</p>
+<p>machines table that have a value in the device_id column that matches a</p>
+<p>value in the device_id column in the employees table</p>
+<p>RIGHT JOIN</p>
+<p>Returns all of the records of the second table, but only returns records from the first</p>
+<p>table that match on a specified column; the second (or right) table appears directly</p>
+<p>after the RIGHT JOIN keyword; the column used to join the tables is specified</p>
+<p>following RIGHT JOIN with syntax that includes ON and equal to (=)</p>
+<p><img alt="Page 7 of 8" src="blob:&lt;https://docs.google.com/93400f69-604a-48c7-95e5-df6b273ef2f7&gt;" /></p>
+<h2 id="page-8-of-8">Page 8 of 8</h2>
+<p>SELECT *</p>
+<p>FROM employees</p>
+<p>RIGHT JOIN machines ON employees.device_id =</p>
+<p>machines.device_id;</p>
+<p>Returns all records from the machines table but only the records from the</p>
+<p>employees table that have a value in the device_id column that matches a</p>
+<p>value in the device_id column in the machines table</p>
+<p>Perform calculations</p>
+<p>The following SQL keywords are aggregate functions and are helpful when performing</p>
+<p>calculations.</p>
+<p>AVG</p>
+<p>Returns a single number that represents the average of the numerical data in a column;</p>
+<p>placed after SELECT</p>
+<p>SELECT AVG(height)</p>
+<p>Returns the average height from all records that have a value in the height</p>
+<p>column</p>
+<p>COUNT</p>
+<p>Returns a single number that represents the number of records returned from a query;</p>
+<p>placed after SELECT</p>
+<p>SELECT COUNT(firstname)</p>
+<p>Returns the number of records that have a value in the firstname column</p>
+<p>SUM</p>
+<p>Returns a single number that represents the sum of the numerical data in a column;</p>
+<p>placed after SELECT</p>
+<p>SELECT SUM(cost)</p>
+<p>Returns the sum of costs from all records that have a value in the cost column</p>
+<p><img alt="Page 8 of 8" src="blob:&lt;https://docs.google.com/35a71bb7-43b6-42bf-b028-81feecffc40e&gt;" /></p>
+<p>Reference Guide SQL</p>
+<p>Page 6 of 8 Page 5 of 8 Page 4 of 8</p>
+<h2 id="glossary-terms-from-module-4">GLOSSARY TERMS from module 4</h2>
+<h2 id="terms-and-definitions-from-course-4-module-4"><strong>Terms and definitions from Course 4, Module 4</strong></h2>
+<p><strong>Database</strong>: An organized collection of information or data</p>
+<p><strong>Date and time data:</strong> Data representing a date and/or time</p>
+<p><strong>Exclusive operator</strong>: An operator that does not include the value of comparison</p>
+<p><strong>Filtering:</strong> Selecting data that match a certain condition</p>
+<p><strong>Foreign key:</strong> A column in a table that is a primary key in another table </p>
+<p><strong>Inclusive operator:</strong> An operator that includes the value of comparison</p>
+<p><strong>Log:</strong> A record of events that occur within an organization's systems</p>
+<p><strong>Numeric data:</strong> Data consisting of numbers</p>
+<p><strong>Operator:</strong> A symbol or keyword that represents an operation</p>
+<p><strong>Primary key:</strong> A column where every row has a unique entry</p>
+<p><strong>Query:</strong> A request for data from a database table or a combination of tables</p>
+<p><strong>Relational database:</strong> A structured database containing tables that are related to each other</p>
+<p><strong>String data</strong>: Data consisting of an ordered sequence of characters</p>
+<p><strong>SQL (Structured Query Language):</strong> A programming language used to create, interact with, and request information from a database</p>
+<p><strong>Syntax:</strong> The rules that determine what is correctly structured in a computing language</p>
+<p><strong>Wildcard</strong>: A special character that can be substituted with any other character</p>
+<h2 id="course-4-glossary">Course 4 glossary</h2></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/course-3-networks-and-network-security/"><small>&larr; Previous</small><span>Course 3: Networks and Network Security</span></a><a class="next" href="/blog/posts/course-5-assets-threats-and-vulnerabilities/"><small>Next &rarr;</small><span>Course 5: Assets, Threats, and Vulnerabilities</span></a></nav>
+  <section class="more">
+    <h2>More in Google Cybersecurity Course Notes</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/course-1-foundations-of-cybersecurity/"><span class="e-title">Course 1: Foundations of Cybersecurity</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/course-2-play-it-safe-manage-security-risks/"><span class="e-title">Course 2: Play It Safe, Manage Security Risks</span></a><time></time></li><li><span class="num">03</span><a href="/blog/posts/course-3-networks-and-network-security/"><span class="e-title">Course 3: Networks and Network Security</span></a><time>Jul 24, 2026</time></li><li class="here" aria-current="page"><span class="num">04</span><a href="/blog/posts/course-4-linux-and-sql/"><span class="e-title">Course 4: Linux and SQL</span></a><time>Sep 8, 2026</time></li><li><span class="num">05</span><a href="/blog/posts/course-5-assets-threats-and-vulnerabilities/"><span class="e-title">Course 5: Assets, Threats, and Vulnerabilities</span></a><time></time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>

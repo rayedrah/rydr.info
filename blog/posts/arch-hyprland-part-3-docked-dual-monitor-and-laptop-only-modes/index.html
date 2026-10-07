@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes | Brain Log</title>
+<meta name="description" content="Three display setups on a hybrid-GPU laptop, which four files change for each one, and how both GPUs share the work in dual-monitor mode.">
+<meta property="og:title" content="Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes | Brain Log">
+<meta property="og:description" content="Three display setups on a hybrid-GPU laptop, which four files change for each one, and how both GPUs share the work in dual-monitor mode.">
+<meta property="og:url" content="https://rydr.info/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+    <nav class="navlinks"><a href="/blog/">folders</a><a href="https://rydr.info">rydr.info</a></nav>
+  </div>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/system-followups/">System Followups</a><i>/</i><span>Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></nav>
+<main class="wrap note">
+  <header class="note-head">
+    <p class="kicker"><a href="/blog/folders/system-followups/">System Followups</a> &middot; Part 3 of 4</p>
+    <h1>Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</h1>
+    <p class="lede">Three display setups on a hybrid-GPU laptop, which four files change for each one, and how both GPUs share the work in dual-monitor mode.</p>
+    <p class="meta"><time>May 9, 2026</time> &middot; 2 min read</p>
+  </header>
+  <details class="toc"><summary>On this page</summary><ol><li><a href="#the-idea">The idea</a></li><li><a href="#the-four-files">The four files</a></li><li><a href="#mode-1-external-monitor-only-docked">Mode 1: External monitor only (docked)</a></li><li><a href="#mode-2-both-screens">Mode 2: Both screens</a></li><li><a href="#mode-3-laptop-screen-only">Mode 3: Laptop screen only</a></li><li><a href="#which-connector-belongs-to-which-gpu">Which connector belongs to which GPU</a></li><li><a href="#quick-checklist-when-switching">Quick checklist when switching</a></li></ol></details>
+  <article class="prose"><h2 id="the-idea">The idea</h2>
+<p>With hybrid graphics, each screen is wired to a different GPU:</p>
+<div class="hl"><pre><span></span><code>NVIDIA (card0)  →  HDMI-A-1   external monitor
+Intel  (card1)  →  eDP-1      laptop screen
+</code></pre></div>
+
+<p>That's why switching layouts means touching four files, not one.</p>
+<h2 id="the-four-files">The four files</h2>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>File</th>
+<th>Applies after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel display parameters</td>
+<td><code>/boot/loader/entries/arch.conf</code></td>
+<td>reboot</td>
+</tr>
+<tr>
+<td>Monitor layout</td>
+<td><code>~/.config/hypr/hyprland.conf</code></td>
+<td><code>hyprctl reload</code></td>
+</tr>
+<tr>
+<td>Output profile</td>
+<td><code>~/.config/shikane/config.toml</code></td>
+<td>restarting Hyprland</td>
+</tr>
+<tr>
+<td>Which GPU Hyprland uses</td>
+<td><code>~/.config/hypr/env.conf</code></td>
+<td>restarting Hyprland</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mode-1-external-monitor-only-docked">Mode 1: External monitor only (docked)</h2>
+<p><strong>arch.conf</strong></p>
+<div class="hl"><pre><span></span><code>options root=/dev/nvme0n1p3 rw video=eDP-1:d video=eDP-2:d
+</code></pre></div>
+
+<p><strong>hyprland.conf</strong></p>
+<div class="hl"><pre><span></span><code>monitor=eDP-1,disable
+monitor=,preferred,auto,auto
+</code></pre></div>
+
+<p><strong>shikane</strong></p>
+<div class="hl"><pre><span></span><code><span class="k">[[profile]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"docked"</span>
+<span class="k">[[profile.output]]</span>
+<span class="n">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"HDMI-A-1"</span>
+<span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1920x1080"</span>
+<span class="n">position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0,0"</span>
+<span class="k">[[profile.output]]</span>
+<span class="n">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"eDP-1"</span>
+<span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+</code></pre></div>
+
+<p><strong>env.conf</strong>: only the NVIDIA card.</p>
+<div class="hl"><pre><span></span><code>env = AQ_DRM_DEVICES,/dev/dri/card0
+</code></pre></div>
+
+<aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Warning</div><div class="callout-body"><p>If the external monitor is unplugged at boot in this mode, the screen stays blank. Switch to Mode 2 or 3 before unplugging.</p></div></aside>
+
+<h2 id="mode-2-both-screens">Mode 2: Both screens</h2>
+<p><strong>arch.conf</strong>: remove every <code>video=</code> parameter so the kernel doesn't disable anything.</p>
+<div class="hl"><pre><span></span><code>options root=/dev/nvme0n1p3 rw
+</code></pre></div>
+
+<p><strong>hyprland.conf</strong>: the external monitor on the left, the laptop to its right at 1.25x scale.</p>
+<div class="hl"><pre><span></span><code>monitor=HDMI-A-1,preferred,0x0,auto
+monitor=eDP-1,preferred,1920x0,1.25
+</code></pre></div>
+
+<p>Adjust the scale to taste (1.0, 1.25, 1.5).</p>
+<p><strong>shikane</strong></p>
+<div class="hl"><pre><span></span><code><span class="k">[[profile]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"docked"</span>
+<span class="k">[[profile.output]]</span>
+<span class="n">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"HDMI-A-1"</span>
+<span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1920x1080"</span>
+<span class="n">position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0,0"</span>
+<span class="k">[[profile.output]]</span>
+<span class="n">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"eDP-1"</span>
+<span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1920,0"</span>
+</code></pre></div>
+
+<p><strong>env.conf</strong>: comment out <code>AQ_DRM_DEVICES</code>.</p>
+<div class="hl"><pre><span></span><code># env = AQ_DRM_DEVICES,/dev/dri/card0
+</code></pre></div>
+
+<p>With it unset, Hyprland finds both GPUs on its own: NVIDIA drives the external monitor and Intel drives the laptop screen. It also handles the card numbers swapping between boots.</p>
+<p><strong>Workspaces 1-5 on the monitor, 6-10 on the laptop</strong> (add to <code>hyprland.conf</code>):</p>
+<div class="hl"><pre><span></span><code>workspace = 1, monitor:HDMI-A-1, default:true
+workspace = 2, monitor:HDMI-A-1
+workspace = 3, monitor:HDMI-A-1
+workspace = 4, monitor:HDMI-A-1
+workspace = 5, monitor:HDMI-A-1
+workspace = 6, monitor:eDP-1
+workspace = 7, monitor:eDP-1
+workspace = 8, monitor:eDP-1
+workspace = 9, monitor:eDP-1
+workspace = 10, monitor:eDP-1
+</code></pre></div>
+
+<p><strong>Wallpaper on both screens:</strong></p>
+<div class="hl"><pre><span></span><code>exec-once = awww img ~/Downloads/Wallpapers/wallhaven-xezolo.png --resize fit --outputs HDMI-A-1,eDP-1
+</code></pre></div>
+
+<h2 id="mode-3-laptop-screen-only">Mode 3: Laptop screen only</h2>
+<p><strong>arch.conf</strong></p>
+<div class="hl"><pre><span></span><code>options root=/dev/nvme0n1p3 rw
+</code></pre></div>
+
+<p><strong>hyprland.conf</strong></p>
+<div class="hl"><pre><span></span><code>monitor=eDP-1,preferred,0x0,1.25
+monitor=HDMI-A-1,disable
+</code></pre></div>
+
+<p><strong>shikane</strong></p>
+<div class="hl"><pre><span></span><code><span class="k">[[profile]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"laptop"</span>
+<span class="k">[[profile.output]]</span>
+<span class="n">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"eDP-1"</span>
+<span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0,0"</span>
+</code></pre></div>
+
+<p><strong>env.conf</strong></p>
+<div class="hl"><pre><span></span><code># env = AQ_DRM_DEVICES,/dev/dri/card0
+</code></pre></div>
+
+<h2 id="which-connector-belongs-to-which-gpu">Which connector belongs to which GPU</h2>
+<div class="hl"><pre><span></span><code>NVIDIA: card0-DP-3, card0-eDP-2, card0-HDMI-A-1
+Intel:  card1-DP-1, card1-DP-2, card1-eDP-1   ← laptop screen
+</code></pre></div>
+
+<p>That's why Part 1 disables both <code>eDP-1</code> and <code>eDP-2</code>: each GPU exposes its own laptop panel connector.</p>
+<h2 id="quick-checklist-when-switching">Quick checklist when switching</h2>
+<ol>
+<li>Edit <code>arch.conf</code> and reboot, if the kernel parameters changed.</li>
+<li>Edit the <code>monitor=</code> lines in <code>hyprland.conf</code>.</li>
+<li>Switch the shikane profile.</li>
+<li>Set or comment out <code>AQ_DRM_DEVICES</code>.</li>
+<li><code>hyprctl reload</code>, or log out and back in.</li>
+</ol></article>
+  <nav class="pager"><a class="prev" href="/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/"><small>&larr; Previous</small><span>Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></a><a class="next" href="/blog/posts/arch-hyprland-part-4-moving-to-lua-config-and-a-bsod-lock-screen/"><small>Next &rarr;</small><span>Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</span></a></nav>
+  <section class="more">
+    <h2>More in System Followups</h2>
+    <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><span class="e-title">Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></a><time></time></li><li><span class="num">02</span><a href="/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/"><span class="e-title">Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></a><time>Apr 22, 2026</time></li><li class="here" aria-current="page"><span class="num">03</span><a href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><span class="e-title">Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a><time>May 9, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/arch-hyprland-part-4-moving-to-lua-config-and-a-bsod-lock-screen/"><span class="e-title">Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</span></a><time>Oct 4, 2026</time></li></ol>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>&copy; 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">github</a><a href="/blog/rss.xml">rss</a></span>
+  </div>
+</footer>
+</body>
+</html>
