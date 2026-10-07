@@ -522,6 +522,7 @@ class Builder:
         )
         out = conv.convert(text)
         if not inline:
+            out = re.sub(r"<table>.*?</table>", lambda m: f'<div class="table-wrap">{m.group(0)}</div>', out, flags=re.S)
             self.last_toc = getattr(conv, "toc_tokens", [])
         if inline:
             out = re.sub(r"^<p>(.*)</p>$", r"\1", out.strip(), flags=re.S)

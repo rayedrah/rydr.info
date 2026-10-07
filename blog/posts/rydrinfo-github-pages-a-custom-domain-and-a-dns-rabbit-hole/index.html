@@ -35,7 +35,7 @@
   <article class="prose"><h2 id="what-this-is">What this is</h2>
 <p>rydr.info is my personal site. It is plain HTML, CSS, and JavaScript with no framework, hosted for free on GitHub Pages, on a domain I bought from Spaceship. This walks through the whole setup in the order I did it, including the part where the site was live for everyone except me.</p>
 <h2 id="the-stack">The stack</h2>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Layer</th>
@@ -64,7 +64,7 @@
 <td>VS Code + the Live Server extension</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="step-1-buy-the-domain">Step 1: Buy the domain</h2>
 <p>I registered <code>rydr.info</code> on Spaceship. By default it uses Spaceship's own nameservers (<code>launch1.spaceship.net</code> and <code>launch2.spaceship.net</code>), which is where you add DNS records later.</p>
 <h2 id="step-2-build-the-site-and-push-it">Step 2: Build the site and push it</h2>
@@ -72,7 +72,7 @@
 <p>Then in the repo: <strong>Settings → Pages → Deploy from a branch → <code>main</code> / root</strong>. The site goes live at <code>username.github.io</code> first.</p>
 <h2 id="step-3-point-the-domain-at-github">Step 3: Point the domain at GitHub</h2>
 <p>In Spaceship's <strong>Advanced DNS</strong>, add GitHub Pages' four IPs for the root, plus a <code>CNAME</code> for <code>www</code>:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Type</th>
@@ -107,7 +107,7 @@
 <td><code>rayedrah.github.io</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Back in <strong>Settings → Pages</strong>, enter <code>rydr.info</code> as the custom domain and save. Once GitHub verifies it, turn on <strong>Enforce HTTPS</strong>.</p>
 <aside class="callout callout-tip"><div class="callout-title"><span class="callout-icon">*</span>GitHub's DNS check is slow</div><div class="callout-body"><p>It kept showing <code>InvalidDNSError</code> for a while after the records had already propagated. The site worked anyway. Wait and retry.</p></div></aside>
 
@@ -149,7 +149,7 @@
 <h2 id="later-moving-dns-to-cloudflare">Later: moving DNS to Cloudflare</h2>
 <p>When I needed subdomains served from my own machine (like the CTF platform from my internship), I moved <code>rydr.info</code>'s nameservers from Spaceship to Cloudflare so Cloudflare Tunnel could route them. The main site still lives on GitHub Pages; only the DNS moved.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Issue</th>
@@ -184,7 +184,7 @@
 <td>Records were correct, dismissed it</td>
 </tr>
 </tbody>
-</table></article>
+</table></div></article>
   <nav class="pager"><span></span><a class="next key-btn" href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><small>Next entry &#9654;</small><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a></nav>
   <section class="more">
     <h2>Directory &middot; Projects</h2>

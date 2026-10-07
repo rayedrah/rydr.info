@@ -37,7 +37,7 @@
 <aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>No spoilers</div><div class="callout-body"><p>This covers how the platform was built and run. Flags, solutions, and challenge internals stay private, since the challenges may be reused.</p></div></aside>
 
 <h2 id="the-stack">The stack</h2>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Piece</th>
@@ -62,7 +62,7 @@
 <td>Exposes it all publicly with no open ports on the host</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Two public hostnames:</p>
 <ul>
 <li><code>agsctf.rydr.info</code> → CTFd</li>
@@ -87,7 +87,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"
 <aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Laptop-hosted means laptop-dependent</div><div class="callout-body"><p>During the drill, the platform ran from my Mac. Mac asleep or tunnel stopped means site down. The planned fix is a clean install on a real server from a fresh repo with no secrets in it.</p></div></aside>
 
 <h2 id="step-4-plan-the-challenge-mix">Step 4: Plan the challenge mix</h2>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Category</th>
@@ -120,7 +120,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"
 <td>2</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Points scale from 50 for warm-ups to 300 for the capstones. Most challenges were sized for 10 to 20 minutes, so beginners could score early and stay engaged, while the harder ones built on skills from the easier ones in the same category.</p>
 <h2 id="step-5-build-in-small-batches">Step 5: Build in small batches</h2>
 <p>I didn't write all 50 and then test. Each category was built in batches of two or three challenges:</p>
@@ -133,7 +133,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"
 <p>Solving every challenge myself is what caught the bugs below before participants did. It also produced a full solution guide for all six categories, converted to a 24-page PDF with <code>pandoc</code> + <code>wkhtmltopdf</code> for the organizers.</p>
 <h2 id="step-6-brand-it">Step 6: Brand it</h2>
 <p>CTFd lets you inject CSS through <strong>Admin → Config → Theme Header</strong>, so I themed it in the client's colors without forking CTFd:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Color</th>
@@ -158,7 +158,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"
 <td>background</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <aside class="callout callout-important"><div class="callout-title"><span class="callout-icon">!</span>The theme isn't in git</div><div class="callout-body"><p>CTFd stores theme settings in its own database, not in your repo. A fresh install or a database wipe loses it. Keep a copy of the CSS snippet somewhere outside CTFd.</p></div></aside>
 
 <h2 id="bugs-i-hit-and-what-they-taught-me">Bugs I hit, and what they taught me</h2>

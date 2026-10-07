@@ -54,7 +54,7 @@
 </ul>
 <h3 id="network-devices">Network devices</h3>
 <p>Physical devices that form a network. Many of their functions can also be performed by <strong>virtualization tools</strong> (software that performs network operations).</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Device</th>
@@ -91,7 +91,7 @@
 <td>Sends/receives digital signals over radio waves (Wi-Fi) to create a wireless network.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Example home network layout:</strong> modem (from ISP) → router → firewall (monitors traffic) → switch (optional, adds ports) → devices/file server. Two routers can be connected to a switch for load balancing.</p>
 <p>Each device/desktop computer has a unique <strong>MAC address</strong> and <strong>IP address</strong> and connects via wired or wireless connection.</p>
 <p><strong>Network diagrams</strong> — maps that use small graphics and dotted lines to show devices and their connections; security analysts use them to develop and refine strategies for securing network architecture.</p>
@@ -158,7 +158,7 @@
 <p><strong>TCP</strong> — An internet communication protocol that allows two devices to form a connection and stream data (organizes data so it can travel across a network).</p>
 <p><strong>IP</strong> — A set of standards for routing and addressing data packets between devices. Includes the <strong>IP address</strong>, which functions as the address for each device on a network.</p>
 </blockquote>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
@@ -193,14 +193,14 @@
 <td>The courier ensuring nothing's lost/out of order</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>IP gets packets moving to the right address; TCP makes sure they all show up intact and in order.</strong></p>
 <blockquote>
 <p><strong>Port</strong> — A software-based location that organizes the sending/receiving of data between devices; splits traffic and prioritizes operations.</p>
 </blockquote>
 <p>Common ports: <strong>25</strong> (email) · <strong>443</strong> (secure internet communication) · <strong>20</strong> (large file transfers)</p>
 <p><strong>The four TCP/IP layers:</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Layer</th>
@@ -235,7 +235,7 @@
 <td>HTTP, SMTP, SSH, FTP, DNS</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <ul>
 <li><strong>ARP (Address Resolution Protocol)</strong> — part of the network access layer.</li>
 <li><strong>ICMP</strong> — shares error info/status updates: reports dropped/lost packets, connectivity issues, packets redirected to other routers.</li>
@@ -246,7 +246,7 @@
 <p><strong>TCP/IP vs OSI:</strong> Both are conceptual models for visualizing data transmission between systems. TCP/IP has <strong>4 layers</strong>; it's essentially a simplified/condensed version of the OSI model's <strong>7 layers</strong>. Some orgs favor one model over the other, so security analysts should know both.</p>
 <h3 id="the-osi-model-7-layers">The OSI Model (7 layers)</h3>
 <p>Working from Layer 7 (user-facing) down to Layer 1 (physical):</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Layer</th>
@@ -299,7 +299,7 @@
 <td>—</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Key takeaway:</strong> Both models help visualize data transmission and communicate where disruptions/threats occur. OSI's extra granularity (7 vs 4 layers) helps pinpoint exactly where in the stack an attack or failure happened.</p>
 <h3 id="ip-and-mac-addressing">IP and MAC addressing</h3>
 <blockquote>
@@ -307,7 +307,7 @@
 <p><strong>MAC address</strong> — A unique alphanumeric identifier assigned to each physical device on a network.</p>
 </blockquote>
 <p><strong>IPv4 vs IPv6:</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
@@ -342,10 +342,10 @@
 <td>Simpler; adds a Flow Label field for special routing handling</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>IPv6 was developed to solve <strong>IPv4 address exhaustion</strong>. It also offers more efficient routing and eliminates private address collisions that can occur on IPv4.</p>
 <h3 id="fields-of-an-ipv4-packet-header-13-fields-2060-bytes-total">Fields of an IPv4 packet header (13 fields, 20–60 bytes total)</h3>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Field</th>
@@ -406,7 +406,7 @@
 <td>Allows security options to be applied if HLEN &gt; 5.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Security angle:</strong> analyzing these fields reveals where a packet came from, where it's going, and what protocol it's using — critical info when inspecting suspicious packets.</p>
 <hr />
 <h2 id="module-2-network-operations">Module 2: Network Operations</h2>
@@ -441,7 +441,7 @@
 <blockquote>
 <p><strong>NAT (Network Address Translation)</strong> — The router swaps a device's private IP address for the router's public IP address when sending traffic outside the home network (and reverses it for responses). Spans layer 2 (internet) and layer 3 (transport) of the TCP/IP model.</p>
 </blockquote>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
@@ -471,7 +471,7 @@
 <td>The rest of the assignable space</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p><strong>DHCP (Dynamic Host Configuration Protocol)</strong> — Management-family, application layer protocol; works with the router to assign a unique IP to each device and provide the appropriate DNS server / default gateway. Servers use UDP port 67, clients use UDP port 68.</p>
 <p><strong>ARP (Address Resolution Protocol)</strong> — Translates IP addresses found in data packets into the MAC address of the hardware device when the MAC address is unknown. Network Access Layer protocol; no port number since it's not an application-layer protocol. Each device tracks IP↔MAC matches in an <strong>ARP cache</strong>.</p>
@@ -485,7 +485,7 @@
 <li><strong>SMTP</strong> — transmits/routes email from sender to recipient, works with Message Transfer Agent (MTA) software to resolve addresses via DNS; unencrypted TCP/UDP port 25 (often abused for spam), encrypted (TLS) TCP/UDP port 587.</li>
 </ul>
 <p><strong>Port reference table:</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Protocol</th>
@@ -542,7 +542,7 @@
 <td>25</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Firewalls can filter traffic based on these port numbers (e.g. only allowing POP3 access from IPs belonging to the org).</p>
 <h3 id="wireless-protocols">Wireless protocols</h3>
 <blockquote>
@@ -579,7 +579,7 @@
 <li><strong>Site-to-site VPN</strong> — used by enterprises to extend their network to other locations/networks; more complex to configure/manage than remote access VPNs.</li>
 </ul>
 <p><strong>VPN protocols:</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
@@ -609,7 +609,7 @@
 <td>Widely supported across OSes; common in site-to-site VPNs</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Choosing between them depends on connection speed needs, compatibility with existing infrastructure, and business/individual needs.</p>
 <p>Organizations increasingly combine <strong>VPN + SD-WAN</strong> (software-defined WAN) to securely connect users to applications across multiple locations over large distances.</p>
 <h3 id="security-zones">Security zones</h3>
@@ -644,7 +644,7 @@
 <p><em>Example:</em> a company's <code>10.0.0.0/16</code> block can be split into department-level <code>/24</code> subnets (HR, Engineering, Guest Wi-Fi, Servers/DMZ) — each its own isolated security zone, with firewall rules between them so a compromise in one subnet doesn't automatically expose the rest.</p>
 <p><strong>CIDR replaced classful addressing</strong> (Class A–E, used in the 1980s, ran out of room as internet adoption grew in the 1990s) — expanded the number of usable IPv4 addresses and reduced routing table size.</p>
 <p><strong>CIDR/subnetting vs. asking your ISP for more IPs — two different problems:</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
@@ -674,7 +674,7 @@
 <td>Getting more devices a public-facing address</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Analogy:</strong> your ISP gives you one apartment building (a public IP or IP block). Subnetting is dividing floors/rooms within that same building for different purposes — you're not getting more building, just organizing what you have. Asking the ISP for more IPs is asking for an entirely additional building.</p>
 <p>Most home/office networks only get <strong>one</strong> public IP from the ISP but have many devices — this works via <strong>NAT</strong>: the router uses private IPs (the reserved <code>192.168.x.x</code> / <code>10.x.x.x</code> CIDR blocks, non-routable on the public internet) internally and translates them all to share the single public IP.</p>
 <p><strong>Bottom line:</strong> CIDR/subnetting is a design tool for addresses you already control; asking the ISP for more IPs is a request for more raw address space from the entity that owns the internet-routable blocks.</p>
@@ -682,7 +682,7 @@
 <blockquote>
 <p><strong>Proxy server</strong> — A server that fulfills a client's requests by forwarding them to other servers.</p>
 </blockquote>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Type</th>
@@ -703,14 +703,14 @@
 <td>Protects the network from spam.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Firewall vs. proxy server:</strong></p>
 <ul>
 <li><strong>Firewall</strong> = a gatekeeper. Decides <em>whether</em> traffic is allowed through, based on rules (IP, port, protocol, sometimes app-level). Doesn't participate in the conversation — just permits or blocks it.</li>
 <li><strong>Proxy server</strong> = a middleman. Actually receives the traffic, processes it, and makes a <em>new</em> request on the client's/destination's behalf. The two real endpoints never talk directly, only to the proxy.</li>
 </ul>
 <p>Analogy: a firewall is a bouncer checking ID at the door; a proxy is a personal assistant who does the errand on your behalf so the shop never deals with you directly.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
@@ -745,7 +745,7 @@
 <td>Hide identity/IP, cache content, filter/log web requests, bypass geo-restrictions, load balancing</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>They often work together in the same pipeline: <code>Internet → Firewall → Proxy Server → Internal Clients</code>. The firewall enforces broad access rules; the proxy handles content-level work (logging visited sites, caching, stripping malicious content, masking internal IPs).</p>
 <h3 id="network-protocols-recap-3-categories">Network protocols recap (3 categories)</h3>
 <ol>
@@ -848,7 +848,7 @@
 
 <p>Source (port 36086) sends a TCP connection request (<code>Flags [S]</code>) directly to the destination's HTTP port (<code>.http</code> = port 80); destination acknowledges (<code>Flags [S.]</code>). Communication continues for ~2 minutes.</p>
 <p><strong>TCP flag codes:</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Flag</th>
@@ -877,7 +877,7 @@
 <td>Acknowledgment</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <div class="hl"><pre><span></span><code>14:18:36.786589 IP your.machine.36086 &gt; yummyrecipesforme.com.http: Flags [P.], ... HTTP: GET / HTTP/1.1
 </code></pre></div>
 
@@ -890,7 +890,7 @@
 <p><strong>Sudden change:</strong> a new DNS request goes out (same source port <code>.52444</code>), this time resolving to a <em>different</em> domain/IP (<code>greatrecipesforme.com</code> / <code>192.0.2.172</code>) — traffic gets redirected to a spoofed site, using a new outgoing port (<code>.56378</code>).</p>
 <p><strong>Reference resources:</strong> tcpdump intro/cheat sheet articles · "What is a computer port?" · IANA Service Name and Transport Protocol Port Number Registry · tcpdump output interpretation guides.</p>
 <h3 id="module-3-glossary">Module 3 glossary</h3>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Term</th>
@@ -955,7 +955,7 @@
 <td>Simulated TCP connections flooding a server with SYN packets</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="module-4-security-hardening">Module 4: Security Hardening</h2>
 <p>Applies to: <strong>networks, devices, applications, cloud infrastructure</strong>. Core parts: <strong>patch updates</strong>, <strong>backups</strong>, plus <strong>physical security</strong>.</p>
@@ -1001,7 +1001,7 @@
 </blockquote>
 <h3 id="network-security-appliances-defense-in-depth">Network security appliances (defense in depth)</h3>
 <p>Layering these tools progressively hardens a network — from a baseline of just a firewall, up to firewall + IDS/IPS + SIEM combined.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Tool</th>
@@ -1036,7 +1036,7 @@
 <td>Only reports — doesn't take action to stop/prevent events itself.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Security analysts often work in a <strong>Security Operations Center (SOC)</strong>, using SIEM dashboards + their own expertise to decide when events need escalation.</p>
 <h3 id="cloud-hardening">Cloud hardening</h3>
 <blockquote>
@@ -1057,7 +1057,7 @@
 </blockquote>
 <p>A common failure mode: an organization assumes the CSP is handling security it hasn't actually taken responsibility for (e.g. app-level configuration).</p>
 <h3 id="module-4-glossary">Module 4 glossary</h3>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Term</th>
@@ -1106,10 +1106,10 @@
 <td>A file that can be altered by anyone in the world</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="module-1-glossary">Module 1 glossary</h2>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Term</th>
@@ -1202,7 +1202,7 @@
 <td>A network spanning a large geographic area (city, state, country)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="module-2-glossary">Module 2 Glossary</h2>
 <p><strong>Address Resolution Protocol (ARP):</strong> A network protocol used to determine the MAC address of the next router or device on the path</p>

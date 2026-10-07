@@ -71,7 +71,7 @@ monitor=,preferred,auto,auto
 </code></pre></div>
 
 <p>Reboot, and the laptop screen works normally.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Mode</th>
@@ -88,7 +88,7 @@ monitor=,preferred,auto,auto
 <td>none</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="clipboard-history-cliphist-wofi">Clipboard history (cliphist + wofi)</h2>
 <p>I wanted clipboard history with a popup picker, while still pasting by hand, because auto-paste tools like <code>wtype</code> are unreliable in terminals and different apps use different paste shortcuts.</p>
 <p>Start the clipboard watchers in <code>hyprland.conf</code>:</p>
@@ -104,7 +104,7 @@ monitor=,preferred,auto,auto
 <div class="hl"><pre><span></span><code>copy something → SUPER+V → pick an item → paste it yourself
 </code></pre></div>
 
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Where</th>
@@ -121,10 +121,10 @@ monitor=,preferred,auto,auto
 <td>Ctrl + V</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The picker only puts the item back on the clipboard. You still paste it, and that's what makes it work the same everywhere.</p>
 <h2 id="screenshots-hyprshot">Screenshots (hyprshot)</h2>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Keys</th>
@@ -145,7 +145,7 @@ monitor=,preferred,auto,auto
 <td>Whole screen, saved</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>hyprshot -m window</code> lets you click a window to capture it.</p>
 <h2 id="notifications-lock-and-idle">Notifications, lock, and idle</h2>
 <ul>
@@ -162,7 +162,7 @@ monitor=,preferred,auto,auto
 <span class="na">exec-once</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">awww img /path/to/wallpaper.jpg --resize fit</span>
 </code></pre></div>
 
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Flag</th>
@@ -183,7 +183,7 @@ monitor=,preferred,auto,auto
 <td>original size, centered</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>There's no config file; everything is a command. For a transition: <code>awww img wall.jpg --transition-type wave --transition-duration 2</code>.</p>
 <aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Note</div><div class="callout-body"><p>Starting <code>awww img</code> at the same moment as <code>awww-daemon</code> can fail, because the daemon isn't ready yet. Part 4 fixes this.</p></div></aside>
 

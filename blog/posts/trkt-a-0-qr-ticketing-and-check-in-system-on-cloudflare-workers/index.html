@@ -56,7 +56,7 @@
 <aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Note</div><div class="callout-body"><p>Only the Worker script gets deployed. There is no static hosting, so files sitting next to it never reach Cloudflare. That's why the favicons are base64-embedded in the code.</p></div></aside>
 
 <h2 id="how-the-data-is-laid-out">How the data is laid out</h2>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>KV key</th>
@@ -81,13 +81,13 @@
 <td>The list of events shown on the landing page</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="the-interesting-problem-two-scanners-one-lost-check-in">The interesting problem: two scanners, one lost check-in</h2>
 <p>My first version stored attendance as a flag inside the single <code>roster:SLUG</code> blob. A check-in did <strong>read the blob → modify it → write the whole blob back</strong>.</p>
 <p>That breaks with two staff members. If two people scan two <em>different</em> guests within about 100ms, both read the same roster, and the second write overwrites the first. One check-in silently disappears.</p>
 <p>I tested it: 10 simultaneous scans, and the single-blob design kept only 3.</p>
 <h3 id="the-fix-two-check-in-modes">The fix: two check-in modes</h3>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Mode</th>
@@ -107,7 +107,7 @@
 <td>Several people scan at once. No check-in is ever lost.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>In high-concurrency mode, two scanners write to <strong>different keys</strong>, so they physically can't overwrite each other. Same test: 10 simultaneous scans, all 10 kept.</p>
 <p>The mode is chosen when the event is created and can't be changed later.</p>
 <h3 id="the-trade-off-reads">The trade-off: reads</h3>

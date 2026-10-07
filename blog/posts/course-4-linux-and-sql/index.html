@@ -691,7 +691,7 @@ Error messages returned by the OS through the shell. </p>
 </li>
 </ul>
 <p>Each character in the 10-character string conveys different information about these permissions. The following table describes the purpose of each character:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th><strong>Character</strong></th>
@@ -751,7 +751,7 @@ Error messages returned by the OS through the shell. </p>
 <td>execute permissions for other<br><br>- x if the other owner type has execute permissions<br>    <br>- - if the other owner type lacks execute permissions</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="exploring-existing-permissions">Exploring existing permissions</h2>
 <p>You can use the ls command to investigate who has permissions on files and directories. Previously, you learned that ls displays the names of files in directories in the current working directory.</p>
 <p>There are additional options you can add to the ls command to make your command more specific. Some of these options provide details about permissions. Here are a few important ls options for security analysts:</p>
@@ -778,7 +778,7 @@ Error messages returned by the OS through the shell. </p>
 <p>chmod u=r,g=r,o=r login_sessions.txt</p>
 <p>This command overwrites existing permissions. For instance, if the user previously had write permissions, these write permissions are removed after you specify only read permissions with =.</p>
 <p>The following table reviews how each character is used within the first argument of chmod:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th><strong>Character</strong></th>
@@ -811,7 +811,7 @@ Error messages returned by the OS through the shell. </p>
 <td>assigns permissions for the user, group, or other</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Note:</strong> When there are permission changes to more than one owner type, commas are needed to separate changes for each owner type. You should not add spaces after those commas.</p>
 <h3 id="the-principle-of-least-privilege-in-action"><strong>The principle of least privilege in action</strong></h3>
 <p>As a security analyst, you may encounter a situation like this one: There’s a file called bonuses.txt within a compensation directory. The owner of this file is a member of the Human Resources department with a username of hrrep1. It has been decided that hrrep1 needs access to this file. But, since this file contains confidential information, no one else in the hr group needs access.</p>
@@ -1357,7 +1357,7 @@ A Symbol or keyword that represents an operation. </p>
 </ul>
 <p>These wildcards can be placed after a string, before a string, or in both locations depending on the pattern you’re filtering for.</p>
 <p>The following table includes these wildcards applied to the string 'a' and examples of what each pattern would return.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th><strong>Pattern</strong></th>
@@ -1394,7 +1394,7 @@ A Symbol or keyword that represents an operation. </p>
 <td>Car, ban, ea7</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="like"><strong>LIKE</strong></h3>
 <p>To apply wildcards to the filter, you need to use the LIKE operator instead of an equals sign (=). LIKE is used with WHERE to search for a pattern in a column. </p>
 <p>For instance, if you want to email employees with a title of either 'IT Staff' or 'IT Manager', you can use LIKE operator combined with the % wildcard:  </p>
@@ -1448,7 +1448,7 @@ A Symbol or keyword that represents an operation. </p>
 </ul>
 <h2 id="comparison-operators">Comparison operators</h2>
 <p>In SQL, filtering numeric and date and time data often involves operators. You can use the following operators in your filters to make sure you return only the rows you need:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th><strong>operator</strong></th>
@@ -1481,7 +1481,7 @@ A Symbol or keyword that represents an operation. </p>
 <td>not equal to</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Note:</strong> You can also use != as an alternative operator for not equal to.</p>
 <h3 id="incorporating-operators-into-filters">Incorporating operators into filters</h3>
 <p>These comparison operators are used in the WHERE clause at the end of a query. The following query uses the &gt; operator to filter the birthdate column. You can run this query to explore its output:</p>

@@ -33,7 +33,7 @@
   </header>
   <details class="toc"><summary>On this page</summary><ol><li><a href="#the-hardware">The hardware</a></li><li><a href="#step-1-the-nvidia-driver">Step 1: The NVIDIA driver</a></li><li><a href="#step-2-tell-hyprland-to-use-the-nvidia-gpu">Step 2: Tell Hyprland to use the NVIDIA GPU</a></li><li><a href="#step-3-no-display-manager-boot-straight-to-a-tty">Step 3: No display manager, boot straight to a TTY</a></li><li><a href="#step-4-fix-the-garbled-tty-on-boot">Step 4: Fix the garbled TTY on boot</a></li><li><a href="#step-5-the-desktop-itself">Step 5: The desktop itself</a></li><li><a href="#when-it-breaks-my-recovery-checklist">When it breaks: my recovery checklist</a></li></ol></details>
   <article class="prose"><h2 id="the-hardware">The hardware</h2>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Part</th>
@@ -66,7 +66,7 @@
 <td>476.9 GB Samsung NVMe</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Partitions:</p>
 <div class="hl"><pre><span></span><code>nvme0n1p1 → /boot  (512 MB)
 nvme0n1p2 → swap   (8 GB)
@@ -75,7 +75,7 @@ nvme0n1p3 → /      (468 GB)
 
 <h2 id="step-1-the-nvidia-driver">Step 1: The NVIDIA driver</h2>
 <p>I use the open kernel module:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Package</th>
@@ -100,7 +100,7 @@ nvme0n1p3 → /      (468 GB)
 <td>1.1.21</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>What surprised me is how little config it needs:</p>
 <ul>
 <li><code>nvidia-drm.modeset=Y</code> is turned on automatically. No kernel parameter needed.</li>
@@ -134,7 +134,7 @@ cat<span class="w"> </span>/sys/class/drm/card1/device/vendor<span class="w">   
 
 <h2 id="step-3-no-display-manager-boot-straight-to-a-tty">Step 3: No display manager, boot straight to a TTY</h2>
 <p>I disabled both greetd and sddm. The laptop boots to a text login on TTY1, and I run <code>start-hyprland</code> after logging in. One less thing to break.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Service</th>
@@ -159,7 +159,7 @@ cat<span class="w"> </span>/sys/class/drm/card1/device/vendor<span class="w">   
 <td>enabled</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <aside class="callout callout-note"><div class="callout-title"><span class="callout-icon">i</span>Note</div><div class="callout-body"><p>Hyprland has to start from a physical TTY. It can't be launched over SSH, because an SSH session has no seat.</p></div></aside>
 
 <h2 id="step-4-fix-the-garbled-tty-on-boot">Step 4: Fix the garbled TTY on boot</h2>
@@ -183,7 +183,7 @@ cat<span class="w"> </span>/sys/class/drm/card1/device/vendor<span class="w">   
 
 <h2 id="step-5-the-desktop-itself">Step 5: The desktop itself</h2>
 <p>Keybinds use <strong>Ctrl + Alt</strong> as the main modifier:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Keys</th>
@@ -232,7 +232,7 @@ cat<span class="w"> </span>/sys/class/drm/card1/device/vendor<span class="w">   
 <td>Scratchpad</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Apps: kitty, nautilus, wofi, waybar, swaync, hypridle, hyprlock, hyprshot, cliphist, awww for wallpaper, and shikane for monitor layouts.</p>
 <p>Shell: zsh with Oh My Zsh and the Powerlevel10k theme.</p>
 <h2 id="when-it-breaks-my-recovery-checklist">When it breaks: my recovery checklist</h2>
