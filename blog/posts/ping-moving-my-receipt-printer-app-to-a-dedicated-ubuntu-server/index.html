@@ -8,7 +8,7 @@
 <meta property="og:title" content="PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server | Brain Log">
 <meta property="og:description" content="PING prints messages people send me on a thermal receipt printer. This is the step-by-step plan for moving it off my desktop onto a proper Ubuntu LTS server.">
 <meta property="og:url" content="https://rydr.info/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#f2efe6">
 <link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
 <link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,10 +24,12 @@
 <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/projects/">Projects</a><i>/</i><span>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></nav>
 <main class="wrap note">
   <header class="note-head">
-    <p class="kicker"><a href="/blog/folders/projects/">Projects</a> &middot; Part 3 of 3</p>
+    <div class="lcd lcd-strip">
+      <div class="lcd-row"><a href="/blog/folders/projects/">Tape: Projects</a><span>Track 03/03</span></div>
+      <div class="lcd-row"><span>&nbsp;</span><span>06 min</span></div>
+    </div>
     <h1>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</h1>
     <p class="lede">PING prints messages people send me on a thermal receipt printer. This is the step-by-step plan for moving it off my desktop onto a proper Ubuntu LTS server.</p>
-    <p class="meta">6 min read</p>
   </header>
   <details class="toc"><summary>On this page</summary><ol><li><a href="#what-this-is">What this is</a></li><li><a href="#what-youll-need">What you&#x27;ll need</a></li><li><a href="#step-1-gather-the-project-files">Step 1: Gather the project files</a></li><li><a href="#step-2-base-setup-on-ubuntu">Step 2: Base setup on Ubuntu</a></li><li><a href="#step-3-use-a-virtual-environment-this-time">Step 3: Use a virtual environment this time</a></li><li><a href="#step-4-give-the-app-printer-access-scoped-properly">Step 4: Give the app printer access, scoped properly</a></li><li><a href="#step-5-replace-the-counter-file-with-sqlite">Step 5: Replace the counter file with SQLite</a></li><li><a href="#step-6-create-a-fresh-cloudflare-tunnel">Step 6: Create a fresh Cloudflare Tunnel</a></li><li><a href="#step-7-run-it-as-two-systemd-services">Step 7: Run it as two systemd services</a></li><li><a href="#step-8-harden-the-server">Step 8: Harden the server</a></li><li><a href="#step-9-cut-over">Step 9: Cut over</a></li><li><a href="#next">Next</a></li></ol></details>
   <article class="prose"><h2 id="what-this-is">What this is</h2>
@@ -253,9 +255,9 @@ sudo<span class="w"> </span>dpkg-reconfigure<span class="w"> </span>--priority<s
 
 <h2 id="next">Next</h2>
 <p>Once this is stable, running it in Docker with USB passthrough (<code>--device</code>) would turn the next migration into one <code>docker compose up</code>.</p></article>
-  <nav class="pager"><a class="prev" href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><small>&larr; Previous</small><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><span></span></nav>
+  <nav class="pager"><a class="prev key-btn" href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><small>&#9664;&#9664; Prev track</small><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><span></span></nav>
   <section class="more">
-    <h2>More in Projects</h2>
+    <h2>Tracklist &middot; Projects</h2>
     <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><span class="e-title">rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><time>Apr 20, 2026</time></li><li><span class="num">02</span><a href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><span class="e-title">TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><time>Jul 7, 2026</time></li><li class="here" aria-current="page"><span class="num">03</span><a href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><span class="e-title">PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a><time></time></li></ol>
   </section>
 </main>

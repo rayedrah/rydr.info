@@ -1303,7 +1303,7 @@ footer {
 }
 
 .log-fab {
-  --paper: #ffffff;
+  --paper: #fbfaf5;
   --ink: #1c1c1c;
   --logc: #00ff88;
   position: fixed;

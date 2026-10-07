@@ -8,7 +8,7 @@
 <meta property="og:title" content="rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole | Brain Log">
 <meta property="og:description" content="How I put a hand-written HTML/CSS/JS site on GitHub Pages under my own domain, and the two DNS problems on my own network that made it look broken.">
 <meta property="og:url" content="https://rydr.info/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#f2efe6">
 <link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
 <link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,10 +24,12 @@
 <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/projects/">Projects</a><i>/</i><span>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></nav>
 <main class="wrap note">
   <header class="note-head">
-    <p class="kicker"><a href="/blog/folders/projects/">Projects</a> &middot; Part 1 of 3</p>
+    <div class="lcd lcd-strip">
+      <div class="lcd-row"><a href="/blog/folders/projects/">Tape: Projects</a><span>Track 01/03</span></div>
+      <div class="lcd-row"><span>Apr 20, 2026</span><span>04 min</span></div>
+    </div>
     <h1>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</h1>
     <p class="lede">How I put a hand-written HTML/CSS/JS site on GitHub Pages under my own domain, and the two DNS problems on my own network that made it look broken.</p>
-    <p class="meta"><time>Apr 20, 2026</time> &middot; 4 min read</p>
   </header>
   <details class="toc"><summary>On this page</summary><ol><li><a href="#what-this-is">What this is</a></li><li><a href="#the-stack">The stack</a></li><li><a href="#step-1-buy-the-domain">Step 1: Buy the domain</a></li><li><a href="#step-2-build-the-site-and-push-it">Step 2: Build the site and push it</a></li><li><a href="#step-3-point-the-domain-at-github">Step 3: Point the domain at GitHub</a></li><li><a href="#step-4-check-propagation-from-outside-your-network">Step 4: Check propagation from outside your network</a></li><li><a href="#the-rabbit-hole-live-for-everyone-but-me">The rabbit hole: live for everyone but me</a><ol><li><a href="#problem-1-tailscale-took-over-my-dns">Problem 1: Tailscale took over my DNS</a></li><li><a href="#problem-2-pi-hole-cached-the-doesnt-exist-answer">Problem 2: Pi-hole cached the &quot;doesn&#x27;t exist&quot; answer</a></li></ol></li><li><a href="#step-5-favicon-and-resume">Step 5: Favicon and resume</a></li><li><a href="#later-moving-dns-to-cloudflare">Later: moving DNS to Cloudflare</a></li><li><a href="#troubleshooting">Troubleshooting</a></li></ol></details>
   <article class="prose"><h2 id="what-this-is">What this is</h2>
@@ -183,9 +185,9 @@
 </tr>
 </tbody>
 </table></article>
-  <nav class="pager"><span></span><a class="next" href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><small>Next &rarr;</small><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a></nav>
+  <nav class="pager"><span></span><a class="next key-btn" href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><small>Next track &#9654;&#9654;</small><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a></nav>
   <section class="more">
-    <h2>More in Projects</h2>
+    <h2>Tracklist &middot; Projects</h2>
     <ol class="entries"><li class="here" aria-current="page"><span class="num">01</span><a href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><span class="e-title">rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><time>Apr 20, 2026</time></li><li><span class="num">02</span><a href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><span class="e-title">TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><time>Jul 7, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><span class="e-title">PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a><time></time></li></ol>
   </section>
 </main>

@@ -8,7 +8,7 @@
 <meta property="og:title" content="Building a 50-Challenge CTF Platform for a National Cyber Drill | Brain Log">
 <meta property="og:description" content="How I built, branded, and ran the CTF platform for the 2nd Agile Cyber Drill 2026 with CTFd, Docker Compose, a Flask challenge backend, and Cloudflare Tunnel.">
 <meta property="og:url" content="https://rydr.info/blog/posts/building-a-50-challenge-ctf-platform-for-a-national-cyber-drill/">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#f2efe6">
 <link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
 <link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,10 +24,12 @@
 <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/ags-internship/">AGS Internship</a><i>/</i><span>Building a 50-Challenge CTF Platform for a National Cyber Drill</span></nav>
 <main class="wrap note">
   <header class="note-head">
-    <p class="kicker"><a href="/blog/folders/ags-internship/">AGS Internship</a> &middot; Part 2 of 2</p>
+    <div class="lcd lcd-strip">
+      <div class="lcd-row"><a href="/blog/folders/ags-internship/">Tape: AGS Internship</a><span>Track 02/02</span></div>
+      <div class="lcd-row"><span>&nbsp;</span><span>04 min</span></div>
+    </div>
     <h1>Building a 50-Challenge CTF Platform for a National Cyber Drill</h1>
     <p class="lede">How I built, branded, and ran the CTF platform for the 2nd Agile Cyber Drill 2026 with CTFd, Docker Compose, a Flask challenge backend, and Cloudflare Tunnel.</p>
-    <p class="meta">4 min read</p>
   </header>
   <details class="toc"><summary>On this page</summary><ol><li><a href="#context">Context</a></li><li><a href="#the-stack">The stack</a></li><li><a href="#step-1-move-dns-to-cloudflare">Step 1: Move DNS to Cloudflare</a></li><li><a href="#step-2-bring-up-ctfd-with-docker-compose">Step 2: Bring up CTFd with Docker Compose</a></li><li><a href="#step-3-expose-it-with-cloudflare-tunnel">Step 3: Expose it with Cloudflare Tunnel</a></li><li><a href="#step-4-plan-the-challenge-mix">Step 4: Plan the challenge mix</a></li><li><a href="#step-5-build-in-small-batches">Step 5: Build in small batches</a></li><li><a href="#step-6-brand-it">Step 6: Brand it</a></li><li><a href="#bugs-i-hit-and-what-they-taught-me">Bugs I hit, and what they taught me</a></li><li><a href="#scaling-notes-for-next-time">Scaling notes for next time</a></li></ol></details>
   <article class="prose"><h2 id="context">Context</h2>
@@ -171,9 +173,9 @@ docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"
 <li>Tune gunicorn's worker count for the number of people you expect to be playing at once.</li>
 <li>Host it on a real server, not a laptop.</li>
 </ul></article>
-  <nav class="pager"><a class="prev" href="/blog/posts/scoping-my-first-web-vulnerability-assessment/"><small>&larr; Previous</small><span>Scoping My First Web Vulnerability Assessment</span></a><span></span></nav>
+  <nav class="pager"><a class="prev key-btn" href="/blog/posts/scoping-my-first-web-vulnerability-assessment/"><small>&#9664;&#9664; Prev track</small><span>Scoping My First Web Vulnerability Assessment</span></a><span></span></nav>
   <section class="more">
-    <h2>More in AGS Internship</h2>
+    <h2>Tracklist &middot; AGS Internship</h2>
     <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/scoping-my-first-web-vulnerability-assessment/"><span class="e-title">Scoping My First Web Vulnerability Assessment</span></a><time></time></li><li class="here" aria-current="page"><span class="num">02</span><a href="/blog/posts/building-a-50-challenge-ctf-platform-for-a-national-cyber-drill/"><span class="e-title">Building a 50-Challenge CTF Platform for a National Cyber Drill</span></a><time></time></li></ol>
   </section>
 </main>

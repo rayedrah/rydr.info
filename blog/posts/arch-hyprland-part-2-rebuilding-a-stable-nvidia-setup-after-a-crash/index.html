@@ -8,7 +8,7 @@
 <meta property="og:title" content="Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash | Brain Log">
 <meta property="og:description" content="After a crash I rebuilt the setup around the NVIDIA open driver, dropped the display manager, fixed a garbled TTY, and wrote down how to recover when it breaks.">
 <meta property="og:url" content="https://rydr.info/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#f2efe6">
 <link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
 <link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,10 +24,12 @@
 <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/system-followups/">System Followups</a><i>/</i><span>Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></nav>
 <main class="wrap note">
   <header class="note-head">
-    <p class="kicker"><a href="/blog/folders/system-followups/">System Followups</a> &middot; Part 2 of 4</p>
+    <div class="lcd lcd-strip">
+      <div class="lcd-row"><a href="/blog/folders/system-followups/">Tape: System Followups</a><span>Track 02/04</span></div>
+      <div class="lcd-row"><span>Apr 22, 2026</span><span>03 min</span></div>
+    </div>
     <h1>Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</h1>
     <p class="lede">After a crash I rebuilt the setup around the NVIDIA open driver, dropped the display manager, fixed a garbled TTY, and wrote down how to recover when it breaks.</p>
-    <p class="meta"><time>Apr 22, 2026</time> &middot; 3 min read</p>
   </header>
   <details class="toc"><summary>On this page</summary><ol><li><a href="#the-hardware">The hardware</a></li><li><a href="#step-1-the-nvidia-driver">Step 1: The NVIDIA driver</a></li><li><a href="#step-2-tell-hyprland-to-use-the-nvidia-gpu">Step 2: Tell Hyprland to use the NVIDIA GPU</a></li><li><a href="#step-3-no-display-manager-boot-straight-to-a-tty">Step 3: No display manager, boot straight to a TTY</a></li><li><a href="#step-4-fix-the-garbled-tty-on-boot">Step 4: Fix the garbled TTY on boot</a></li><li><a href="#step-5-the-desktop-itself">Step 5: The desktop itself</a></li><li><a href="#when-it-breaks-my-recovery-checklist">When it breaks: my recovery checklist</a></li></ol></details>
   <article class="prose"><h2 id="the-hardware">The hardware</h2>
@@ -250,9 +252,9 @@ cat<span class="w"> </span>/sys/class/drm/card1/device/vendor<span class="w">   
 
 <p><strong>A known harmless crash</strong></p>
 <p><code>libaquamarine</code> can segfault when a display connector disconnects on greeter exit (upstream issue <code>hyprwm/aquamarine#219</code>). With no greeter, it doesn't apply.</p></article>
-  <nav class="pager"><a class="prev" href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><small>&larr; Previous</small><span>Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></a><a class="next" href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><small>Next &rarr;</small><span>Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a></nav>
+  <nav class="pager"><a class="prev key-btn" href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><small>&#9664;&#9664; Prev track</small><span>Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></a><a class="next key-btn" href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><small>Next track &#9654;&#9654;</small><span>Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a></nav>
   <section class="more">
-    <h2>More in System Followups</h2>
+    <h2>Tracklist &middot; System Followups</h2>
     <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/arch-hyprland-part-1-first-setup-on-a-laptop-with-an-external-monitor/"><span class="e-title">Arch + Hyprland, Part 1: First Setup on a Laptop with an External Monitor</span></a><time></time></li><li class="here" aria-current="page"><span class="num">02</span><a href="/blog/posts/arch-hyprland-part-2-rebuilding-a-stable-nvidia-setup-after-a-crash/"><span class="e-title">Arch + Hyprland, Part 2: Rebuilding a Stable NVIDIA Setup After a Crash</span></a><time>Apr 22, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/arch-hyprland-part-3-docked-dual-monitor-and-laptop-only-modes/"><span class="e-title">Arch + Hyprland, Part 3: Docked, Dual Monitor, and Laptop-Only Modes</span></a><time>May 9, 2026</time></li><li><span class="num">04</span><a href="/blog/posts/arch-hyprland-part-4-moving-to-lua-config-and-a-bsod-lock-screen/"><span class="e-title">Arch + Hyprland, Part 4: Moving to Lua Config, and a BSOD Lock Screen</span></a><time>Oct 4, 2026</time></li></ol>
   </section>
 </main>

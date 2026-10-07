@@ -8,7 +8,7 @@
 <meta property="og:title" content="TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers | Brain Log">
 <meta property="og:description" content="A reusable QR ticketing system I run my events on. One Worker file, one KV namespace, no monthly bill, and a check-in race condition I had to design around.">
 <meta property="og:url" content="https://rydr.info/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#f2efe6">
 <link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
 <link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,10 +24,12 @@
 <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/folders/projects/">Projects</a><i>/</i><span>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></nav>
 <main class="wrap note">
   <header class="note-head">
-    <p class="kicker"><a href="/blog/folders/projects/">Projects</a> &middot; Part 2 of 3</p>
+    <div class="lcd lcd-strip">
+      <div class="lcd-row"><a href="/blog/folders/projects/">Tape: Projects</a><span>Track 02/03</span></div>
+      <div class="lcd-row"><span>Jul 7, 2026</span><span>05 min</span></div>
+    </div>
     <h1>TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</h1>
     <p class="lede">A reusable QR ticketing system I run my events on. One Worker file, one KV namespace, no monthly bill, and a check-in race condition I had to design around.</p>
-    <p class="meta"><time>Jul 7, 2026</time> &middot; 5 min read</p>
   </header>
   <details class="toc"><summary>On this page</summary><ol><li><a href="#what-this-is">What this is</a></li><li><a href="#why-cloudflare-workers-kv">Why Cloudflare Workers + KV</a></li><li><a href="#how-the-data-is-laid-out">How the data is laid out</a></li><li><a href="#the-interesting-problem-two-scanners-one-lost-check-in">The interesting problem: two scanners, one lost check-in</a><ol><li><a href="#the-fix-two-check-in-modes">The fix: two check-in modes</a></li><li><a href="#the-trade-off-reads">The trade-off: reads</a></li></ol></li><li><a href="#two-separate-passwords">Two separate passwords</a></li><li><a href="#a-timezone-bug-worth-knowing-about">A timezone bug worth knowing about</a></li><li><a href="#hardening-i-did-before-thinking-about-making-it-public">Hardening I did before thinking about making it public</a></li><li><a href="#running-an-event-with-it">Running an event with it</a><ol><li><a href="#csv-format">CSV format</a></li></ol></li><li><a href="#staying-inside-the-free-tier">Staying inside the free tier</a></li><li><a href="#first-time-setup">First-time setup</a></li></ol></details>
   <article class="prose"><h2 id="what-this-is">What this is</h2>
@@ -162,9 +164,9 @@ wrangler<span class="w"> </span>deploy
 
 <p>If you ever recreate the KV namespace, run <code>wrangler kv namespace create TICKETS_KV</code> and paste the returned ID into <code>wrangler.toml</code>.</p>
 <aside class="callout callout-warning"><div class="callout-title"><span class="callout-icon">!</span>Secrets go in Worker secrets, nowhere else</div><div class="callout-body"><p>Put API tokens in with <code>wrangler secret put NAME</code>. The name goes in the command, and the value goes at the prompt. Never paste a token into a note, a commit, or a shell command.</p></div></aside></article>
-  <nav class="pager"><a class="prev" href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><small>&larr; Previous</small><span>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><a class="next" href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><small>Next &rarr;</small><span>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a></nav>
+  <nav class="pager"><a class="prev key-btn" href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><small>&#9664;&#9664; Prev track</small><span>rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><a class="next key-btn" href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><small>Next track &#9654;&#9654;</small><span>PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a></nav>
   <section class="more">
-    <h2>More in Projects</h2>
+    <h2>Tracklist &middot; Projects</h2>
     <ol class="entries"><li><span class="num">01</span><a href="/blog/posts/rydrinfo-github-pages-a-custom-domain-and-a-dns-rabbit-hole/"><span class="e-title">rydr.info: GitHub Pages, a Custom Domain, and a DNS Rabbit Hole</span></a><time>Apr 20, 2026</time></li><li class="here" aria-current="page"><span class="num">02</span><a href="/blog/posts/trkt-a-0-qr-ticketing-and-check-in-system-on-cloudflare-workers/"><span class="e-title">TRKT: A $0 QR Ticketing and Check-in System on Cloudflare Workers</span></a><time>Jul 7, 2026</time></li><li><span class="num">03</span><a href="/blog/posts/ping-moving-my-receipt-printer-app-to-a-dedicated-ubuntu-server/"><span class="e-title">PING: Moving My Receipt Printer App to a Dedicated Ubuntu Server</span></a><time></time></li></ol>
   </section>
 </main>
