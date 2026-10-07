@@ -71,7 +71,8 @@
       about: 'about.html',
       experience: 'experience.html',
       projects: 'projects.html',
-      contact: 'contact.html'
+      contact: 'contact.html',
+      blog: 'blog/'
     };
 
     function print(line) {
@@ -97,7 +98,8 @@
         print('  whoami           who you are talking to');
         print('  status           what i am up to right now');
         print('  skills           top skills and tools');
-        print('  cd <page>        go to home, about, experience, projects, contact');
+        print('  blog             open brain log (or: cat brain.log)');
+        print('  cd <page>        go to home, about, experience, projects, blog, contact');
         print('  ls               list pages');
         print('  resume           open resume.pdf');
         print('  contact          how to reach me');
@@ -117,7 +119,7 @@
         print('penetration testing, vulnerability assessment, ctf, python, java, linux, wireshark, selenium, git, bash');
       },
       ls: function () {
-        print('home  about  experience  projects  contact  resume.pdf');
+        print('home  about  experience  projects  blog/  contact  resume.pdf');
       },
       resume: function () {
         print('opening resume.pdf ...');
@@ -128,6 +130,12 @@
         print('github: github.com/rayedrah');
         print('linkedin: linkedin.com/in/rayedrah');
       },
+      blog: function () {
+        print('tail -f ~/brain.log ...');
+        setTimeout(function () {
+          window.location.href = PAGES.blog;
+        }, 350);
+      },
       clear: function () {
         output.innerHTML = '';
       }
@@ -136,7 +144,7 @@
     function runCd(arg) {
       var key = (arg || '').toLowerCase().replace(/^\/+|\/+$/g, '');
       if (!key) {
-        print('usage: cd <home|about|experience|projects|contact>');
+        print('usage: cd <home|about|experience|projects|blog|contact>');
         return;
       }
       if (PAGES[key]) {
@@ -165,6 +173,8 @@
         print('permission denied. you are not root. nice try.');
       } else if (cmd === 'cd') {
         runCd(rest);
+      } else if (cmd === 'cat' && /brain\.?log/i.test(rest)) {
+        COMMANDS.blog();
       } else if (COMMANDS[cmd]) {
         COMMANDS[cmd]();
       } else {
@@ -175,7 +185,17 @@
     });
   }
 
+  function initLogFab() {
+    var fab = document.getElementById('logFab');
+    var input = document.getElementById('termInput');
+    if (!fab || !input) return;
+    // keep the floating blog button out of the way while typing on small screens
+    input.addEventListener('focus', function () { fab.classList.add('gf-tucked'); });
+    input.addEventListener('blur', function () { fab.classList.remove('gf-tucked'); });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    initLogFab();
     initNameIntro();
     initNavToggle();
     initTerminal();

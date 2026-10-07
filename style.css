@@ -1287,3 +1287,141 @@ footer {
   line-height: 1.6;
 }
 .radar-caption .key { color: var(--accent); }
+
+/* ---------- blog link + floating Brain Log button ---------- */
+/* colors borrowed from the Brain Log theme so the button
+   reads as a doorway into that site */
+
+.nav-links a.nav-blog::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  background: #e3492c;
+  vertical-align: 1px;
+}
+
+.log-fab {
+  --paper: #f1efe8;
+  --ink: #1c1c1c;
+  --logc: #e3492c;
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 12px 14px;
+  color: var(--ink);
+  text-decoration: none;
+  background-color: var(--paper);
+  background-image: radial-gradient(rgba(28, 28, 28, 0.16) 1px, transparent 1.2px);
+  background-size: 10px 10px;
+  border: 1px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--logc);
+  animation: fab-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.4s both;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.log-fab:hover,
+.log-fab:focus-visible {
+  transform: translate(-3px, -3px);
+  box-shadow: 7px 7px 0 var(--logc);
+  outline: none;
+}
+
+.log-fab:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--logc);
+}
+
+.gf-flag {
+  position: absolute;
+  top: -10px;
+  left: -1px;
+  padding: 3px 7px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gf-mark {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  background: var(--logc);
+  border: 1px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.gf-mark::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 1px solid var(--logc);
+  opacity: 0;
+  animation: fab-ping 2.4s ease-out 2.2s infinite;
+}
+
+.gf-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.gf-kicker {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b6964;
+}
+
+.gf-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.gf-arrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 16px;
+  color: var(--logc);
+  transition: transform 0.15s ease;
+}
+
+.log-fab:hover .gf-arrow { transform: translateX(4px); }
+
+.has-fab footer { padding-bottom: 92px; }
+
+@keyframes fab-in {
+  from { opacity: 0; translate: 0 18px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes fab-ping {
+  0% { opacity: 0.9; transform: scale(0.6); }
+  70%, 100% { opacity: 0; transform: scale(1.5); }
+}
+
+@media (max-width: 600px) {
+  .log-fab {
+    right: 14px;
+    bottom: 14px;
+    gap: 10px;
+    padding: 10px 12px 10px 11px;
+    box-shadow: 3px 3px 0 var(--logc);
+  }
+  .gf-kicker { display: none; }
+  .gf-title { font-size: 15px; }
+  .has-fab footer { padding-bottom: 72px; }
+  .log-fab.gf-tucked { opacity: 0; pointer-events: none; transform: translateY(12px); }
+}

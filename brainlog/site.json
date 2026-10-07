@@ -1,0 +1,40 @@
+{
+  "title": "Brain Log",
+  "short": "rydr/brain.log",
+  "hero_title": "RYDR",
+  "hero_accent": "Brain Log",
+  "tagline": "Everything I break, fix, and figure out gets written down here. Some entries are sparks, some are core. All of them are logged.",
+  "description": "Rayed Rahman's brain log: notes on Linux, home labs, security, and the things I build.",
+  "author": "Rayed Rahman",
+  "url": "https://rydr.info/blog",
+  "nav": [
+    {
+      "label": "Entries",
+      "href": "/"
+    },
+    {
+      "label": "Tags",
+      "href": "/tags/"
+    },
+    {
+      "label": "rydr.info",
+      "href": "https://rydr.info"
+    }
+  ],
+  "footer": [
+    {
+      "label": "rydr.info",
+      "href": "https://rydr.info"
+    },
+    {
+      "label": "GitHub",
+      "href": "https://github.com/rayedrah"
+    },
+    {
+      "label": "RSS",
+      "href": "/rss.xml"
+    }
+  ],
+  "base": "/blog",
+  "out": "../blog"
+}

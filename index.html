@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="has-fab">
 
   <section class="name-intro" id="nameIntro">
     <div class="intro-line">
@@ -37,6 +37,7 @@
         <li><a href="about.html">about</a></li>
         <li><a href="experience.html">experience</a></li>
         <li><a href="projects.html">projects</a></li>
+        <li><a href="blog/" class="nav-blog">blog</a></li>
         <li><a href="contact.html" id="contactTrigger">contact</a></li>
       </ul>
   </div>
@@ -85,6 +86,16 @@
       </div>
   </div>
   </footer>
+
+  <a class="log-fab" id="logFab" href="blog/" aria-label="Read Brain Log, my blog">
+    <span class="gf-flag">new</span>
+    <span class="gf-mark" aria-hidden="true"></span>
+    <span class="gf-text">
+      <span class="gf-kicker">fig. 02 &middot; tail -f</span>
+      <span class="gf-title">Brain Log</span>
+    </span>
+    <span class="gf-arrow" aria-hidden="true">&rarr;</span>
+  </a>
 
   <script src="script.js"></script>
   <script src="contact-popup.js"></script>

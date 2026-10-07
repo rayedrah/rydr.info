@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brain Log</title>
+<meta name="description" content="Rayed Rahman&#x27;s brain log: notes on Linux, home labs, security, and the things I build.">
+<meta property="og:title" content="Brain Log">
+<meta property="og:description" content="Rayed Rahman&#x27;s brain log: notes on Linux, home labs, security, and the things I build.">
+<meta property="og:url" content="https://rydr.info/blog/">
+<meta name="theme-color" content="#f1efe8">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+<script>try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}</script>
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+  <nav class="navlinks"><a href="/blog/">Entries</a><a href="/blog/tags/">Tags</a><a href="https://rydr.info">rydr.info</a><button class="theme" type="button" aria-label="Toggle dark mode" onclick="toggleTheme()">◐</button></nav>
+</header>
+
+<main class="home">
+  <section class="lockup">
+    <div class="lockup-label"><span>fig. 01</span><span>rydr/brain.log</span></div>
+    <h1>RYDR<br><span>Brain Log</span></h1>
+    <p class="lede">Everything I break, fix, and figure out gets written down here. Some entries are sparks, some are core. All of them are logged.</p>
+    <dl class="spec">
+      <div><dt>Author</dt><dd>Rayed Rahman</dd></div>
+      <div><dt>Entries</dt><dd>4</dd></div>
+      <div><dt>Last logged</dt><dd>Oct 2026</dd></div>
+    </dl>
+  </section>
+  <section class="block">
+    <h2 class="label">Latest entries</h2>
+    <ol class="recent"><li><a href="/blog/posts/day-1-with-obsidian/"><span class="r-title">Day 1 with Obsidian</span><span class="r-desc">Setting up my vault: a terminal theme, a pixel font, plugins, and a CSS snippet that finally fixed my folder icons.</span></a><span class="r-meta"><span class="status status-logged">logged</span><time>Oct 2026</time></span></li><li><a href="/blog/posts/arch-hyprland-booting-straight-to-my-external-monitor/"><span class="r-title">Arch + Hyprland: Booting Straight to My External Monitor</span><span class="r-desc">My login screen kept showing up on the closed laptop panel. The fix lives at the kernel level, plus my clipboard history setup.</span></a><span class="r-meta"><span class="status status-revised">revised</span><time>Oct 2026</time></span></li><li><a href="/blog/posts/networks-and-network-security/"><span class="r-title">Networks and Network Security</span><span class="r-desc">My notes from Course 3 of the Google Cybersecurity Certificate: network structure, protocols, attacks, and hardening.</span></a><span class="r-meta"><span class="status status-logged">logged</span><time>Jul 2026</time></span></li><li><a href="/blog/posts/github-over-ssh/"><span class="r-title">GitHub over SSH</span><span class="r-desc">The git add variants I keep mixing up, and the compact SSH key setup that means never typing a password for GitHub again.</span></a><span class="r-meta"><span class="status status-revised">revised</span><time>Mar 2026</time></span></li></ol>
+  </section>
+  <section class="block">
+    <h2 class="label">All entries</h2>
+    <div class="cats"><section class="cat" id="cyber"><h3><span class="idx">01</span>Cyber<span class="count">2</span></h3><ul class="tree"><li class="row"><span class="branch" aria-hidden="true">├──</span><a href="/blog/posts/networks-and-network-security/">Networks and Network Security</a><span class="dots" aria-hidden="true"></span><span class="status status-logged">logged</span><time>Jul 2026</time></li><li class="row"><span class="branch" aria-hidden="true">└──</span><a href="/blog/posts/github-over-ssh/">GitHub over SSH</a><span class="dots" aria-hidden="true"></span><span class="status status-revised">revised</span><time>Mar 2026</time></li></ul></section><section class="cat" id="systems"><h3><span class="idx">02</span>Systems<span class="count">2</span></h3><ul class="tree"><li class="row"><span class="branch" aria-hidden="true">├──</span><a href="/blog/posts/day-1-with-obsidian/">Day 1 with Obsidian</a><span class="dots" aria-hidden="true"></span><span class="status status-logged">logged</span><time>Oct 2026</time></li><li class="row"><span class="branch" aria-hidden="true">└──</span><a href="/blog/posts/arch-hyprland-booting-straight-to-my-external-monitor/">Arch + Hyprland: Booting Straight to My External Monitor</a><span class="dots" aria-hidden="true"></span><span class="status status-revised">revised</span><time>Oct 2026</time></li></ul></section></div>
+  </section>
+  <section class="block">
+    <h2 class="label">Entry status</h2>
+    <ul class="legend"><li><span class="status status-spark">spark</span><span>Half-formed idea. Expect gaps.</span></li><li><span class="status status-logged">logged</span><span>Written up, not revisited yet.</span></li><li><span class="status status-revised">revised</span><span>Revisited and kept current.</span></li><li><span class="status status-core">core</span><span>Stable reference I keep coming back to.</span></li><li><span class="status status-fading">fading</span><span>Probably out of date.</span></li></ul>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>© 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">GitHub</a><a href="/blog/rss.xml">RSS</a></span>
+  </div>
+</footer>
+<script>
+function toggleTheme(){var d=document.documentElement.classList.toggle("dark");try{localStorage.setItem("theme",d?"dark":"light")}catch(e){}}
+</script>
+</body>
+</html>

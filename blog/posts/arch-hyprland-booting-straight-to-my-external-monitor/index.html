@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arch + Hyprland: Booting Straight to My External Monitor | Brain Log</title>
+<meta name="description" content="My login screen kept showing up on the closed laptop panel. The fix lives at the kernel level, plus my clipboard history setup.">
+<meta property="og:title" content="Arch + Hyprland: Booting Straight to My External Monitor | Brain Log">
+<meta property="og:description" content="My login screen kept showing up on the closed laptop panel. The fix lives at the kernel level, plus my clipboard history setup.">
+<meta property="og:url" content="https://rydr.info/blog/posts/arch-hyprland-booting-straight-to-my-external-monitor/">
+<meta name="theme-color" content="#f1efe8">
+<link rel="icon" href="/blog/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Brain Log" href="/blog/rss.xml">
+<link rel="preload" href="/blog/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/blog/style.css">
+<script>try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}</script>
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="/blog/"><span class="brand-mark" aria-hidden="true"></span>rydr/brain.log</a>
+  <nav class="navlinks"><a href="/blog/">Entries</a><a href="/blog/tags/">Tags</a><a href="https://rydr.info">rydr.info</a><button class="theme" type="button" aria-label="Toggle dark mode" onclick="toggleTheme()">◐</button></nav>
+</header>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">rydr/brain.log</a><i>/</i><a href="/blog/">notes</a><i>/</i><a href="/blog/#systems">systems</a><i>/</i><span>arch + hyprland: booting straight to my external monitor</span></nav>
+<main class="note">
+  <header class="note-head">
+    <h1>Arch + Hyprland: Booting Straight to My External Monitor</h1>
+    <p class="lede">My login screen kept showing up on the closed laptop panel. The fix lives at the kernel level, plus my clipboard history setup.</p>
+    <dl class="spec"><div><dt>Logged</dt><dd>Oct 2026</dd></div><div><dt>Revised</dt><dd>Oct 2026</dd></div><div><dt>Status</dt><dd><span class="status status-revised">revised</span></dd></div><div><dt>Read</dt><dd>3 min</dd></div><div><dt>Audience</dt><dd>Linux tinkerers running Hyprland on a laptop</dd></div></dl>
+    <div class="tags"><a class="tag" href="/blog/tags/arch/">#arch</a><a class="tag" href="/blog/tags/hyprland/">#hyprland</a><a class="tag" href="/blog/tags/linux/">#linux</a></div>
+  </header>
+  <div class="note-grid">
+    <aside class="toc"><h2 class="label">Contents</h2><ol><li><a href="#base-conf">Base Conf.</a><ol><li><a href="#monitor-dell-50-asus-lid-off">Monitor Dell $50 | Asus Lid off</a></li><li><a href="#display-kernel-cancel">Display Kernel Cancel.</a></li><li><a href="#problem">Problem</a></li><li><a href="#fix-systemd-boot">Fix (systemd-boot)</a></li><li><a href="#undo-restore-laptop-screen">Undo (restore laptop screen)</a></li><li><a href="#system-setup">System Setup</a></li></ol></li><li><a href="#clipboard">Clipboard</a><ol><li><a href="#clipboard-setup-hyprland-cliphist">🧠 Clipboard Setup (Hyprland + cliphist)</a></li></ol></li><li><a href="#screenshot">Screenshot</a></li><li><a href="#notification">Notification</a></li><li><a href="#lock-screen">Lock-screen</a></li><li><a href="#idle">Idle</a></li><li><a href="#wallpaper">Wallpaper</a><ol><li><a href="#swww-setup">swww Setup</a></li><li><a href="#install">Install</a></li><li><a href="#hyprland-config">Hyprland Config</a></li><li><a href="#usage">Usage</a></li><li><a href="#resize-modes">Resize Modes</a></li><li><a href="#no-config-file-cli-only">No config file — CLI only</a></li></ol></li><li><a href="#login-greeter">Login Greeter</a><ol><li><a href="#sysc-greet-setup">sysc-greet Setup</a></li><li><a href="#install_1">Install</a></li><li><a href="#greetd-config">greetd Config</a></li><li><a href="#ascii-art">ASCII Art</a></li><li><a href="#key-bindings-on-login-screen">Key Bindings (on login screen)</a></li><li><a href="#themes">Themes</a></li><li><a href="#background-effects">Background Effects</a></li></ol></li></ol></aside>
+    <article class="prose"><blockquote>
+<p>HYPRLAND </p>
+<p>If Crashes: <br />
+  sudo pacman -S xdg-desktop-potal-hyprland mesa </p>
+</blockquote>
+<p>Super + E (dolphin file manager)<br />
+Super + F (Window size change)</p>
+<h1 id="base-conf">Base Conf.</h1>
+<h3 id="monitor-dell-50-asus-lid-off">Monitor Dell $50 | Asus Lid off</h3>
+<blockquote>
+<p>Hyprland.conf </p>
+</blockquote>
+<p>monitor=eDP-1,disable<br />
+monitor=,preffered,auto,auto</p>
+<blockquote>
+<p>SDDM login page transfer to the Monitor </p>
+</blockquote>
+<p>wallpaper: <br />
+<a href="https://www.youtube.com/watch?v=Bwp2xWis8qk">https://www.youtube.com/watch?v=Bwp2xWis8qk</a></p>
+<h3 id="display-kernel-cancel">Display Kernel Cancel.</h3>
+<h2 id="problem">Problem</h2>
+<p>Login (<code>sysc</code>) appeared on the <strong>laptop screen</strong> instead of the external monitor.</p>
+<p>Reason:</p>
+<p>Kernel initializes laptop panel (eDP) first<br />
+→ greetd attaches to first display<br />
+→ sysc shows on laptop<br />
+→ Hyprland disables it only AFTER login</p>
+<p>So the fix must happen <strong>at kernel boot level</strong>, not in Hyprland.</p>
+<hr />
+<h2 id="fix-systemd-boot">Fix (systemd-boot)</h2>
+<p>Edit boot entry:</p>
+<p>sudo nano /boot/loader/entries/arch.conf</p>
+<p>Original:</p>
+<p>options root=/dev/nvme0n1p3 rw</p>
+<p>Change to:</p>
+<p>options root=/dev/nvme0n1p3 rw video=eDP-1:d video=eDP-2:d</p>
+<p>Explanation:</p>
+<p>video=eDP-*:d<br />
+d = disable internal laptop display</p>
+<p>Reboot:</p>
+<p>reboot</p>
+<p>Result:</p>
+<p>Boot<br />
+→ greetd<br />
+→ sysc <br />
+→ Hyprland  </p>
+<p>All appear on HDMI monitor.<br />
+Laptop screen stays OFF.</p>
+<hr />
+<h2 id="undo-restore-laptop-screen">Undo (restore laptop screen)</h2>
+<p>Edit again:</p>
+<p>sudo nano /boot/loader/entries/arch.conf</p>
+<p>Remove the parameters:</p>
+<p>options root=/dev/nvme0n1p3 rw</p>
+<p>Reboot.</p>
+<p>Laptop screen works normally again.</p>
+<hr />
+<h2 id="system-setup">System Setup</h2>
+<p>Bootloader: systemd-boot<br />
+Login manager: greetd<br />
+Greeter: sysc<br />
+WM: Hyprland<br />
+Monitor: HDMI-A-1<br />
+Laptop panel: eDP</p>
+<hr />
+<p>✅ Toggle summary:</p>
+<p>Desktop mode:<br />
+video=eDP-1:d video=eDP-2:d  </p>
+<p>Laptop mode:<br />
+(no video parameters)</p>
+<h1 id="clipboard">Clipboard</h1>
+<h2 id="clipboard-setup-hyprland-cliphist">🧠 Clipboard Setup (Hyprland + cliphist)</h2>
+<h3 id="goal">🎯 Goal</h3>
+<p>Use clipboard history (<code>cliphist</code>) with a popup selector, while keeping <strong>manual paste behavior</strong> for reliability (especially in terminal).</p>
+<hr />
+<h3 id="keybind">⚙️ Keybind</h3>
+<div class="hl"><pre><span></span><code><span class="na">bind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$mainMod, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy</span>
+</code></pre></div>
+
+<hr />
+<h3 id="workflow">🔁 Workflow</h3>
+<div class="hl"><pre><span></span><code>Copy (Ctrl+C / Ctrl+Shift+C)
+→ SUPER + V
+→ Select item (Enter)
+→ Paste manually
+</code></pre></div>
+
+<hr />
+<h3 id="paste-behavior">⌨️ Paste Behavior</h3>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Paste Shortcut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Terminal</td>
+<td>Ctrl + Shift + V</td>
+</tr>
+<tr>
+<td>Normal Apps</td>
+<td>Ctrl + V</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="important-notes">⚠️ Important Notes</h3>
+<ul>
+<li>
+<p>This setup <strong>does NOT auto-paste</strong></p>
+</li>
+<li>
+<p>It only restores the selected item into clipboard</p>
+</li>
+<li>
+<p>Manual paste is required → <strong>more stable across apps</strong></p>
+</li>
+</ul>
+<hr />
+<h3 id="why-this-setup">🧠 Why this setup?</h3>
+<ul>
+<li>
+<p><code>wtype</code> auto-paste is unreliable in terminals</p>
+</li>
+<li>
+<p>Different apps use different paste shortcuts</p>
+</li>
+<li>
+<p>This approach is <strong>universal + predictable</strong></p>
+</li>
+</ul>
+<hr />
+<h3 id="clipboard-watchers-required">🔧 Clipboard Watchers (required)</h3>
+<div class="hl"><pre><span></span><code><span class="na">exec-once</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">wl-paste --type text --watch cliphist store</span>
+<span class="na">exec-once</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">wl-paste --type image --watch cliphist store</span>
+</code></pre></div>
+
+<hr />
+<h3 id="mental-model">🧪 Mental Model</h3>
+<div class="hl"><pre><span></span><code>cliphist list → wofi → select → wl-copy → (YOU paste)
+</code></pre></div>
+
+<hr />
+<h3 id="tldr">🚀 TL;DR</h3>
+<div class="hl"><pre><span></span><code>SUPER+V = choose clipboard item
+Ctrl+Shift+V = paste in terminal
+Ctrl+V = paste in apps
+</code></pre></div>
+
+<h3 id="clearing-the-clipboard">CLEARING THE CLIPBOARD</h3>
+<ul>
+<li>SUPER + Space </li>
+<li>Search Clipboard manager</li>
+<li>Hit enter</li>
+<li>Clear the clipboard from their. </li>
+</ul>
+<h1 id="screenshot">Screenshot</h1>
+<blockquote>
+<p>Hyprshot </p>
+</blockquote>
+<ul>
+<li>hyprshot -m window (lets you select windows)<ul>
+<li>screenshots are saved in the default picture folder. </li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>fn + prtsc (prints the whole screen and saves it)</p>
+<p>SUPER + X (region screenshot and copy only)<br />
+SUPER SHIFT + X (region screenshot and save in Pictures)</p>
+</blockquote>
+<h1 id="notification">Notification</h1>
+<blockquote>
+<p>swaync </p>
+</blockquote>
+<p>changed the config </p>
+<blockquote>
+<p>exec-once = swaync </p>
+</blockquote>
+<h1 id="lock-screen">Lock-screen</h1>
+<p>hyprlock</p>
+<blockquote>
+<p>SUPER  + l </p>
+</blockquote>
+<h1 id="idle">Idle</h1>
+<p>Hypridle </p>
+<blockquote>
+<p>300 secs </p>
+</blockquote>
+<p>and ~/.config/hypr/hypridle.conf </p>
+<h1 id="wallpaper">Wallpaper</h1>
+<h2 id="swww-setup">swww Setup</h2>
+<h2 id="install">Install</h2>
+<p><code>sudo pacman -S awww</code></p>
+<h2 id="hyprland-config">Hyprland Config</h2>
+<p>add to <code>~/.config/hypr/hyprland.conf</code>:<br />
+```<br />
+exec-once = awww-daemon<br />
+exec-once = awww img /path/to/wallpaper.jpg --resize fit<br />
+```</p>
+<h2 id="usage">Usage</h2>
+<p>```bash<br />
+awww img /path/to/wallpaper.jpg              # basic<br />
+awww img /path/to/wallpaper.jpg --resize fit # no crop<br />
+awww img /path/to/wallpaper.jpg --transition-type wave --transition-duration 2<br />
+```</p>
+<h2 id="resize-modes">Resize Modes</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--resize fit</code></td>
+<td>whole image, may add bars</td>
+</tr>
+<tr>
+<td><code>--resize crop</code></td>
+<td>fills screen, crops edges</td>
+</tr>
+<tr>
+<td><code>--resize no</code></td>
+<td>original size, centered</td>
+</tr>
+</tbody>
+</table>
+<h2 id="no-config-file-cli-only">No config file — CLI only</h2>
+<hr />
+<h1 id="login-greeter">Login Greeter</h1>
+<h2 id="sysc-greet-setup">sysc-greet Setup</h2>
+<h2 id="install_1">Install</h2>
+<p><code>yay -S sysc-greet-hyprland</code></p>
+<h2 id="greetd-config">greetd Config</h2>
+<p><code>/etc/greetd/config.toml</code><br />
+[terminal]<br />
+vt = 1<br />
+[default_session]<br />
+command = "start-hyprland -- -c /etc/greetd/hyprland-greeter-config.conf"<br />
+user = "greeter"</p>
+<h2 id="ascii-art">ASCII Art</h2>
+<p>Location: <code>/usr/share/sysc-greet/ascii_configs/hyprland.conf</code></p>
+<ul>
+<li>Edit <code>name=</code> to change display name</li>
+<li>Add <code>ascii_1=</code> through <code>ascii_N=</code> for variants</li>
+<li><code>colors=</code> for hex color cycling</li>
+<li><code>roasts=</code> for roast messages separated by <code>│</code></li>
+</ul>
+<h2 id="key-bindings-on-login-screen">Key Bindings (on login screen)</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Page Up/Down</td>
+<td>Cycle ASCII variants</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>Settings (themes, borders, backgrounds)</td>
+</tr>
+<tr>
+<td>F2</td>
+<td>Session selection</td>
+</tr>
+<tr>
+<td>F4</td>
+<td>Power menu</td>
+</tr>
+<tr>
+<td>Tab</td>
+<td>Navigate fields</td>
+</tr>
+<tr>
+<td>Enter</td>
+<td>Submit</td>
+</tr>
+</tbody>
+</table>
+<h2 id="themes">Themes</h2>
+<p>Dracula, Gruvbox, Nord, Tokyo Night, Catppuccin, Monochrome, and more.<br />
+Change via F1 on login screen.</p>
+<h2 id="background-effects">Background Effects</h2>
+<p>Fire (DOOM), Matrix rain, ASCII rain, Fireworks, Aquarium<br />
+Change via F1 on login screen.</p></article>
+  </div>
+  <section class="next">
+    <h2 class="label">Where to next?</h2>
+    <p class="next-cat"><a href="/blog/#systems">Systems</a></p>
+    <ul class="tree"><li class="row"><span class="branch" aria-hidden="true">├──</span><a href="/blog/posts/day-1-with-obsidian/">Day 1 with Obsidian</a><span class="dots" aria-hidden="true"></span><span class="status status-logged">logged</span><time>Oct 2026</time></li><li aria-current="page" class="row here"><span class="branch" aria-hidden="true">└──</span><a href="/blog/posts/arch-hyprland-booting-straight-to-my-external-monitor/">Arch + Hyprland: Booting Straight to My External Monitor</a><span class="dots" aria-hidden="true"></span><span class="status status-revised">revised</span><time>Oct 2026</time></li></ul>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-inner">
+    <span>© 2026 Rayed Rahman</span>
+    <span class="foot-links"><a href="https://rydr.info">rydr.info</a><a href="https://github.com/rayedrah">GitHub</a><a href="/blog/rss.xml">RSS</a></span>
+  </div>
+</footer>
+<script>
+function toggleTheme(){var d=document.documentElement.classList.toggle("dark");try{localStorage.setItem("theme",d?"dark":"light")}catch(e){}}
+</script>
+</body>
+</html>
