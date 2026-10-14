@@ -7,8 +7,8 @@
 
   var CHANNELS = [
     {
-      label: 'email', title: 'rayedrah@gmail.com', value: 'rayedrah@gmail.com',
-      href: 'mailto:rayedrah@gmail.com',
+      label: 'email', title: 'contact@rydr.info', value: 'contact@rydr.info',
+      href: 'mailto:contact@rydr.info',
       hook: 'YOU\'VE GOT MAIL!', sub: '1 new way to reach me',
       titleBg: 'var(--accent)', titleText: '#06120c',
       icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18v12H3V6z" stroke="#06120c" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="#06120c" stroke-width="1.8" stroke-linejoin="round"/></svg>',
