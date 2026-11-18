@@ -352,7 +352,8 @@ class Builder:
                         f'<a href="/posts/{p["slug"]}/">{html.escape(p["title"])}</a>{when}</li>')
         return "".join(rows)
 
-    def tree(self, folders, current=None):
+    def tree(self, folders, current=None, expanded=True):
+        """expanded=False starts every folder closed (blog home); folder and post pages open theirs"""
         dirs = []
         for i, f in enumerate(folders):
             last = i == len(folders) - 1
@@ -360,7 +361,7 @@ class Builder:
             prefix = "    " if last else "\u2502   "
             count = len(f["posts"])
             dirs.append(
-                f'<li class="dir" id="{f["slug"]}"><details open><summary>'
+                f'<li class="dir" id="{f["slug"]}"><details{" open" if expanded else ""}><summary>'
                 f'<span class="br" aria-hidden="true">{branch}</span>{self.folder_icons()}'
                 f'<span class="d-name">{html.escape(f["slug"])}/</span>'
                 f'<span class="d-count">{count:02d}</span></summary>'
@@ -398,7 +399,7 @@ class Builder:
     <p class="tagline">{html.escape(SITE['tagline'])}</p>
   </header>
   <p class="cmd" aria-hidden="true"><span class="prompt">guest@rydr:~$</span> tree brain.log<span class="cursor"></span></p>
-  {self.tree(self.folders)}
+  {self.tree(self.folders, expanded=False)}
   {self.tree_summary(self.folders)}
 </main>"""
         self.write("index.html", self.page(SITE["title"], home))
