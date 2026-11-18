@@ -198,3 +198,19 @@ html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
   .pager { grid-template-columns: 1fr; }
   .pager .next { grid-column: 1; text-align: left; }
 }
+
+/* ---------- scrollbars: thin, square, pixel-style ----------
+   Page, code blocks, terminal log and tables. Dark track, grey thumb, lime on hover.
+   Chrome/Safari/Edge use the ::-webkit-scrollbar rules; Firefox gets the closest match. */
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #3a3a3a; border: 2px solid #0a0a0a; border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: #a5ff3f; }
+::-webkit-scrollbar-thumb:active { background: #a5ff3f; }
+::-webkit-scrollbar-corner { background: #0a0a0a; }
+::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+
+@supports not selector(::-webkit-scrollbar) {
+  * { scrollbar-width: thin; scrollbar-color: #3a3a3a #0a0a0a; }
+}
