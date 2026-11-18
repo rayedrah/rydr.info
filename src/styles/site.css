@@ -520,57 +520,6 @@ body { text-shadow: 0 0 2px #000, 0 0 8px rgba(0, 0, 0, 0.85); }
 .footer-inner .fine .credit a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
 .footer-inner .fine .credit a:hover { color: var(--accent); }
 
-/* ---------- floating Brain Log card (home), ported from the live site in the new theme ---------- */
-
-.log-fab {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px 12px 14px;
-  color: var(--text);
-  text-decoration: none;
-  text-shadow: none;
-  background: rgba(10, 10, 10, 0.92);
-  border: 1px solid var(--accent);
-  box-shadow: 4px 4px 0 var(--accent);
-  animation: fab-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.4s both;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.log-fab:hover, .log-fab:focus-visible { opacity: 1; transform: translate(-3px, -3px); box-shadow: 7px 7px 0 var(--accent); outline: none; }
-.log-fab:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--accent); }
-
-.gf-flag {
-  position: absolute; top: -10px; left: -1px;
-  padding: 3px 7px;
-  background: var(--accent); color: #000;
-  font-family: var(--font-mono); font-size: 9px; line-height: 1;
-  letter-spacing: 0.14em; text-transform: uppercase;
-}
-.gf-mark { position: relative; width: 14px; height: 14px; flex-shrink: 0; background: var(--accent); border-radius: 50%; }
-.gf-mark::after {
-  content: ""; position: absolute; inset: -6px; border-radius: 50%;
-  border: 1px solid var(--accent); opacity: 0;
-  animation: fab-ping 2.4s ease-out 2.2s infinite;
-}
-.gf-text { display: flex; flex-direction: column; line-height: 1.15; }
-.gf-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-.gf-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 17px; letter-spacing: -0.01em; }
-.gf-arrow { font-family: var(--font-mono); font-size: 16px; color: var(--accent); transition: transform 0.15s ease; }
-.log-fab:hover .gf-arrow { transform: translateX(4px); }
-
-@keyframes fab-in { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
-@keyframes fab-ping { 0% { opacity: 0.9; transform: scale(0.6); } 70%, 100% { opacity: 0; transform: scale(1.5); } }
-
-@media (max-width: 600px) {
-  .log-fab { right: 14px; bottom: 14px; gap: 10px; padding: 10px 12px 10px 11px; box-shadow: 3px 3px 0 var(--accent); }
-  .gf-kicker { display: none; }
-  .gf-title { font-size: 15px; }
-}
-@media (prefers-reduced-motion: reduce) { .log-fab, .gf-mark::after { animation: none; } }
 
 /* ---------- scrollbars: thin, square, pixel-style ----------
    Page, code blocks, terminal log and tables. Dark track, grey thumb, lime on hover.

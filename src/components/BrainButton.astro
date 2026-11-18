@@ -1,0 +1,123 @@
+---
+// Floating pixel-brain button that opens Brain Log (the blog).
+// Pink brain, blue nerves that flicker like firing neurons, and a blue
+// notification dot with a ping. Drawn on a pixel grid, no images.
+//   D  dark pink outline / folds     P  pink     L  light pink highlight
+//   B  blue nerve (flickers)         .  empty
+const BRAIN = [
+  '.....DDDDDD.....',
+  '...DDPPLLPPDD...',
+  '..DPPLLPPBPPPD..',
+  '.DPPBBPPPBPPLPD.',
+  'DPPBPPDPBBPPPPPD',
+  'DPLPPPDPPPBBPPPD',
+  'DPPBBPDPPBPPPBPD',
+  'DPBPPPDPPPBBPPPD',
+  '.DPPBPDPBPPPBPD.',
+  '..DDPPDPPBPPDD..',
+  '....DDDDDPPDD...',
+  '........DPPD....',
+  '.........DD.....',
+];
+const COLORS: Record<string, string> = { D: '#c2457f', P: '#ff7eb6', L: '#ffc2dd', B: '#4cc9ff' };
+
+let n = 0;
+const pixels = BRAIN.flatMap((row, y) =>
+  [...row].map((c, x) => {
+    if (!(c in COLORS)) return null;
+    const nerve = c === 'B';
+    // stagger the nerve flicker so it ripples instead of blinking all at once
+    const delay = nerve ? `${((n++ * 0.37) % 2.4).toFixed(2)}s` : undefined;
+    return { x, y, fill: COLORS[c], nerve, delay };
+  }),
+).filter(Boolean) as { x: number; y: number; fill: string; nerve: boolean; delay?: string }[];
+
+const W = BRAIN[0].length;
+const H = BRAIN.length;
+---
+<a class="brain-btn" href="blog/" aria-label="Brain Log: read my notes">
+  <svg viewBox={`0 0 ${W} ${H}`} width={W * 3} height={H * 3} shape-rendering="crispEdges" aria-hidden="true">
+    {pixels.map((p) => (
+      <rect x={p.x} y={p.y} width="1" height="1" fill={p.fill}
+        class={p.nerve ? 'nerve' : undefined} style={p.delay ? `animation-delay:${p.delay}` : undefined} />
+    ))}
+  </svg>
+  <span class="brain-ping" aria-hidden="true"></span>
+  <span class="brain-tip" aria-hidden="true">brain.log</span>
+</a>
+
+<style>
+  .brain-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 50;
+    display: block;
+    line-height: 0;
+    filter: drop-shadow(0 0 10px rgba(255, 126, 182, 0.35)) drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.8));
+    animation: brain-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.4s both;
+    transition: transform 0.15s ease;
+  }
+  .brain-btn:hover, .brain-btn:focus-visible { transform: translateY(-3px) scale(1.06); opacity: 1; outline: none; }
+  .brain-btn svg { display: block; image-rendering: pixelated; }
+
+  /* nerves: blue, flaring to near-white like a signal firing */
+  .nerve { animation: fire 2.4s steps(1) infinite; }
+  @keyframes fire {
+    0%, 82% { fill: #4cc9ff; }
+    86% { fill: #d6f3ff; }
+    92% { fill: #8fdcff; }
+  }
+
+  /* notification: blue square dot with a ping, top-right of the brain */
+  .brain-ping {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 9px;
+    height: 9px;
+    background: #4cc9ff;
+    box-shadow: 0 0 0 2px #0a0a0a;
+  }
+  .brain-ping::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border: 1px solid #4cc9ff;
+    opacity: 0;
+    animation: ping 2.4s ease-out 2.2s infinite;
+  }
+  @keyframes ping {
+    0% { opacity: 0.9; transform: scale(0.5); }
+    70%, 100% { opacity: 0; transform: scale(1.4); }
+  }
+
+  /* label slides out to the left on hover */
+  .brain-tip {
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translate(6px, -50%);
+    padding: 3px 7px;
+    font: 11px/1.4 var(--font-mono);
+    color: #ff7eb6;
+    background: rgba(10, 10, 10, 0.92);
+    border: 1px solid #c2457f;
+    white-space: nowrap;
+    text-shadow: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .brain-btn:hover .brain-tip, .brain-btn:focus-visible .brain-tip { opacity: 1; transform: translate(0, -50%); }
+
+  @keyframes brain-in { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
+
+  @media (max-width: 600px) {
+    .brain-btn { right: 14px; bottom: 14px; }
+    .brain-btn svg { width: 40px; height: 32.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .brain-btn, .nerve, .brain-ping::after { animation: none; }
+  }
+</style>

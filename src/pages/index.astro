@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import BrainButton from '../components/BrainButton.astro';
 import { PROJECTS, EXPERIENCE, LINKS } from '../data/site.js';
 
 const recent = PROJECTS.slice(0, 4);
@@ -68,15 +69,7 @@ const now = EXPERIENCE[0].items;
     </ul>
   </section>
 
-  <a class="log-fab" href="blog/" aria-label="Read Brain Log, my blog">
-    <span class="gf-flag">new</span>
-    <span class="gf-mark" aria-hidden="true"></span>
-    <span class="gf-text">
-      <span class="gf-kicker">fig. 02 &middot; tail -f</span>
-      <span class="gf-title">Brain Log</span>
-    </span>
-    <span class="gf-arrow" aria-hidden="true">&rarr;</span>
-  </a>
+  <BrainButton />
 
   <section class="row">
     <div class="label">
