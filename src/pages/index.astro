@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import { PROJECTS, EXPERIENCE, LINKS } from '../data/site.js';
+
+const recent = PROJECTS.slice(0, 4);
+const now = EXPERIENCE[0].items;
+---
+<Base title="Rayed Rahman | Cybersecurity @ Purdue" active="home">
+
+  <section class="intro" id="intro" slot="intro" aria-label="Rayed Rahman">
+    <canvas class="intro-grain" aria-hidden="true"></canvas>
+    <p class="intro-prompt" aria-hidden="true"><span class="prompt">guest@rydr:~$</span> <span class="intro-cmd"></span><span class="intro-cursor"></span></p>
+    <p class="intro-name" aria-hidden="true"><span class="word">RAYED</span> <span class="word">RAHMAN</span></p>
+    <div class="scroll-hint" aria-hidden="true"><span>scroll</span><span class="chevron"></span></div>
+  </section>
+
+  <section class="row">
+    <div class="label">
+      <h1 data-scramble>Rayed Rahman</h1>
+      <span class="sub">cybersecurity @ purdue</span>
+      <pre class="ascii-art" data-ascii-art role="img" aria-label="pixel art"></pre>
+    </div>
+    <div class="body">
+      <p>Hi!</p>
+      <p>
+        I'm Rayed, a Cybersecurity student at <a href="https://www.purdue.edu/" target="_blank" rel="noopener">Purdue</a>'s
+        Honors College, interning at <a href="experience.html">AGS Quality Action</a> and researching deepfake detection at
+        <a href="experience.html">GRAIL Lab</a>. I like finding out why systems break under pressure. Active
+        <a href="projects.html">b01lers</a> CTF player and systems tinkerer.
+      </p>
+      <p>
+        Find me on <a href={LINKS.github} target="_blank" rel="noopener">GitHub</a>,
+        <a href={LINKS.linkedin} target="_blank" rel="noopener">LinkedIn</a>, read my notes on
+        <a href="blog/">Brain Log</a>, or email me at <a href={`mailto:${LINKS.email}`}>{LINKS.email}</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="label">
+      <h2 data-scramble>Now</h2>
+      <span class="sub"><a href="experience.html">All experience</a></span>
+    </div>
+    <ul class="body list">
+      {now.map((e) => (
+        <li class="item">
+          <span class="name">{e.role}</span>
+          <span class="lead"></span>
+          <span class="meta">{e.org}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="row">
+    <div class="label">
+      <h2 data-scramble>Recent Projects</h2>
+      <span class="sub"><a href="projects.html">View all</a></span>
+    </div>
+    <ul class="body list">
+      {recent.map((p) => (
+        <li class="item">
+          <a class="name" href={`projects.html#${p.id}`} style="color: var(--text)">{p.title}</a>
+          <span class="lead"></span>
+          <span class="tags">{p.stack.slice(0, 3).map((s) => <span class="tag">{s}</span>)}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <a class="log-fab" href="blog/" aria-label="Read Brain Log, my blog">
+    <span class="gf-flag">new</span>
+    <span class="gf-mark" aria-hidden="true"></span>
+    <span class="gf-text">
+      <span class="gf-kicker">fig. 02 &middot; tail -f</span>
+      <span class="gf-title">Brain Log</span>
+    </span>
+    <span class="gf-arrow" aria-hidden="true">&rarr;</span>
+  </a>
+
+  <section class="row">
+    <div class="label">
+      <h2 data-scramble>Poke Around</h2>
+      <span class="sub">type 'help'</span>
+    </div>
+    <div class="body term">
+      <div class="term-log" id="termLog" aria-live="polite">
+        <div class="out">guest@rydr connected. type 'help' to look around.</div>
+      </div>
+      <form class="term-input-row" id="termForm">
+        <span class="prompt">~/rayed $</span>
+        <input type="text" id="termInput" class="term-input" autocomplete="off" spellcheck="false" aria-label="terminal command" />
+      </form>
+    </div>
+  </section>
+
+</Base>

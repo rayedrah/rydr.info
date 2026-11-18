@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import { EDUCATION, CERTS, SKILLS } from '../data/site.js';
+---
+<Base title="About | Rayed Rahman" active="about">
+
+  <section class="row">
+    <div class="label">
+      <h1 data-scramble>About</h1>
+      <span class="sub">Honors Cybersecurity, CS minor</span>
+    </div>
+    <div class="body">
+      <p>
+        Cybersecurity student and researcher working across systems administration, incident research, and security
+        tooling. I care about the <span style="color: var(--accent)">trust</span> people place in technology, and
+        about understanding why a system fails before it does.
+      </p>
+      <p class="muted">
+        CTF player with b01lers, Purdue's competitive team. Back in Bangladesh I founded CGSEncrypted, the country's first
+        high school CTF team, and led the CGS Programming and MUN clubs.
+      </p>
+      <p class="muted">
+        Outside security I cofounded SYNQ, a sportswear brand. Same pattern: find what's missing, build the fix, see it through.
+      </p>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="label"><h2 data-scramble>Education</h2></div>
+    <ul class="body list">
+      {EDUCATION.map((e) => (
+        <li class="item">
+          <span class="name">{e.name}</span>
+          <span class="lead"></span>
+          <span class="tags">{e.tags.map((t) => <span class="tag">{t}</span>)}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="row">
+    <div class="label"><h2 data-scramble>Certifications</h2></div>
+    <ul class="body list">
+      {CERTS.map((c) => (
+        <li class="item">
+          <span class="name">{c.name}</span>
+          <span class="lead"></span>
+          <span class="tags">{c.tags.map((t) => <span class="tag">{t}</span>)}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="row">
+    <div class="label"><h2 data-scramble>Things I Do</h2></div>
+    <dl class="body kv">
+      <dt>focus</dt>
+      <dd><span class="tags">{SKILLS.focus.map((t) => <span class="tag hot">{t}</span>)}</span></dd>
+      <dt>languages</dt>
+      <dd><span class="tags">{SKILLS.languages.map((t) => <span class="tag">{t}</span>)}</span></dd>
+      <dt>tools</dt>
+      <dd><span class="tags">{SKILLS.tools.map((t) => <span class="tag">{t}</span>)}</span></dd>
+    </dl>
+  </section>
+
+</Base>

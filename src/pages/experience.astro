@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import { EXPERIENCE } from '../data/site.js';
+---
+<Base title="Experience | Rayed Rahman" active="experience">
+
+  <section class="row">
+    <div class="label">
+      <h1 data-scramble>Experience</h1>
+    </div>
+    <div class="body">
+      <p class="muted">From Chittagong to Purdue. Click a role to expand it.</p>
+    </div>
+  </section>
+
+  {EXPERIENCE.map((g) => (
+    <section class="row">
+      <div class="label"><h2 data-scramble>{g.group}</h2></div>
+      <div class="body list">
+        {g.items.map((e) => (
+          <details class="entry" open={e.open}>
+            <summary class="item">
+              <span class="name">{e.role}</span>
+              <span class="lead"></span>
+              <span class="meta">{e.date}</span>
+            </summary>
+            <div class="entry-body">
+              <div class="org">{e.org}{e.place && <span style="color: var(--muted)"> · {e.place}</span>}</div>
+              {e.text && <p>{e.text}</p>}
+              {e.points && <ul>{e.points.map((pt) => <li>{pt}</li>)}</ul>}
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+  ))}
+
+</Base>

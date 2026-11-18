@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import { PROJECTS, AXES, SKILLS } from '../data/site.js';
+
+// skill map geometry, drawn at build time
+const cx = 130, cy = 120, R = 82;
+const pt = (i: number, v: number) => {
+  const a = (Math.PI * 2 * i) / AXES.length - Math.PI / 2;
+  const r = (v / 10) * R;
+  return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+};
+const poly = (vals: number[]) => vals.map((v, i) => pt(i, v).join(',')).join(' ');
+const rings = [2.5, 5, 7.5, 10].map((f) => poly(AXES.map(() => f)));
+---
+<Base title="Projects | Rayed Rahman" active="projects">
+
+  <section class="row">
+    <div class="label">
+      <h1 data-scramble>Projects</h1>
+      <span class="sub">built, broken, or both</span>
+      <div class="radar" aria-hidden="true">
+        <svg viewBox="0 0 260 240" id="radar">
+          {rings.map((r) => <polygon class="radar-grid" points={r} />)}
+          {AXES.map((a, i) => {
+            const [x, y] = pt(i, 10);
+            const [lx, ly] = pt(i, 12.6);
+            return (
+              <>
+                <line class="radar-axis" x1={cx} y1={cy} x2={x} y2={y} />
+                <text class="radar-label" x={lx} y={ly}>{a}</text>
+              </>
+            );
+          })}
+          {PROJECTS.map((p) => (
+            <polygon class="radar-shape" data-id={p.id} points={poly(AXES.map((a) => p.scores[a]))} />
+          ))}
+        </svg>
+      </div>
+      <p class="radar-note">skill map: open a project to highlight its shape.</p>
+    </div>
+
+    <div class="body list" id="projList">
+      {PROJECTS.map((p) => (
+        <details class="entry" id={p.id} data-id={p.id}>
+          <summary class="item">
+            <span class="name">{p.title}</span>
+            <span class="lead"></span>
+            <span class="tags">{p.stack.slice(0, 3).map((s) => <span class="tag">{s}</span>)}</span>
+          </summary>
+          <div class="entry-body">
+            <div class="org">{p.sub}</div>
+            <p set:html={p.desc} />
+            <div class="tags">
+              {AXES.map((a) => <span class={`tag${p.scores[a] >= 8 ? ' hot' : ''}`}>{a} {p.scores[a]}/10</span>)}
+            </div>
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="label"><h2 data-scramble>Skills &amp; Tools</h2></div>
+    <div class="body tags">
+      {SKILLS.focus.map((t) => <span class="tag hot">{t}</span>)}
+      {[...SKILLS.languages, ...SKILLS.tools].map((t) => <span class="tag">{t}</span>)}
+    </div>
+  </section>
+
+</Base>
+
+<script>
+  // one project open at a time; light up its shape on the skill map
+  const list = document.getElementById('projList');
+  const shapes = document.querySelectorAll<SVGPolygonElement>('#radar .radar-shape');
+  const entries = list ? [...list.querySelectorAll<HTMLDetailsElement>('details.entry')] : [];
+
+  function highlight(id: string | null) {
+    shapes.forEach((s) => {
+      s.classList.toggle('lit', id !== null && s.dataset.id === id);
+      s.classList.toggle('dim', id !== null && s.dataset.id !== id);
+    });
+  }
+
+  entries.forEach((d) => {
+    d.addEventListener('toggle', () => {
+      if (d.open) {
+        entries.forEach((o) => { if (o !== d) o.open = false; });
+        highlight(d.dataset.id ?? null);
+      } else if (!entries.some((o) => o.open)) {
+        highlight(null);
+      }
+    });
+    d.querySelector('summary')?.addEventListener('mouseenter', () => { if (!entries.some((o) => o.open)) highlight(d.dataset.id ?? null); });
+    d.querySelector('summary')?.addEventListener('mouseleave', () => { if (!entries.some((o) => o.open)) highlight(null); });
+  });
+
+  // deep link from the home page, e.g. projects.html#trkt
+  const target = location.hash && document.getElementById(location.hash.slice(1));
+  if (target instanceof HTMLDetailsElement) target.open = true;
+</script>

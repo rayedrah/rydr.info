@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { LINKS } from '../data/site.js';
+
+const channels = [
+  { k: 'email', v: LINKS.email, href: `mailto:${LINKS.email}` },
+  { k: 'github', v: 'github.com/rayedrah', href: LINKS.github },
+  { k: 'linkedin', v: 'linkedin.com/in/rayedrah', href: LINKS.linkedin },
+  { k: 'instagram', v: 'instagram.com/rayed_rn', href: LINKS.instagram },
+  { k: 'resume', v: 'resume.pdf', href: LINKS.resume },
+];
+---
+<Base title="Contact | Rayed Rahman" active="contact">
+
+  <section class="row">
+    <div class="label">
+      <h1 data-scramble>Say Hi</h1>
+    </div>
+    <div class="body">
+      <p>Best reached by email. Open to cybersecurity internships, research collaborations, and CTF teammates.</p>
+      <dl class="kv" style="margin-top: 1.5rem">
+        {channels.map((c) => (
+          <>
+            <dt>{c.k}</dt>
+            <dd><a href={c.href} target={c.href.startsWith('mailto') ? undefined : '_blank'} rel="noopener">{c.v}</a></dd>
+          </>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+</Base>

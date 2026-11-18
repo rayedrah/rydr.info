@@ -1,6 +1,6 @@
 # Brain Log: the blog at rydr.info/blog
 
-This folder holds the generator. The built site lives in `../blog/` and is committed, so GitHub Pages serves it with no extra setup.
+This folder holds the generator. The built site lives in `../public/blog/` and is committed; Astro copies it into the deployed site unchanged.
 
 ## Publishing a note
 

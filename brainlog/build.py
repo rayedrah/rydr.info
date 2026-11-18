@@ -8,7 +8,7 @@ Only notes with `publish: true` in their frontmatter are built.
 The build stops if a published note looks like it contains a secret.
 
 Usage:
-    python3 build.py                     # reads ./content, writes ../blog
+    python3 build.py                     # reads ./content, writes ../public/blog
     python3 build.py --vault ~/Obsidian  # reads straight from your vault
 """
 
@@ -296,10 +296,10 @@ class Builder:
 <meta property="og:title" content="{html.escape(full_title)}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{SITE['url']}{path}">
-<meta name="theme-color" content="#f2efe6">
+<meta name="theme-color" content="#0a0a0a">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="{html.escape(SITE['title'])}" href="/rss.xml">
-<link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -317,6 +317,7 @@ class Builder:
     <span class="foot-links">{"".join(f'<a href="{html.escape(l["href"])}">{html.escape(l["label"])}</a>' for l in SITE["footer"])}</span>
   </div>
 </footer>
+<script type="module" src="/theme.js"></script>
 </body>
 </html>
 """
@@ -450,6 +451,10 @@ class Builder:
                 dest = self.out / f.relative_to(static)
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(f, dest)
+        # grain background + bolt cursor: the main site's own scripts, so both stay in sync
+        site_scripts = ROOT.parent / "src" / "scripts"
+        for name in ("grain.js", "cursor.js"):
+            shutil.copy2(site_scripts / name, self.out / name)
         with open(self.out / "style.css", "a", encoding="utf-8") as fh:
             fh.write("\n/* syntax highlighting */\n" + HtmlFormatter(style="native").get_style_defs(".hl") + "\n")
         if SITE.get("domain"):
