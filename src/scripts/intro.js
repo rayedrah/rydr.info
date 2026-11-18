@@ -43,7 +43,7 @@ void main() {
   // letters: densely packed light grey specks, a little denser where the smoke is thick
   if (letter >= 0.5) {
     float on = step(q.x, mix(0.7, 0.95, n));
-    float g = (0.6 + 0.25 * q.y) * (0.85 + 0.15 * breathe);
+    float g = (0.67 + 0.25 * q.y) * (0.85 + 0.15 * breathe);   // grey letters
     gl_FragColor = vec4(vec3(g) * on, on);
     return;
   }
