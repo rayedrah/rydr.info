@@ -1,91 +1,42 @@
 ---
-// Floating pixel-brain button that opens Brain Log (the blog).
-// A pink pixel brain (cerebrum with folds, striped cerebellum, stem), a pink
-// notification dot with a ping, and a couple of highlight pixels that glint.
-// Drawn on a pixel grid, no images.
-//   O  outline      D  folds         P  pink body
-//   L  light pink   H  highlight (glints)   M  cerebellum / stem   .  empty
-const BRAIN = [
-  '........OOOOOOOO........',
-  '.....OOOLLLPPPPDOOO.....',
-  '....OLLHHLPPDDDPPPPO....',
-  '...OLLHLPPDDPPPPDDPPO...',
-  '..OPLLPPDDPPPDDDPPDPPO..',
-  '.OPPPPDDPPPDDPPPPDDPPPO.',
-  '.OPPDDDPPPDPPPDDPPPDPPO.',
-  'OPPDPPPPDDPPPDPPDDPPPDPO',
-  'OPDPPDDDPPPDDPPDPPPDDPPO',
-  'OPPPDPPPPDDPPPDPPDDPPPDO',
-  'OPDDPPDDDPPPDDPPDPPPDDPO',
-  '.OPPDDPPPDDPPPPDDPPDPPO.',
-  '.OPPPPDPPPPDDDPPPPOOOOO.',
-  '..OOPPPDDDPPPPPPPOMDMDMO',
-  '....OOOOPPPPPOOOOMMMMMMO',
-  '........OOMMOO..OMDMDMO.',
-  '.........OMMO....OOOOO..',
-  '.........OMMO...........',
-  '..........OO............',
-];
-const COLORS: Record<string, string> = {
-  O: '#7a2350', D: '#c2457f', P: '#ff7eb6', L: '#ffb0d2', H: '#ffe3f0', M: '#e0609d',
-};
-const PX = 2;   // css px per pixel
-
-let n = 0;
-const pixels = BRAIN.flatMap((row, y) =>
-  [...row].map((c, x) => {
-    if (!(c in COLORS)) return null;
-    const glint = c === 'H';
-    // stagger the glints so they twinkle one after another
-    const delay = glint ? `${(n++ * 0.9).toFixed(1)}s` : undefined;
-    return { x, y, fill: COLORS[c], glint, delay };
-  }),
-).filter(Boolean) as { x: number; y: number; fill: string; glint: boolean; delay?: string }[];
-
-const W = BRAIN[0].length;
-const H = BRAIN.length;
+// Floating brain button that opens Brain Log (the blog).
+// A slowly rotating grey brain with a bitmap / halftone texture that now and
+// then glitches pink and snaps back (scripts/brain.js), plus a pink
+// notification dot with a ping and a brain.log label on hover.
 ---
 <a class="brain-btn" href="blog/" aria-label="Brain Log: read my notes">
-  <svg viewBox={`0 0 ${W} ${H}`} width={W * PX} height={H * PX} shape-rendering="crispEdges" aria-hidden="true">
-    {pixels.map((p) => (
-      <rect x={p.x} y={p.y} width="1" height="1" fill={p.fill}
-        class={p.glint ? 'glint' : undefined} style={p.delay ? `animation-delay:${p.delay}` : undefined} />
-    ))}
-  </svg>
+  <canvas class="brain-canvas" data-brain aria-hidden="true"></canvas>
   <span class="brain-ping" aria-hidden="true"></span>
   <span class="brain-tip" aria-hidden="true">brain.log</span>
 </a>
 
+<script>
+  import { initBrain } from '../scripts/brain.js';
+  initBrain();
+</script>
+
 <style>
   .brain-btn {
     position: fixed;
-    right: 24px;
-    bottom: 24px;
+    right: 20px;
+    bottom: 18px;
     z-index: 50;
     display: block;
     line-height: 0;
-    filter: drop-shadow(0 0 10px rgba(255, 126, 182, 0.35)) drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.8));
+    filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.85));
     animation: brain-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.4s both;
     transition: transform 0.15s ease;
   }
   .brain-btn:hover, .brain-btn:focus-visible { transform: translateY(-3px) scale(1.06); opacity: 1; outline: none; }
-  .brain-btn svg { display: block; image-rendering: pixelated; }
-
-  /* highlight pixels glint white now and then */
-  .glint { animation: glint 4.5s steps(1) infinite; }
-  @keyframes glint {
-    0%, 88% { fill: #ffe3f0; }
-    91% { fill: #ffffff; }
-    95% { fill: #ffb0d2; }
-  }
+  .brain-canvas { display: block; width: 76px; height: 64px; image-rendering: pixelated; }
 
   /* notification: pink square dot with a ping, top-right of the brain */
   .brain-ping {
     position: absolute;
-    top: -4px;
-    right: -4px;
-    width: 9px;
-    height: 9px;
+    top: 6px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
     background: #ff7eb6;
     box-shadow: 0 0 0 2px #0a0a0a;
   }
@@ -105,7 +56,7 @@ const H = BRAIN.length;
   /* label slides out to the left on hover */
   .brain-tip {
     position: absolute;
-    right: calc(100% + 10px);
+    right: calc(100% + 6px);
     top: 50%;
     transform: translate(6px, -50%);
     padding: 3px 7px;
@@ -124,10 +75,10 @@ const H = BRAIN.length;
   @keyframes brain-in { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
 
   @media (max-width: 600px) {
-    .brain-btn { right: 14px; bottom: 14px; }
-    .brain-btn svg { width: 40px; height: 31.7px; }
+    .brain-btn { right: 10px; bottom: 10px; }
+    .brain-canvas { width: 62px; height: 52px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .brain-btn, .glint, .brain-ping::after { animation: none; }
+    .brain-btn, .brain-ping::after { animation: none; }
   }
 </style>
