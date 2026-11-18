@@ -1,12 +1,11 @@
 ---
 // Floating brain button that opens Brain Log (the blog).
 // A slowly rotating grey brain with a bitmap / halftone texture that now and
-// then glitches pink and snaps back (scripts/brain.js), plus a pink
-// notification dot with a ping and a brain.log label on hover.
+// then glitches pink and snaps back (scripts/brain.js), with a brain.log
+// label on hover.
 ---
 <a class="brain-btn" href="blog/" aria-label="Brain Log: read my notes">
   <canvas class="brain-canvas" data-brain aria-hidden="true"></canvas>
-  <span class="brain-ping" aria-hidden="true"></span>
   <span class="brain-tip" aria-hidden="true">brain.log</span>
 </a>
 
@@ -29,29 +28,6 @@
   }
   .brain-btn:hover, .brain-btn:focus-visible { transform: translateY(-3px) scale(1.06); opacity: 1; outline: none; }
   .brain-canvas { display: block; width: 76px; height: 64px; image-rendering: pixelated; }
-
-  /* notification: pink square dot with a ping, top-right of the brain */
-  .brain-ping {
-    position: absolute;
-    top: 6px;
-    right: 2px;
-    width: 8px;
-    height: 8px;
-    background: #ff7eb6;
-    box-shadow: 0 0 0 2px #0a0a0a;
-  }
-  .brain-ping::after {
-    content: "";
-    position: absolute;
-    inset: -5px;
-    border: 1px solid #ff7eb6;
-    opacity: 0;
-    animation: ping 2.4s ease-out 2.2s infinite;
-  }
-  @keyframes ping {
-    0% { opacity: 0.9; transform: scale(0.5); }
-    70%, 100% { opacity: 0; transform: scale(1.4); }
-  }
 
   /* label slides out to the left on hover */
   .brain-tip {
@@ -79,6 +55,6 @@
     .brain-canvas { width: 62px; height: 52px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .brain-btn, .brain-ping::after { animation: none; }
+    .brain-btn { animation: none; }
   }
 </style>

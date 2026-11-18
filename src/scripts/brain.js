@@ -121,9 +121,9 @@ export function initBrain() {
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const t0 = performance.now();
 
-  // glitch schedule: grey for 6-11 s, then ~0.8 s of flickering pink
+  // glitch schedule: grey for 3-6 s, then ~0.8 s of flickering pink
   const GLITCH_MS = 800;
-  let nextGlitch = t0 + 4000 + Math.random() * 3000;
+  let nextGlitch = t0 + 2500 + Math.random() * 2000;
   let glitchEnd = 0;
   let level = 0;
   let lastFlick = 0;
@@ -131,7 +131,7 @@ export function initBrain() {
   function frame(now) {
     const t = (now - t0) / 1000;
     if (!still) {
-      if (now >= nextGlitch) { glitchEnd = now + GLITCH_MS; nextGlitch = now + 6000 + Math.random() * 5000; }
+      if (now >= nextGlitch) { glitchEnd = now + GLITCH_MS; nextGlitch = now + 3000 + Math.random() * 3000; }
       if (now < glitchEnd) {
         if (now - lastFlick > 70) {            // flicker: pink, back, pinker, back
           level = Math.random() < 0.65 ? 0.45 + Math.random() * 0.55 : 0;
