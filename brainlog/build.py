@@ -322,31 +322,58 @@ class Builder:
 </html>
 """
 
-    def entry_list(self, posts, numbered=True, current=None):
-        rows = []
-        for p in posts:
-            num = f'<span class="num">{p["part"]:02d}</span>' if numbered else ""
-            here = ' class="here" aria-current="page"' if p is current else ""
-            desc = f'<span class="e-desc">{html.escape(p["description"])}</span>' if p["description"] and current is None else ""
-            when = f'<time>{self.fmt(p["date"])}</time>' if p["date"] else "<time></time>"
-            rows.append(
-                f'<li{here}>{num}<a href="/posts/{p["slug"]}/"><span class="e-title">{html.escape(p["title"])}</span>{desc}</a>'
-                f'{when}</li>'
-            )
-        return '<ol class="entries">' + "".join(rows) + "</ol>"
+    # ---- folder tree (pixel folders, `tree`-style branches)
+    @staticmethod
+    def pixel_svg(rows, cls):
+        rects = "".join(f'<rect x="{x}" y="{y}" width="1" height="1"/>'
+                        for y, row in enumerate(rows) for x, c in enumerate(row) if c == "#")
+        w, h = len(rows[0]), len(rows)
+        return (f'<svg class="{cls}" width="{w * 2}" height="{h * 2}" viewBox="0 0 {w} {h}" '
+                f'shape-rendering="crispEdges" aria-hidden="true">{rects}</svg>')
 
-    def folder_block(self, f, link_title=True):
-        count = len(f["posts"])
-        idx = self.folders.index(f)
-        name = html.escape(f["name"])
-        title = f'<a href="/folders/{f["slug"]}/">{name}</a>' if link_title else name
-        desc = f'<p class="f-desc">{html.escape(f.get("description", ""))}</p>' if f.get("description") else ""
-        return (f'<section class="module" id="{f["slug"]}">'
-                f'<div class="mod-head"><span class="led on" aria-hidden="true"></span>'
-                f'<span class="mod-id">DIR {idx + 1:02d}</span>'
-                f'<span class="mod-count">{count:02d} {"entry" if count == 1 else "entries"}</span></div>'
-                f'<div class="crt crt-mod"><h2>{title}</h2>{desc}</div>'
-                f'{self.entry_list(f["posts"])}</section>')
+    # 9 x 7 pixel folders, drawn in currentColor
+    FOLDER_CLOSED = ["####.....", "#########", "#########", "#########", "#########", "#########", "#########"]
+    FOLDER_OPEN = ["####.....", "#..######", "#.#######", "#########", "########.", "#######..", "######..."]
+
+    def open_icon(self):
+        return self.pixel_svg(self.FOLDER_OPEN, "px-folder")
+
+    def folder_icons(self):
+        """closed + open icon; CSS shows the one matching the folder's state"""
+        return self.pixel_svg(self.FOLDER_CLOSED, "px-folder px-closed") + self.pixel_svg(self.FOLDER_OPEN, "px-folder px-open")
+
+    def tree_items(self, posts, prefix, current=None):
+        rows = []
+        for i, p in enumerate(posts):
+            branch = "\u2514\u2500\u2500 " if i == len(posts) - 1 else "\u251c\u2500\u2500 "
+            here = ' class="here" aria-current="page"' if p is current else ""
+            when = f'<time>{self.fmt(p["date"]).lower()}</time>' if p["date"] else ""
+            rows.append(f'<li{here}><span class="br" aria-hidden="true">{prefix}{branch}</span>'
+                        f'<a href="/posts/{p["slug"]}/">{html.escape(p["title"])}</a>{when}</li>')
+        return "".join(rows)
+
+    def tree(self, folders, current=None):
+        dirs = []
+        for i, f in enumerate(folders):
+            last = i == len(folders) - 1
+            branch = "\u2514\u2500\u2500 " if last else "\u251c\u2500\u2500 "
+            prefix = "    " if last else "\u2502   "
+            count = len(f["posts"])
+            dirs.append(
+                f'<li class="dir" id="{f["slug"]}"><details open><summary>'
+                f'<span class="br" aria-hidden="true">{branch}</span>{self.folder_icons()}'
+                f'<span class="d-name">{html.escape(f["slug"])}/</span>'
+                f'<span class="d-count">{count:02d}</span></summary>'
+                f'<ul>{self.tree_items(f["posts"], prefix, current)}</ul></details></li>')
+        return ('<div class="tree"><p class="tree-root">' + self.open_icon()
+                + f'<a href="/">brain.log/</a></p><ul>{"".join(dirs)}</ul></div>')
+
+    @staticmethod
+    def tree_summary(folders):
+        n_dirs = len(folders)
+        n_posts = sum(len(f["posts"]) for f in folders)
+        return (f'<p class="tree-sum">{n_dirs} {"directory" if n_dirs == 1 else "directories"}, '
+                f'{n_posts} {"entry" if n_posts == 1 else "entries"}</p>')
 
     def build(self):
         self.collect()
@@ -364,43 +391,26 @@ class Builder:
                 plain = re.sub(r"\s+", " ", html.unescape(plain)).strip()
                 post["description"] = (plain[:157] + "…") if len(plain) > 160 else plain
 
-        # home: a terminal header, then one module per folder
-        dated = [p for p in self.posts if p["date"]]
-        latest = dated[0] if dated else (self.posts[0] if self.posts else None)
-        play = (f'<a class="key key-play" href="/posts/{latest["slug"]}/"><span aria-hidden="true">&#9654;</span> Latest entry</a>'
-                if latest else "")
+        # home: a `tree` of every folder
         home = f"""<main class="wrap">
-  <section class="deck">
-    <div class="deck-head">
-      <span class="plate">{html.escape(SITE['short'])} &middot; terminal BL-1</span>
-      <span class="leds" aria-hidden="true"><i class="on"></i><i></i><i></i></span>
-    </div>
-    <div class="deck-body">
-      <div class="crt" role="img" aria-label="Brain Log, {len(self.posts)} entries in {len(self.folders)} folders">
-        <div class="crt-row"><span>Sys online</span><span class="rec">&#9679; Live</span></div>
-        <div class="crt-title">{html.escape(SITE['hero_title'])}</div>
-        <div class="crt-row"><span>{len(self.posts):03d} entries / {len(self.folders):02d} directories</span><span>{self.fmt(latest['date']) if latest and latest['date'] else ''}</span></div>
-        <div class="prompt" aria-hidden="true">&gt; select a directory<span class="cursor">_</span></div>
-      </div>
-      <div class="deck-side">
-        <h1 class="sr-only">{html.escape(SITE['hero_title'])}</h1>
-        <p class="tagline">{html.escape(SITE['tagline'])}</p>
-        <div class="keys">{play}<a class="key" href="#dirs"><span aria-hidden="true">&#8801;</span> Directories</a></div>
-      </div>
-    </div>
-  </section>
-  <div class="dirs" id="dirs">
-  {"".join(self.folder_block(f) for f in self.folders)}
-  </div>
+  <header class="intro">
+    <h1>{html.escape(SITE['hero_title'])}</h1>
+    <p class="tagline">{html.escape(SITE['tagline'])}</p>
+  </header>
+  <p class="cmd" aria-hidden="true"><span class="prompt">guest@rydr:~$</span> tree brain.log<span class="cursor"></span></p>
+  {self.tree(self.folders)}
+  {self.tree_summary(self.folders)}
 </main>"""
         self.write("index.html", self.page(SITE["title"], home))
 
-        # folder pages
+        # folder pages: the same tree, just this folder
         for f in self.folders:
-            body = f'<main class="wrap"><div class="dirs">{self.folder_block(f, link_title=False)}</div></main>'
+            desc = f'<p class="tagline">{html.escape(f.get("description", ""))}</p>' if f.get("description") else ""
+            body = (f'<main class="wrap"><header class="intro"><h1>{html.escape(f["name"])}</h1>{desc}</header>'
+                    f'<p class="cmd" aria-hidden="true"><span class="prompt">guest@rydr:~$</span> tree brain.log/{f["slug"]}<span class="cursor"></span></p>'
+                    f'{self.tree([f])}{self.tree_summary([f])}</main>')
             self.write(f"folders/{f['slug']}/index.html",
-                       self.page(f["name"], body, f.get("description", ""), f"/folders/{f['slug']}/",
-                                 crumbs=[(f["name"], None)]))
+                       self.page(f["name"], body, f.get("description", ""), f"/folders/{f['slug']}/"))
 
         # posts
         for post in self.posts:
@@ -410,35 +420,35 @@ class Builder:
             prev_p = series[i - 1] if i > 0 else None
             next_p = series[i + 1] if i + 1 < len(series) else None
             pager = '<nav class="pager">'
-            pager += (f'<a class="prev key-btn" href="/posts/{prev_p["slug"]}/"><small>&#9664; Prev entry</small>'
+            pager += (f'<a class="prev" href="/posts/{prev_p["slug"]}/"><small>&larr; prev</small>'
                       f'<span>{html.escape(prev_p["title"])}</span></a>') if prev_p else "<span></span>"
-            pager += (f'<a class="next key-btn" href="/posts/{next_p["slug"]}/"><small>Next entry &#9654;</small>'
+            pager += (f'<a class="next" href="/posts/{next_p["slug"]}/"><small>next &rarr;</small>'
                       f'<span>{html.escape(next_p["title"])}</span></a>') if next_p else "<span></span>"
             pager += "</nav>"
             toc = self.toc_html(post["toc"])
+            meta = " &middot; ".join(x for x in [
+                self.fmt(post["date"]).lower() if post["date"] else "",
+                f'{post["minutes"]} min',
+                f'entry {post["part"]:02d}/{len(series):02d}'] if x)
             content = f"""<main class="wrap note">
   <header class="note-head">
-    <div class="crt crt-strip">
-      <div class="crt-row"><a href="/folders/{f['slug']}/">Dir: {html.escape(f['name'])}</a><span>Entry {post['part']:02d}/{len(series):02d}</span></div>
-      <div class="crt-row"><span>{(self.fmt(post['date']) if post['date'] else '&nbsp;')}</span><span>{post['minutes']:02d} min</span></div>
-    </div>
+    <p class="path">{self.open_icon()}<a href="/">brain.log</a><i>/</i><a href="/folders/{f['slug']}/">{html.escape(f['slug'])}</a><i>/</i><span>{post['part']:02d}</span></p>
     <h1>{html.escape(post['title'])}</h1>
+    <p class="meta">{meta}</p>
     <p class="lede">{html.escape(post['description'])}</p>
   </header>
-  {'<details class="toc"><summary>On this page</summary>' + toc + '</details>' if toc else ''}
+  {'<details class="toc"><summary>on this page</summary>' + toc + '</details>' if toc else ''}
   <article class="prose">{post['html']}</article>
   {pager}
   <section class="more">
-    <h2>Directory &middot; {html.escape(f['name'])}</h2>
-    {self.entry_list(series, current=post)}
+    {self.tree([f], current=post)}
   </section>
 </main>"""
             self.write(f"posts/{post['slug']}/index.html",
-                       self.page(post["title"], content, post["description"], f"/posts/{post['slug']}/",
-                                 crumbs=[(f["name"], f"/folders/{f['slug']}/"), (post["title"], None)]))
+                       self.page(post["title"], content, post["description"], f"/posts/{post['slug']}/"))
 
         self.write("404.html", self.page("Not found", '<main class="wrap"><header class="intro"><h1>404</h1>'
-                                         '<p>No entry at this address. <a href="/">Back to the log</a></p></header></main>'))
+                                         '<p class="tagline">No entry at this address. <a href="/">Back to the log</a></p></header></main>'))
         self.write_rss()
 
         media = self.out / "media"

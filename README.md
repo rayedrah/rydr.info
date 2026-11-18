@@ -15,9 +15,9 @@ npm run build    # static site in dist/
 
 - `src/pages/` one `.astro` file per page (`about.astro` builds to `about.html`, so old links still work)
 - `src/layouts/Base.astro` shared head, nav, footer
-- `src/styles/site.css` page, component and intro styles; `contact-popup.css` the contact windows
+- `src/styles/site.css` page, component and intro styles
 - `src/scripts/` grain shader, home intro (grain-textured name), heading scramble, pixel bolt cursor,
-  hover pixel art, terminal, contact popup
+  hover pixel art, terminal
 - `src/data/` site content (`site.js`) and the pixel-art pieces (`ascii-art.js`)
 - `public/` copied as is: `icon/`, `fonts/`, `resume.pdf`, `CNAME`, and the built blog
 

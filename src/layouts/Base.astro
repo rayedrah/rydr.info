@@ -3,7 +3,6 @@ import '@fontsource/uncut-sans/400.css';
 import '@fontsource/uncut-sans/500.css';
 import '@fontsource/syne/800.css';
 import '../styles/site.css';
-import '../styles/contact-popup.css';
 import { LINKS } from '../data/site.js';
 
 interface Props {
@@ -46,7 +45,7 @@ const nav = [
     <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav">menu</button>
     <nav class="site-nav" id="siteNav">
       {nav.map((n) => (
-        <a href={n.href} id={n.key === 'contact' ? 'contactTrigger' : undefined} aria-current={active === n.key ? 'page' : undefined}>{n.label}</a>
+        <a href={n.href} aria-current={active === n.key ? 'page' : undefined}>{n.label}</a>
       ))}
     </nav>
   </header>

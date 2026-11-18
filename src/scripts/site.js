@@ -6,7 +6,6 @@ import { initCursor } from './cursor.js';
 import { initScramble } from './scramble.js';
 import { initAsciiArt } from './ascii-art.js';
 import { initIntro } from './intro.js';
-import './contact-popup.js';   // self-starting: binds to the nav's contact link
 
 function initNav() {
   const toggle = document.getElementById('navToggle');
