@@ -4,9 +4,9 @@ import BrainButton from '../components/BrainButton.astro';
 import { PROJECTS, EXPERIENCE, LINKS } from '../data/site.js';
 
 const recent = PROJECTS.slice(0, 4);
-const now = EXPERIENCE[0].items;
+const now = EXPERIENCE[0].items.slice(0, 4);
 ---
-<Base title="Rayed Rahman | Cybersecurity @ Purdue" active="home">
+<Base title="Rayed Rahman | Cybersecurity @ Purdue" active="home" bodyClass="home">
 
   <section class="intro" id="intro" slot="intro" aria-label="Rayed Rahman">
     <canvas class="intro-grain" aria-hidden="true"></canvas>
@@ -15,19 +15,23 @@ const now = EXPERIENCE[0].items;
     <div class="scroll-hint" aria-hidden="true"><span>scroll</span><span class="chevron"></span></div>
   </section>
 
-  <section class="row">
-    <div class="label">
-      <h1 data-scramble>Rayed Rahman</h1>
-      <span class="sub">cybersecurity @ purdue</span>
-      <pre class="ascii-art" data-ascii-art role="img" aria-label="pixel art"></pre>
+  <section class="row" data-object-host>
+    <div class="label hero">
+      <div>
+        <a class="txt" href="about.html"><h1 data-tglitch>Rayed Rahman</h1></a>
+        <a class="sub txt" href="about.html">cybersecurity @ purdue</a>
+      </div>
+      <a class="obj-link" href="about.html" aria-label="About me"><canvas class="hero-obj" data-object="bolt" data-dot="2" aria-hidden="true"></canvas></a>
     </div>
     <div class="body">
-      <p>Hi!</p>
+      <p>Salam!</p>
       <p>
         I'm Rayed, a Cybersecurity student at <a href="https://www.purdue.edu/" target="_blank" rel="noopener">Purdue</a>'s
-        Honors College, interning at <a href="experience.html">AGS Quality Action</a> and researching deepfake detection at
-        <a href="experience.html">GRAIL Lab</a>. I like finding out why systems break under pressure. Active
-        <a href="projects.html">b01lers</a> CTF player and systems tinkerer.
+        Honors College. This summer I built the CTF platform for a national cyber drill at
+        <a href="experience.html">AGS Quality Action</a>, and before that I worked on deepfake detection at
+        <a href="experience.html">GRAIL Lab</a>. I like finding out why systems break under pressure: I'm preparing for CCDC
+        with <a href="experience.html">BlueTeam@Purdue</a>, play CTFs with <a href="experience.html">b01lers</a>, and attack
+        my own home lab.
       </p>
       <p>
         Find me on <a href={LINKS.github} target="_blank" rel="noopener">GitHub</a>,
@@ -37,15 +41,14 @@ const now = EXPERIENCE[0].items;
     </div>
   </section>
 
-  <section class="row">
+  <section class="row" data-object-host>
     <div class="label">
-      <h2 data-scramble>Now</h2>
-      <span class="sub"><a href="experience.html">All experience</a></span>
+      <div class="sec"><a class="obj-link" href="experience.html" aria-label="Experience"><canvas data-object="computer" aria-hidden="true"></canvas></a><div><a class="txt" href="experience.html"><h2 data-tglitch>Now</h2></a><span class="sub"><a class="txt" href="experience.html">All experience</a></span></div></div>
     </div>
     <ul class="body list">
       {now.map((e) => (
         <li class="item">
-          <span class="name">{e.role}</span>
+          <a class="name txt" href="experience.html">{e.role}</a>
           <span class="lead"></span>
           <span class="meta">{e.org}</span>
         </li>
@@ -53,15 +56,14 @@ const now = EXPERIENCE[0].items;
     </ul>
   </section>
 
-  <section class="row">
+  <section class="row" data-object-host>
     <div class="label">
-      <h2 data-scramble>Recent Projects</h2>
-      <span class="sub"><a href="projects.html">View all</a></span>
+      <div class="sec"><a class="obj-link" href="projects.html" aria-label="Projects"><canvas data-object="server" aria-hidden="true"></canvas></a><div><a class="txt" href="projects.html"><h2 data-tglitch>Recent Projects</h2></a><span class="sub"><a class="txt" href="projects.html">View all</a></span></div></div>
     </div>
     <ul class="body list">
       {recent.map((p) => (
         <li class="item">
-          <a class="name" href={`projects.html#${p.id}`} style="color: var(--text)">{p.title}</a>
+          <a class="name txt" href={`projects.html#${p.id}`}>{p.title}</a>
           <span class="lead"></span>
           <span class="tags">{p.stack.slice(0, 3).map((s) => <span class="tag">{s}</span>)}</span>
         </li>
@@ -71,10 +73,9 @@ const now = EXPERIENCE[0].items;
 
   <BrainButton />
 
-  <section class="row">
+  <section class="row" data-object-host>
     <div class="label">
-      <h2 data-scramble>Poke Around</h2>
-      <span class="sub">type 'help'</span>
+      <div class="sec"><button class="obj-link" type="button" data-focus="termInput" aria-label="Type in the terminal"><canvas data-object="flag" aria-hidden="true"></canvas></button><div><button class="txt plain" type="button" data-focus="termInput"><h2 data-tglitch>Poke Around</h2></button><span class="sub">type 'help'</span></div></div>
     </div>
     <div class="body term">
       <div class="term-log" id="termLog" aria-live="polite">

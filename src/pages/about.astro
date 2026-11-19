@@ -4,12 +4,14 @@ import { EDUCATION, CERTS, SKILLS } from '../data/site.js';
 ---
 <Base title="About | Rayed Rahman" active="about">
 
-  <section class="row">
-    <div class="label">
-      <h1 data-scramble>About</h1>
-      <span class="sub">Honors Cybersecurity, CS minor</span>
-    </div>
-    <div class="body">
+  {/* the keychain gets its own column, as large as the test preview; text beside it */}
+  <section class="about-hero" data-object-host>
+    <canvas class="ks-obj" data-object="keysword" data-dot="2" role="img" aria-label="rotating pixel keychain with a key and a sword"></canvas>
+    <div class="about-text">
+      <div class="about-title">
+        <h1 data-tglitch>About</h1>
+        <span class="sub">Honors Cybersecurity, CS minor</span>
+      </div>
       <p>
         Cybersecurity student and researcher working across systems administration, incident research, and security
         tooling. I care about the <span style="color: var(--accent)">trust</span> people place in technology, and
@@ -26,7 +28,7 @@ import { EDUCATION, CERTS, SKILLS } from '../data/site.js';
   </section>
 
   <section class="row">
-    <div class="label"><h2 data-scramble>Education</h2></div>
+    <div class="label"><h2 data-tglitch>Education</h2></div>
     <ul class="body list">
       {EDUCATION.map((e) => (
         <li class="item">
@@ -39,7 +41,7 @@ import { EDUCATION, CERTS, SKILLS } from '../data/site.js';
   </section>
 
   <section class="row">
-    <div class="label"><h2 data-scramble>Certifications</h2></div>
+    <div class="label"><h2 data-tglitch>Certifications</h2></div>
     <ul class="body list">
       {CERTS.map((c) => (
         <li class="item">
@@ -52,7 +54,7 @@ import { EDUCATION, CERTS, SKILLS } from '../data/site.js';
   </section>
 
   <section class="row">
-    <div class="label"><h2 data-scramble>Things I Do</h2></div>
+    <div class="label"><h2 data-tglitch>Things I Do</h2></div>
     <dl class="body kv">
       <dt>focus</dt>
       <dd><span class="tags">{SKILLS.focus.map((t) => <span class="tag hot">{t}</span>)}</span></dd>

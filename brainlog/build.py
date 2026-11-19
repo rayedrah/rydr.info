@@ -305,7 +305,10 @@ class Builder:
 <body>
 <header class="bar">
   <div class="bar-inner">
-    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>{html.escape(SITE['short'])}</a>
+    <div class="hd-left">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>{html.escape(SITE['short'])}</a>
+      <button class="sfx-toggle" type="button" data-sfx-toggle aria-pressed="true" aria-label="Interface sounds">sfx:on</button>
+    </div>
     <nav class="navlinks">{nav_links}</nav>
   </div>
 </header>
@@ -394,9 +397,12 @@ class Builder:
 
         # home: a `tree` of every folder
         home = f"""<main class="wrap">
-  <header class="intro">
-    <h1>{html.escape(SITE['hero_title'])}</h1>
-    <p class="tagline">{html.escape(SITE['tagline'])}</p>
+  <header class="intro hero" data-object-host>
+    <div>
+      <h1 data-tglitch>{html.escape(SITE['hero_title'])}</h1>
+      <p class="tagline">{html.escape(SITE['tagline'])}</p>
+    </div>
+    <canvas class="hero-obj" data-object="brain" data-dot="2" data-glitch="auto" role="img" aria-label="rotating pixel brain"></canvas>
   </header>
   <p class="cmd" aria-hidden="true"><span class="prompt">guest@rydr:~$</span> tree brain.log<span class="cursor"></span></p>
   {self.tree(self.folders, expanded=False)}
@@ -407,7 +413,7 @@ class Builder:
         # folder pages: the same tree, just this folder
         for f in self.folders:
             desc = f'<p class="tagline">{html.escape(f.get("description", ""))}</p>' if f.get("description") else ""
-            body = (f'<main class="wrap"><header class="intro"><h1>{html.escape(f["name"])}</h1>{desc}</header>'
+            body = (f'<main class="wrap"><header class="intro"><h1 data-tglitch>{html.escape(f["name"])}</h1>{desc}</header>'
                     f'<p class="cmd" aria-hidden="true"><span class="prompt">guest@rydr:~$</span> tree brain.log/{f["slug"]}<span class="cursor"></span></p>'
                     f'{self.tree([f])}{self.tree_summary([f])}</main>')
             self.write(f"folders/{f['slug']}/index.html",
@@ -464,7 +470,7 @@ class Builder:
                 shutil.copy2(f, dest)
         # grain background + bolt cursor: the main site's own scripts, so both stay in sync
         site_scripts = ROOT.parent / "src" / "scripts"
-        for name in ("grain.js", "cursor.js"):
+        for name in ("grain.js", "cursor.js", "sfx.js", "objects.js", "textglitch.js"):
             shutil.copy2(site_scripts / name, self.out / name)
         with open(self.out / "style.css", "a", encoding="utf-8") as fh:
             fh.write("\n/* syntax highlighting */\n" + HtmlFormatter(style="native").get_style_defs(".hl") + "\n")

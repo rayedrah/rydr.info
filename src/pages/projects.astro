@@ -14,10 +14,9 @@ const rings = [2.5, 5, 7.5, 10].map((f) => poly(AXES.map(() => f)));
 ---
 <Base title="Projects | Rayed Rahman" active="projects">
 
-  <section class="row">
+  <section class="row" data-object-host>
     <div class="label">
-      <h1 data-scramble>Projects</h1>
-      <span class="sub">built, broken, or both</span>
+      <div class="sec"><canvas data-object="server" aria-hidden="true"></canvas><div><h1 data-tglitch>Projects</h1><span class="sub">built, broken, or both</span></div></div>
       <div class="radar" aria-hidden="true">
         <svg viewBox="0 0 260 240" id="radar">
           {rings.map((r) => <polygon class="radar-grid" points={r} />)}
@@ -60,7 +59,7 @@ const rings = [2.5, 5, 7.5, 10].map((f) => poly(AXES.map(() => f)));
   </section>
 
   <section class="row">
-    <div class="label"><h2 data-scramble>Skills &amp; Tools</h2></div>
+    <div class="label"><h2 data-tglitch>Skills &amp; Tools</h2></div>
     <div class="body tags">
       {SKILLS.focus.map((t) => <span class="tag hot">{t}</span>)}
       {[...SKILLS.languages, ...SKILLS.tools].map((t) => <span class="tag">{t}</span>)}
@@ -90,6 +89,15 @@ const rings = [2.5, 5, 7.5, 10].map((f) => poly(AXES.map(() => f)));
       } else if (!entries.some((o) => o.open)) {
         highlight(null);
       }
+    });
+    // opening a row closes the others first, in the same frame, and scrolls by
+    // whatever they took up so the clicked row stays under the cursor
+    d.querySelector('summary')?.addEventListener('click', () => {
+      if (d.open) return;
+      const top = d.getBoundingClientRect().top;
+      entries.forEach((o) => { if (o !== d) o.open = false; });
+      const shift = d.getBoundingClientRect().top - top;
+      if (shift) window.scrollBy({ top: shift, behavior: 'instant' });
     });
     d.querySelector('summary')?.addEventListener('mouseenter', () => { if (!entries.some((o) => o.open)) highlight(d.dataset.id ?? null); });
     d.querySelector('summary')?.addEventListener('mouseleave', () => { if (!entries.some((o) => o.open)) highlight(null); });

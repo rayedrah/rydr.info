@@ -11,6 +11,8 @@
 //     churns gently instead of flickering.
 //  5. A steep contrast curve keeps most of the screen near-black with thin,
 //     bright grey wisps.
+//  6. The smoke streams in from the left and right edges toward the middle
+//     (inflow), instead of drifting diagonally across.
 
 export const VERT = `
 attribute vec2 aPos;
@@ -64,9 +66,10 @@ float gnoise(vec2 p) {
   return 1.414 * mix(mix(a, b, s.x), mix(c, d, s.x), s.y);
 }
 
-// two soft octaves drifting diagonally, mapped to [0, 1]
+// two soft octaves with a slow upward drift, mapped to [0, 1]
+// (the main motion, streaming in from the sides, comes from inflow() below)
 float layer(vec2 p) {
-  p += uTime * DRIFT * vec2(0.5, -1.0);
+  p += uTime * DRIFT * vec2(0.0, -0.35);
   float v = 0.7 * gnoise(p) + 0.3 * gnoise(p * 2.03 + 11.7);
   return clamp(0.5 + 0.75 * v, 0.0, 1.0);
 }
@@ -78,6 +81,20 @@ float smoke(vec2 p) {
   return layer(p + b);
 }
 
+// Smoke streaming in from both sides of the screen toward the centre line.
+// c is the centred position, off the seed and per-speck offsets, pick a random
+// 0..1 per speck. Each half reads the field by distance from the centre plus
+// time, so its shapes travel inward. The halves read different parts of the
+// field; near the centre each speck randomly takes one side or the other, so
+// they dissolve into each other as grain. The smoke is sampled once per pixel,
+// the same cost as a plain drift.
+const float FLOW = 0.075;   // inward speed
+const float SEAM = 0.18;    // width of the dissolve between the two sides
+float inflow(vec2 c, vec2 off, float pick) {
+  float right = step(pick, smoothstep(-SEAM, SEAM, c.x));
+  return smoke(vec2(abs(c.x) + uTime * FLOW, c.y) + off + vec2(0.0, 37.0) * right);
+}
+
 `;
 
 const FRAG = GRAIN_LIB + `
@@ -85,8 +102,8 @@ void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
 
   // wide aspect, squashed vertically so the folds run long and horizontal
-  vec2 p = (uv - 0.5) * vec2(uRes.x / uRes.y, 2.0) * ZOOM;
-  p += (rnd2(vec2(uSeed, 17.0)) - 0.5) * 200.0;
+  vec2 c = (uv - 0.5) * vec2(uRes.x / uRes.y, 2.0) * ZOOM;
+  vec2 p = (rnd2(vec2(uSeed, 17.0)) - 0.5) * 200.0;
 
   float edge = smoothstep(0.2, 1.0, length((uv - 0.5) * 1.6));
 
@@ -98,7 +115,7 @@ void main() {
   float ang = TAU * r.y + uTime * orbit;
   p += reach * vec2(cos(ang), sin(ang));
 
-  float n = smoke(p);
+  float n = inflow(c, p, rnd2(cell + 5.3).x);
   n = smoothstep(0.0, 1.0, pow(clamp(n * 1.1 * uGain, 0.0, 1.0), CONTRAST));
   n *= 1.0 - 0.5 * edge;
 

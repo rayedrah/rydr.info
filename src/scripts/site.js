@@ -1,10 +1,11 @@
-// ~/rayed site scripts: grain background, square cursor, heading scramble,
+// ~/rayed site scripts: grain background, square cursor, heading glitch,
 // mobile nav, and the little terminal on the home page.
 
 import { initGrain } from './grain.js';
 import { initCursor } from './cursor.js';
-import { initScramble } from './scramble.js';
-import { initAsciiArt } from './ascii-art.js';
+import { initTextGlitch } from './textglitch.js';
+import { initObjects } from './objects.js';
+import { initSfx } from './sfx.js';
 import { initIntro } from './intro.js';
 
 function initNav() {
@@ -63,12 +64,12 @@ function initTerminal() {
     },
     whoami() { print('rayed rahman, cybersecurity @ purdue honors college'); },
     status() {
-      print('intern, cybersecurity @ ags quality action');
-      print('research assistant @ grail lab (pdid)');
-      print('student scholar @ tech justice lab');
-      print('active member, b01lers ctf');
+      print('independent security research, roadmap.rydr.info');
+      print('blue team @ blueteam@purdue (ccdc prep)');
+      print('ctf @ b01lers (mitre ectf 2027)');
+      print('student affiliate scholar @ tech justice lab');
     },
-    skills() { print('pentesting, vuln assessment, ctf, python, java, linux, wireshark, selenium, git, bash'); },
+    skills() { print('pentesting, vapt, blue team, ctf, python, bash, linux, nmap, wireshark, burp, docker, tailscale'); },
     ls() { print('home  about  experience  projects  blog/  contact  resume.pdf'); },
     resume() { print('opening resume.pdf ...'); window.open('resume.pdf', '_blank'); },
     contact() {
@@ -100,15 +101,17 @@ function initTerminal() {
     else if (COMMANDS[cmd]) COMMANDS[cmd]();
     else print(`command not found: ${cmd}. type "help"`);
 
-    log.scrollTop = log.scrollHeight;
+    // the log grows with the page: keep the prompt in view
+    input.scrollIntoView({ block: 'nearest' });
   });
 }
 
 function boot() {
   initGrain();
   initCursor();
-  initScramble();
-  initAsciiArt();
+  initTextGlitch();
+  initObjects();
+  initSfx();
   initIntro();
   initNav();
   initTerminal();

@@ -68,6 +68,18 @@ html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
 .intro h1 { margin: 0 0 6px; font: 16px/24px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--text); }
 .tagline { margin: 0; color: var(--muted); font-size: 15px; max-width: 56ch; }
 .tagline a { color: var(--accent); }
+.intro.hero { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.intro.hero h1 { font-weight: 700; }
+.hero-obj { display: block; flex: none; width: 168px; height: 196px; image-rendering: pixelated; }
+
+/* ---------- ASCII wave on headings (scripts/textglitch.js) ---------- */
+
+[data-tglitch] .tg { white-space: pre; transition: color 0.12s linear; }
+[data-tglitch] .tg-off { color: transparent; }
+[data-tglitch] .tg-ramp { color: #4d4d4d; }
+[data-tglitch] .tg-rand { color: #8a8a8a; }
+[data-tglitch] .tg-near { color: #c4c4c4; }
+
 .cmd { margin: 0 0 14px; font: 13px var(--mono); color: var(--text-2); }
 .cmd .prompt { color: var(--accent); margin-right: 6px; }
 .cursor { display: inline-block; width: .6em; height: 1.05em; margin-left: 3px; vertical-align: -.18em; background: var(--accent); animation: blink 1s steps(1) infinite; }
@@ -192,6 +204,7 @@ html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
   .bar-inner { padding: 16px 16px 8px; }
   .wrap { padding: 0 14px 64px; }
   .intro, .note-head { margin-top: 32px; }
+  .hero-obj { width: 104px; height: 120px; }
   .tree { font-size: 13px; }
   .dir li a { font-size: 14px; }
   .dir li time { display: none; }
@@ -214,6 +227,21 @@ html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
 @supports not selector(::-webkit-scrollbar) {
   * { scrollbar-width: thin; scrollbar-color: #3a3a3a #0a0a0a; }
 }
+
+/* nav: mono font with a trailing slash, same as the main site */
+.navlinks { font: 13px var(--mono); }
+.navlinks a::after { content: '/'; color: #525252; }
+
+/* ---------- sound toggle beside the home link (sfx.js) ---------- */
+.hd-left { display: flex; align-items: baseline; gap: 1.1rem; }
+.sfx-toggle {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font-family: var(--font-mono, var(--mono)); font-size: 12px; text-transform: lowercase;
+  color: #6a6a6a; transition: color 0.2s linear;
+}
+.sfx-toggle:hover { color: #fff; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 5px; }
+.sfx-toggle[aria-pressed='false'] { color: #444; text-decoration: line-through; }
+.sfx-toggle:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
 
 /* syntax highlighting */
 pre { line-height: 125%; }

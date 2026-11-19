@@ -1,18 +1,13 @@
 ---
 // Floating brain button that opens Brain Log (the blog).
 // A slowly rotating grey brain with a bitmap / halftone texture that now and
-// then glitches pink and snaps back (scripts/brain.js), with a brain.log
+// then glitches pink and snaps back (scripts/objects.js), with a brain.log
 // label on hover.
 ---
 <a class="brain-btn" href="blog/" aria-label="Brain Log: read my notes">
-  <canvas class="brain-canvas" data-brain aria-hidden="true"></canvas>
+  <canvas class="brain-canvas" data-object="brain" data-glitch="auto" aria-hidden="true"></canvas>
   <span class="brain-tip" aria-hidden="true">brain.log</span>
 </a>
-
-<script>
-  import { initBrain } from '../scripts/brain.js';
-  initBrain();
-</script>
 
 <style>
   .brain-btn {

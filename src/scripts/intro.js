@@ -29,13 +29,13 @@ void main() {
 
   // same smoke field and speck jitter as the background
   vec2 uv = gl_FragCoord.xy / uRes;
-  vec2 p = (uv - 0.5) * vec2(uRes.x / uRes.y, 2.0) * ZOOM;
-  p += (rnd2(vec2(uSeed, 17.0)) - 0.5) * 200.0;
+  vec2 c = (uv - 0.5) * vec2(uRes.x / uRes.y, 2.0) * ZOOM;
+  vec2 p = (rnd2(vec2(uSeed, 17.0)) - 0.5) * 200.0;
   vec2 cell = floor(gl_FragCoord.xy / SPECK);
   vec2 r = rnd2(cell);
   float ang = TAU * r.y + uTime * CHURN * (2.0 * rnd2(cell + 71.3).x - 1.0);
   p += JITTER * pow(r.x, 1.5) * vec2(cos(ang), sin(ang));
-  float n = smoke(p);
+  float n = inflow(c, p, rnd2(cell + 5.3).x);
 
   vec2 q = rnd2(cell + 13.7);
   float breathe = 0.55 + 0.45 * sin(TAU * q.y + uTime * (0.5 + r.x));
@@ -180,10 +180,19 @@ function createGrainName(intro, canvas, name, still) {
   }
 
   function draw() {
+    const x = rect.x * dpr, y = (rect.y - window.scrollY) * dpr, w = rect.w * dpr, h = rect.h * dpr;
     gl.uniform1f(U.uTime, still ? 0 : (Date.now() - t0) / 1000);
-    gl.uniform4f(U.uRect, rect.x * dpr, (rect.y - window.scrollY) * dpr, rect.w * dpr, rect.h * dpr);
+    gl.uniform4f(U.uRect, x, y, w, h);
+    gl.disable(gl.SCISSOR_TEST);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
+    // only shade the box around the name, not the whole screen
+    const bottom = canvas.height - (y + h);
+    const sx = Math.max(0, Math.floor(x)), sy = Math.max(0, Math.floor(bottom));
+    const sw = Math.min(canvas.width, Math.ceil(x + w)) - sx, sh = Math.min(canvas.height, Math.ceil(bottom + h)) - sy;
+    if (sw <= 0 || sh <= 0) return;
+    gl.enable(gl.SCISSOR_TEST);
+    gl.scissor(sx, sy, sw, sh);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
