@@ -164,13 +164,22 @@ function createGrainName(intro, canvas, name, still) {
     gl.uniform2f(U.uView, window.innerWidth * dpr, window.innerHeight * dpr);
     gl.uniform2f(U.uOrigin, x0 * dpr, y0 * dpr);
 
-    const paint = (unit, tex, filter) => {
+    // The halo mask is a blurred copy of the name. It is blurred with a canvas
+    // shadow, not ctx.filter: iOS Safari ignores ctx.filter, which left phones
+    // with no lime halo. The text itself is drawn far off to the left, so only its
+    // shadow lands on the mask.
+    const paint = (unit, tex, blurPx) => {
       const mask = document.createElement('canvas');
       mask.width = Math.ceil(rect.w * dpr);
       mask.height = Math.ceil(rect.h * dpr);
       const g = mask.getContext('2d');
       g.scale(dpr, dpr);
-      g.filter = filter;
+      const off = blurPx ? (rect.w + blurPx * 8) : 0;   // CSS px the text is pushed out of view
+      if (blurPx) {
+        g.shadowColor = '#fff';
+        g.shadowBlur = blurPx * 2 * dpr;    // shadowBlur is twice the blur radius, in device px
+        g.shadowOffsetX = off * dpr;        // shadow offsets ignore the scale, so device px too
+      }
       g.font = `800 ${size}px "Syne"`;
       if ('letterSpacing' in g) g.letterSpacing = cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing;
       g.fillStyle = '#fff';
@@ -178,14 +187,14 @@ function createGrainName(intro, canvas, name, still) {
         const met = g.measureText(w.textContent);
         const asc = met.fontBoundingBoxAscent ?? size * 0.9;
         const desc = met.fontBoundingBoxDescent ?? size * 0.25;
-        g.fillText(w.textContent, r.left - x0, r.top - y0 + (lineH - (asc + desc)) / 2 + asc);
+        g.fillText(w.textContent, r.left - x0 - off, r.top - y0 + (lineH - (asc + desc)) / 2 + asc);
       }
       gl.activeTexture(gl.TEXTURE0 + unit);
       gl.bindTexture(gl.TEXTURE_2D, tex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, mask);
     };
-    paint(0, blurTex, `blur(${blur}px)`);
-    paint(1, textTex, 'none');
+    paint(0, blurTex, blur);
+    paint(1, textTex, 0);
   }
 
   function draw() {
