@@ -297,7 +297,8 @@ class Builder:
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{SITE['url']}{path}">
 <meta name="theme-color" content="#0a0a0a">
-<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="{html.escape(SITE['title'])}" href="/rss.xml">
 <link rel="preload" href="/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -471,7 +472,7 @@ class Builder:
                 shutil.copy2(f, dest)
         # grain background + bolt cursor: the main site's own scripts, so both stay in sync
         site_scripts = ROOT.parent / "src" / "scripts"
-        for name in ("grain.js", "cursor.js", "sfx.js", "objects.js", "textglitch.js", "favicon.js"):
+        for name in ("grain.js", "cursor.js", "sfx.js", "objects.js", "textglitch.js"):
             shutil.copy2(site_scripts / name, self.out / name)
         with open(self.out / "style.css", "a", encoding="utf-8") as fh:
             fh.write("\n/* syntax highlighting */\n" + HtmlFormatter(style="native").get_style_defs(".hl") + "\n")

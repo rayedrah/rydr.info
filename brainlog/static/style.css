@@ -56,7 +56,7 @@ html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
 .bar { position: relative; z-index: 2; }
 .bar-inner { max-width: var(--w); margin: 0 auto; padding: 22px 20px 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 15px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--text); }
-.brand-mark { width: 8px; height: 8px; background: var(--accent); }
+.brand-mark { width: 8px; height: 8px; background: #ff7db5; }   /* Brain Log pink, like its favicon */
 .navlinks { display: flex; gap: 1rem; font: 14px var(--sans); }
 .navlinks a { text-decoration: none; color: var(--muted); transition: color .2s; }
 .navlinks a:hover { color: var(--text); }
@@ -242,3 +242,7 @@ html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
 .sfx-toggle:hover { color: #fff; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 5px; }
 .sfx-toggle[aria-pressed='false'] { color: #444; text-decoration: line-through; }
 .sfx-toggle:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
+
+/* the brand is a flex box (square + text), so line the toggle up by centre, not baseline */
+.bar .hd-left { align-items: center; }
+.bar .sfx-toggle { line-height: 1; padding-top: 1px; }

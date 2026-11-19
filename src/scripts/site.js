@@ -7,7 +7,6 @@ import { initTextGlitch } from './textglitch.js';
 import { initObjects } from './objects.js';
 import { initSfx } from './sfx.js';
 import { initIntro } from './intro.js';
-import { initFavicon } from './favicon.js';
 
 function initNav() {
   const toggle = document.getElementById('navToggle');
@@ -114,7 +113,6 @@ function boot() {
   initObjects();
   initSfx();
   initIntro();
-  initFavicon('bolt');   // animated pixel bolt in the tab
   initNav();
   initTerminal();
 }
