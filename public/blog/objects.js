@@ -33,7 +33,7 @@ uniform float uAngle;    // turntable rotation
 uniform float uGlitch;   // 0 = clean frame, else glitch strength for this frame (stepped, never eased)
 uniform float uGSeed;    // new random layout every glitch frame
 uniform vec2  uGDir;     // tear direction: sideways, up/down or corner to corner
-uniform float uShape;
+const float uShape = float(SHAPE);   // set per object by a #define, so each icon compiles only its own shape
 uniform float uZoom;
 uniform float uTilt;
 uniform vec3  uTrue;     // the colour it wants to be
@@ -272,14 +272,23 @@ vec3 keychainColor(vec3 p) {
 }
 
 vec2 mapM(vec3 p) {
-  if (uShape < 0.5) return brain(p);
-  if (uShape < 1.5) return bolt(p);
-  if (uShape < 2.5) return computer(p);
-  if (uShape < 3.5) return lock(p);
-  if (uShape < 4.5) return key(p);
-  if (uShape < 5.5) return flag(p);
-  if (uShape < 6.5) return server(p);
+#if SHAPE == 0
+  return brain(p);
+#elif SHAPE == 1
+  return bolt(p);
+#elif SHAPE == 2
+  return computer(p);
+#elif SHAPE == 3
+  return lock(p);
+#elif SHAPE == 4
+  return key(p);
+#elif SHAPE == 5
+  return flag(p);
+#elif SHAPE == 6
+  return server(p);
+#else
   return keysword(p);
+#endif
 }
 float map(vec3 p) { return mapM(p).x; }
 
@@ -310,7 +319,11 @@ float march(vec2 uv, out vec3 pos) {
   return 0.0;
 }
 // the colour a hit point wants to be: per piece for the keychain, else one colour
-vec3 trueAt(vec3 p) { return (uShape > 6.5 && uShape < 7.5) ? keychainColor(p) : uTrue; }
+#if SHAPE == 7
+vec3 trueAt(vec3 p) { return keychainColor(p); }
+#else
+vec3 trueAt(vec3 p) { return uTrue; }
+#endif
 
 float halftone(vec2 c, float v) {   // Ben-Day dots on a 45 degree, 3-dot grid
   vec2 q = vec2(c.x + c.y, c.x - c.y) / 3.0;
@@ -324,7 +337,11 @@ vec3 shade(vec3 p, vec2 cell, float b, out float lum) {
   vec3 L = normalize(rotY(vec3(-0.5, 0.85, 0.6), uAngle));
   vec3 V = rotY(-rotX(vec3(0.0, 0.0, -1.0), uTilt), uAngle);
   float dif = max(dot(n, L), 0.0);
-  float det = uShape < 0.5 ? 0.5 + 0.5 * smoothstep(0.0, 0.35, abs(folds(p))) : 0.75 + 0.25 * max(dot(n, V), 0.0);
+#if SHAPE == 0
+  float det = 0.5 + 0.5 * smoothstep(0.0, 0.35, abs(folds(p)));
+#else
+  float det = 0.75 + 0.25 * max(dot(n, V), 0.0);
+#endif
   lum = 0.06 + 0.8 * dif * det;
   float mat = mapM(p).y;
 
@@ -442,6 +459,9 @@ const objs = [];
 
 // Each object has its own small WebGL canvas (a page holds at most five), so
 // nothing is copied between canvases and nothing stalls the GPU.
+// Each canvas compiles the shader with only its own shape (#define SHAPE): one
+// shader holding all eight shapes took the Intel/Mesa driver most of a second
+// to compile and held up the whole page's first paint.
 // Setup is split in two so it never holds up the page: start() hands the shader
 // to the GPU driver, and finish() runs on a later frame once the driver says it
 // is compiled (KHR_parallel_shader_compile), so the background and the text
@@ -457,7 +477,7 @@ function start(o) {
   };
   const prog = gl.createProgram();
   gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT));
-  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, `#define SHAPE ${o.cfg.id}\n` + FRAG));
   gl.linkProgram(prog);
   o.gl = gl;
   o.prog = prog;
@@ -482,8 +502,7 @@ function finish(o) {
   gl.enableVertexAttribArray(aPos);
   gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
   o.U = {};
-  for (const n of ['uRes', 'uTime', 'uAngle', 'uGlitch', 'uGSeed', 'uGDir', 'uShape', 'uZoom', 'uTilt', 'uTrue', 'uWide']) o.U[n] = gl.getUniformLocation(prog, n);
-  gl.uniform1f(o.U.uShape, o.cfg.id);
+  for (const n of ['uRes', 'uTime', 'uAngle', 'uGlitch', 'uGSeed', 'uGDir', 'uZoom', 'uTilt', 'uTrue', 'uWide']) o.U[n] = gl.getUniformLocation(prog, n);
   gl.uniform1f(o.U.uZoom, o.cfg.zoom);
   gl.uniform1f(o.U.uTilt, o.cfg.tilt);
   gl.uniform3fv(o.U.uTrue, o.cfg.color);
@@ -594,9 +613,10 @@ export function glitchNow() {
 export function initObjects() {
   const canvases = [...document.querySelectorAll('canvas[data-object]')];
   if (!canvases.length) return;
-  // wait two frames so the background and text are on screen, then start one
-  // object per frame
-  requestAnimationFrame(() => requestAnimationFrame(run));
+  // wait until the page has painted (load, then a frame), so compiling the icons
+  // never delays the first view of the page; then start one object per frame
+  const go = () => setTimeout(() => requestAnimationFrame(run), 50);
+  if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
 
   function run(t0) {
     let rt = 0;

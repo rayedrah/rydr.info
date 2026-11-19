@@ -246,3 +246,25 @@ html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
 /* the brand is a flex box (square + text), so line the toggle up by centre, not baseline */
 .bar .hd-left { align-items: center; }
 .bar .sfx-toggle { line-height: 1; padding-top: 1px; }
+
+/* phones: the nav drops to its own line instead of running off the screen */
+@media (max-width: 560px) {
+  .bar-inner { flex-wrap: wrap; row-gap: 6px; }
+  .navlinks { margin-left: auto; }
+}
+
+/* soft, blurred edge where the page meets the black footer */
+.foot::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 96px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 70%);
+  mask-image: linear-gradient(to bottom, transparent, #000 70%);
+}

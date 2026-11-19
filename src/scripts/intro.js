@@ -15,23 +15,24 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const FRAG = GRAIN_LIB + `
 uniform sampler2D uMask;   // blurred copy of the name (lime halo)
 uniform sampler2D uText;   // sharp copy of the name (letters)
-uniform vec4  uRect;       // where the masks sit on screen, device px, top-left origin
+uniform vec2  uView;       // screen size, device px
+uniform vec2  uOrigin;     // where this canvas sat on screen when it was built, device px, top-left origin
 
 const vec3 LIME = vec3(0.647, 1.0, 0.247);
 
 void main() {
-  vec2 fc = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
-  vec2 m = (fc - uRect.xy) / uRect.zw;
-  if (m.x < 0.0 || m.y < 0.0 || m.x > 1.0 || m.y > 1.0) { gl_FragColor = vec4(0.0); return; }
+  // the canvas covers exactly the box around the name, so mask coords are canvas coords
+  vec2 m = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y) / uRes;
   float band = smoothstep(0.04, 0.6, texture2D(uMask, m).a);
   float letter = texture2D(uText, m).a;
   if (band <= 0.0 && letter < 0.5) { gl_FragColor = vec4(0.0); return; }
 
-  // same smoke field and speck jitter as the background
-  vec2 uv = gl_FragCoord.xy / uRes;
-  vec2 c = (uv - 0.5) * vec2(uRes.x / uRes.y, 2.0) * ZOOM;
+  // same smoke field and speck jitter as the background, in screen coordinates
+  vec2 sfc = vec2(uOrigin.x + gl_FragCoord.x, uView.y - uOrigin.y - uRes.y + gl_FragCoord.y);
+  vec2 uv = sfc / uView;
+  vec2 c = (uv - 0.5) * vec2(uView.x / uView.y, 2.0) * ZOOM;
   vec2 p = (rnd2(vec2(uSeed, 17.0)) - 0.5) * 200.0;
-  vec2 cell = floor(gl_FragCoord.xy / SPECK);
+  vec2 cell = floor(sfc / SPECK);
   vec2 r = rnd2(cell);
   float ang = TAU * r.y + uTime * CHURN * (2.0 * rnd2(cell + 71.3).x - 1.0);
   p += JITTER * pow(r.x, 1.5) * vec2(cos(ang), sin(ang));
@@ -109,7 +110,7 @@ function createGrainName(intro, canvas, name, still) {
   gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
   const U = {};
-  for (const n of ['uRes', 'uTime', 'uSeed', 'uRect', 'uMask', 'uText']) U[n] = gl.getUniformLocation(prog, n);
+  for (const n of ['uRes', 'uTime', 'uSeed', 'uView', 'uOrigin', 'uMask', 'uText']) U[n] = gl.getUniformLocation(prog, n);
 
   function texture(unit) {
     const t = gl.createTexture();
@@ -131,29 +132,37 @@ function createGrainName(intro, canvas, name, still) {
   gl.uniform1f(U.uSeed, Number.isFinite(visit?.seed) ? visit.seed : 0);
 
   let dpr = 1;
-  let rect = null;   // mask rect in document px
+  let rect = null;   // the box around the name, px, relative to the intro section
   let running = false;
   let visible = true;
 
-  // draw a blurred and a sharp copy of the name into the two masks
+  // The canvas is absolutely positioned inside the intro section and covers just
+  // the box around the name, so it scrolls with the page natively. (It used to be
+  // a fixed full-screen layer moved by JS on scroll, which lagged behind fast
+  // touch scrolling and made the name wobble against the prompt.)
+  // Draw a blurred and a sharp copy of the name into the two masks.
   function build() {
     dpr = Math.min(2, window.devicePixelRatio || 1);
-    canvas.width = Math.round(window.innerWidth * dpr);
-    canvas.height = Math.round(window.innerHeight * dpr);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.uniform2f(U.uRes, canvas.width, canvas.height);
-
     const cs = getComputedStyle(name);
     const size = parseFloat(cs.fontSize);
     const lineH = parseFloat(cs.lineHeight) || size;
     const blur = size * BLUR;
     const pad = blur * 3;
+    const ir = intro.getBoundingClientRect();
     const words = [...name.querySelectorAll('.word')].map((w) => ({ w, r: w.getBoundingClientRect() }));
     const x0 = Math.min(...words.map((o) => o.r.left)) - pad;
     const y0 = Math.min(...words.map((o) => o.r.top)) - pad;
     const x1 = Math.max(...words.map((o) => o.r.right)) + pad;
     const y1 = Math.max(...words.map((o) => o.r.bottom)) + pad;
-    rect = { x: x0, y: y0 + window.scrollY, w: x1 - x0, h: y1 - y0 };
+    rect = { x: x0 - ir.left, y: y0 - ir.top, w: x1 - x0, h: y1 - y0 };
+
+    Object.assign(canvas.style, { left: `${rect.x}px`, top: `${rect.y}px`, width: `${rect.w}px`, height: `${rect.h}px` });
+    canvas.width = Math.ceil(rect.w * dpr);
+    canvas.height = Math.ceil(rect.h * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(U.uRes, canvas.width, canvas.height);
+    gl.uniform2f(U.uView, window.innerWidth * dpr, window.innerHeight * dpr);
+    gl.uniform2f(U.uOrigin, x0 * dpr, y0 * dpr);
 
     const paint = (unit, tex, filter) => {
       const mask = document.createElement('canvas');
@@ -180,26 +189,15 @@ function createGrainName(intro, canvas, name, still) {
   }
 
   function draw() {
-    const x = rect.x * dpr, y = (rect.y - window.scrollY) * dpr, w = rect.w * dpr, h = rect.h * dpr;
     gl.uniform1f(U.uTime, still ? 0 : (Date.now() - t0) / 1000);
-    gl.uniform4f(U.uRect, x, y, w, h);
-    gl.disable(gl.SCISSOR_TEST);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    // only shade the box around the name, not the whole screen
-    const bottom = canvas.height - (y + h);
-    const sx = Math.max(0, Math.floor(x)), sy = Math.max(0, Math.floor(bottom));
-    const sw = Math.min(canvas.width, Math.ceil(x + w)) - sx, sh = Math.min(canvas.height, Math.ceil(bottom + h)) - sy;
-    if (sw <= 0 || sh <= 0) return;
-    gl.enable(gl.SCISSOR_TEST);
-    gl.scissor(sx, sy, sw, sh);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
   function loop() {
     if (!running || still || !visible || document.hidden) {
       running = false;
-      if (rect) draw();   // last frame, so nothing is left on the fixed layer once the name is off screen
       return;
     }
     draw();
@@ -213,7 +211,6 @@ function createGrainName(intro, canvas, name, still) {
 
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; kick(); }).observe(intro);
   document.addEventListener('visibilitychange', kick);
-  window.addEventListener('scroll', () => { if (still && rect) draw(); }, { passive: true });
   let resizeTimer = 0;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
