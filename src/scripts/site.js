@@ -7,6 +7,7 @@ import { initTextGlitch } from './textglitch.js';
 import { initObjects } from './objects.js';
 import { initSfx } from './sfx.js';
 import { initIntro } from './intro.js';
+import { LINKS } from '../data/site.js';
 
 function initNav() {
   const toggle = document.getElementById('navToggle');
@@ -71,7 +72,7 @@ function initTerminal() {
     },
     skills() { print('pentesting, vapt, blue team, ctf, python, bash, linux, nmap, wireshark, burp, docker, tailscale'); },
     ls() { print('home  about  experience  projects  blog/  contact  resume.pdf'); },
-    resume() { print('opening resume.pdf ...'); window.open('resume.pdf', '_blank'); },
+    resume() { print('opening resume.pdf ...'); window.open(LINKS.resume, '_blank'); },
     contact() {
       print('email     contact@rydr.info');
       print('github    github.com/rayedrah');

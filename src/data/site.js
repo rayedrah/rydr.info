@@ -5,7 +5,7 @@ export const LINKS = {
   github: 'https://github.com/rayedrah',
   linkedin: 'https://linkedin.com/in/rayedrah',
   instagram: 'https://instagram.com/rayed_rn',
-  resume: 'resume.pdf',
+  resume: 'resume.pdf?v=2026-11-19',   // change the ?v= date whenever public/resume.pdf is replaced, so browsers fetch the new one
 };
 
 /* Projects. To add one, copy an object and change the values.

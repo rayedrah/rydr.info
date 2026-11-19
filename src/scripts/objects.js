@@ -719,7 +719,8 @@ function add(canvas, now) {
   const auto = canvas.dataset.glitch === 'auto';
   const o = {
     canvas, cfg, auto, wide: canvas.dataset.glitchStyle === 'wide',
-    angle: rand(0, Math.PI * 2), hover: 0, visible: true,
+    angle: canvas.dataset.angle ? Number(canvas.dataset.angle) : rand(0, Math.PI * 2), hover: 0, visible: true,
+    still: canvas.hasAttribute('data-still'),   // posed: no spin, no glitch (used for exported images)
     next: auto ? now + rand(1000, 2500) : Infinity,   // next burst
     burstEnd: 0, tickAt: 0,                          // current burst / next glitch frame
     g: 0, seed: 0, dir: DIRS[0], hold: false,
@@ -829,7 +830,7 @@ export function initObjects() {
       const t = (now - t0) / 1000;
       for (const o of objs) {
         if (!finish(o)) continue;
-        step(o, now, dt);
+        if (!o.still) step(o, now, dt);
         if (o.visible) draw(o, t);
       }
     })(t0);
