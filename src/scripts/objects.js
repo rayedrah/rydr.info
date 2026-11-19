@@ -1,6 +1,6 @@
 // Dithered 3D objects for rydr.info: the brain button's renderer, generalised.
 //
-// Every <canvas data-object="bolt|brain|computer|lock|key|flag|server"> gets a
+// Every <canvas data-object="bolt|brain|computer|lock|key|flag|server|keysword|floppy|wrench|gear"> gets a
 // small raymarched object on a turntable, lit, then ordered-dithered (Bayer 4x4)
 // into 1-bit grey dots. It renders at one fragment per dot and the canvas is
 // scaled up with image-rendering: pixelated.
@@ -182,6 +182,24 @@ vec2 server(vec3 p) {
   return U(vec2(rack, 0.0), vec2(led, 1.0 + blink));
 }
 
+// ---------- 3.5" floppy disk: clipped corner, label, metal shutter, write-protect hole ----------
+// Flat, so it reads at a glance; the turntable slows when it faces front (ease).
+vec2 floppy(vec3 p) {
+  float body = sdRBox(p, vec3(0.7, 0.72, 0.05), 0.03);
+  body = max(body, (p.x + p.y) * 0.7071 - 0.9);                                 // clipped top-right corner
+  body = max(body, -sdBox(p - vec3(-0.56, -0.6, 0.0), vec3(0.05, 0.05, 0.2)));   // write-protect hole
+  vec3 lb = p - vec3(0.0, -0.24, 0.05);
+  body = max(body, -sdBox(lb, vec3(0.55, 0.42, 0.012)));                        // label recess on the front
+  body += 0.004 * step(abs(lb.x), 0.48) * step(abs(lb.y), 0.32)
+        * step(0.7, sin(lb.y * 50.0)) * step(0.0, p.z);                         // ruled lines on the label
+  vec3 s = p - vec3(-0.06, 0.47, 0.0);
+  float sh = sdBox(s, vec3(0.32, 0.25, 0.062));                                 // metal shutter, both faces
+  vec3 w = s - vec3(0.12, 0.02, 0.0);
+  sh = max(sh, -sdBox(w, vec3(0.07, 0.16, 0.2)));                               // its window
+  float media = sdBox(w, vec3(0.07, 0.16, 0.056));                              // the disk showing through, lime
+  return U(U(vec2(body, 0.0), vec2(sh, 4.0)), vec2(media, 1.0));
+}
+
 // ---------- keychain: a key ring with a key and a small sword hanging from it, swaying ----------
 vec2 rot2(vec2 p, float a) { float c = cos(a), s = sin(a); return vec2(c * p.x + s * p.y, -s * p.x + c * p.y); }
 float torusYZ(vec3 p, float R, float r) { return length(vec2(length(p.yz) - R, p.x)) - r; }   // ring facing sideways
@@ -271,6 +289,144 @@ vec3 keychainColor(vec3 p) {
   return dk < ds ? BLUE_TEAM : RED_TEAM;
 }
 
+// ---------- wrench: open jaw on top, hex ring on the bottom, grooved handle, held diagonally ----------
+float sdHex2(vec2 p, float r) {
+  const vec3 k = vec3(-0.866025404, 0.5, 0.577350269);
+  p = abs(p);
+  p -= 2.0 * min(dot(k.xy, p), 0.0) * k.xy;
+  p -= vec2(clamp(p.x, -k.z * r, k.z * r), r);
+  return length(p) * sign(p.y);
+}
+vec2 wrench(vec3 p) {
+  vec3 q = p;
+  q.xy = rot2(q.xy, 0.62);                                         // lean it like the classic icon
+  vec2 h = q.xy;
+  float handle = sdBox2(h, vec2(0.085, 0.5)) - 0.02;
+  vec2 top = h - vec2(0.0, 0.66);
+  float head = length(top) - 0.25;
+  float jaw = min(sdBox2(top - vec2(0.0, 0.2), vec2(0.095, 0.2)), length(top - vec2(0.0, 0.02)) - 0.095);
+  head = max(head, -jaw);                                          // U-shaped opening
+  vec2 bot = h + vec2(0.0, 0.66);
+  float ring = max(length(bot) - 0.2, -sdHex2(bot, 0.095));        // box end with a hex hole
+  float d2 = min(min(handle, head), ring);
+  vec2 w = vec2(d2 + 0.012, abs(q.z) - 0.045);
+  float body = min(max(w.x, w.y), 0.0) + length(max(w, 0.0)) - 0.012;   // extruded, edges rounded
+  body += 0.012 * step(abs(h.x), 0.035) * step(abs(h.y), 0.36) * step(0.02, abs(q.z));   // groove down the handle, both faces
+  return vec2(body, 0.0);
+}
+
+// ---------- gear: 10 teeth, 5 cut-outs, a raised lime hub; turns slowly on its axle ----------
+float extrude(float d2, float z, float h) { vec2 w = vec2(d2, abs(z) - h); return min(max(w.x, w.y), 0.0) + length(max(w, 0.0)); }
+vec2 gear(vec3 p) {
+  vec2 g = rot2(p.xy, uTime * 0.5);
+  float a = atan(g.y, g.x);
+  float tw = 6.28318530718 / 10.0;
+  vec2 t = rot2(g, tw * floor(a / tw + 0.5));                       // fold into one tooth's sector
+  float teeth = sdBox2(t - vec2(0.7, 0.0), vec2(0.11, 0.085)) - 0.02;
+  float r = length(g);
+  float d2 = min(r - 0.62, teeth);
+  float hw = 6.28318530718 / 5.0;
+  vec2 c = rot2(g, hw * floor(a / hw + 0.5));
+  d2 = max(d2, -(length(c - vec2(0.42, 0.0)) - 0.11));              // round cut-outs between hub and rim
+  d2 = max(d2, -(r - 0.12));                                        // axle hole
+  float body = extrude(d2 + 0.01, p.z, 0.07) - 0.01;
+  float hub = extrude(max(r - 0.25, -(r - 0.12)) + 0.01, p.z, 0.11) - 0.01;   // raised ring around the axle
+  return U(vec2(body, 0.0), vec2(hub, 2.0));
+}
+
+// ---------- candidate tech objects for Projects (lime parts use material 2) ----------
+float sdSeg(vec3 p, vec3 a, vec3 b, float r) { vec3 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * h) - r; }
+// half a torus in the xy plane, the half with x > c.x: a cable looping out to the right
+float loopR(vec3 p, vec3 c, float R, float r) { vec3 q = p - c; float d = length(vec2(length(q.xy) - R, q.z)) - r; return max(d, -q.x); }
+
+// server rack with lime patch cables looping out of its right side and one hanging down
+vec2 serverCables(vec3 p) {
+  vec3 sp = (p - vec3(-0.14, 0.0, 0.0)) * 1.18;
+  vec2 rack = server(sp);
+  rack.x /= 1.18;
+  float cab = loopR(p, vec3(0.24, 0.42, 0.18), 0.2, 0.045);
+  cab = min(cab, loopR(p, vec3(0.24, 0.02, 0.22), 0.26, 0.045));
+  cab = min(cab, loopR(p, vec3(0.24, -0.36, 0.14), 0.16, 0.045));
+  cab = min(cab, sdSeg(p, vec3(0.2, -0.55, 0.3), vec3(0.42, -0.7, 0.36), 0.045));
+  cab = min(cab, sdSeg(p, vec3(0.42, -0.7, 0.36), vec3(0.5, -0.95, 0.3), 0.045));
+  return U(rack, vec2(cab, 2.0));
+}
+
+// wifi router: flat box, three antennas, a row of lime status lights
+vec2 router(vec3 p) {
+  float body = sdRBox(p - vec3(0.0, -0.32, 0.0), vec3(0.72, 0.15, 0.42), 0.07);
+  body += 0.01 * step(0.3, p.z) * smoothstep(0.7, 1.0, sin(p.x * 60.0)) * step(abs(p.y + 0.32), 0.06);   // vents on the front
+  float ant = sdSeg(p, vec3(-0.5, -0.2, -0.28), vec3(-0.66, 0.72, -0.32), 0.05);
+  ant = min(ant, sdSeg(p, vec3(0.0, -0.2, -0.3), vec3(0.0, 0.8, -0.34), 0.05));
+  ant = min(ant, sdSeg(p, vec3(0.5, -0.2, -0.28), vec3(0.66, 0.72, -0.32), 0.05));
+  vec3 l = p - vec3(0.0, -0.28, 0.43);
+  l.x = mod(l.x + 0.5, 0.2) - 0.1;
+  float led = max(length(l) - 0.045, abs(p.x) - 0.58);
+  return U(vec2(min(body, ant), 0.0), vec2(led, 2.0));
+}
+
+// network switch: slim box with four lime ethernet cables plugged into the front, hanging down
+vec2 netSwitch(vec3 p) {
+  vec3 b = p - vec3(0.0, 0.28, 0.0);
+  float body = sdRBox(b, vec3(0.82, 0.13, 0.4), 0.04);
+  vec3 port = b - vec3(0.0, 0.0, 0.4);
+  port.x = mod(port.x + 0.135, 0.27) - 0.135;
+  body = max(body, -max(sdBox(port, vec3(0.07, 0.06, 0.05)), abs(b.x) - 0.75));   // port openings
+  float cab = 1e9;
+  for (int i = 0; i < 4; i++) {
+    float x = -0.405 + float(i) * 0.27;
+    vec3 a = vec3(x, 0.28, 0.4), m = vec3(x * 1.05, 0.05, 0.62), e = vec3(x * 1.15, -0.85, 0.5);
+    cab = min(cab, min(sdSeg(p, a, m, 0.05), sdSeg(p, m, e, 0.05)));
+    cab = min(cab, sdBox(p - a - vec3(0.0, 0.0, 0.04), vec3(0.065, 0.055, 0.06)));   // the plug in the port
+  }
+  return U(vec2(body, 0.0), vec2(cab, 2.0));
+}
+
+// raspberry pi: board facing front, chips, ports along one edge, lime GPIO header
+vec2 piBoard(vec3 p) {
+  float board = sdRBox(p, vec3(0.78, 0.52, 0.03), 0.03);
+  vec2 mh = abs(p.xy) - vec2(0.66, 0.4);
+  board = max(board, -(length(mh) - 0.05));                                       // mounting holes
+  float parts = sdRBox(p - vec3(-0.1, -0.02, 0.07), vec3(0.2, 0.2, 0.04), 0.01);   // processor
+  parts = min(parts, sdRBox(p - vec3(-0.45, -0.18, 0.06), vec3(0.11, 0.09, 0.03), 0.01));
+  parts = min(parts, sdRBox(p - vec3(0.62, 0.22, 0.13), vec3(0.17, 0.13, 0.1), 0.01));   // usb
+  parts = min(parts, sdRBox(p - vec3(0.62, -0.12, 0.13), vec3(0.17, 0.13, 0.1), 0.01));
+  parts = min(parts, sdRBox(p - vec3(0.6, -0.42, 0.11), vec3(0.17, 0.08, 0.08), 0.01));  // ethernet
+  vec3 h = p - vec3(-0.12, 0.42, 0.07);
+  float gpio = sdBox(h, vec3(0.52, 0.06, 0.04));
+  vec3 pin = h; pin.x = mod(pin.x + 0.04, 0.08) - 0.04; pin.y = abs(pin.y) - 0.03;
+  gpio = min(gpio, max(sdBox(pin - vec3(0.0, 0.0, 0.05), vec3(0.012, 0.012, 0.04)), abs(h.x) - 0.5));
+  return U(vec2(min(board, parts), 0.0), vec2(gpio, 2.0));
+}
+
+// hard drive with the cover off: lime platter in its well, grey spindle and read arm
+vec2 hdd(vec3 p) {
+  float cas = sdRBox(p, vec3(0.6, 0.82, 0.1), 0.04);
+  vec3 c = p - vec3(0.0, 0.2, 0.0);
+  cas = max(cas, -extrude(length(c.xy) - 0.5, c.z - 0.1, 0.06));                   // well for the platter
+  float plat = extrude(length(c.xy) - 0.46, c.z - 0.06, 0.012);
+  float spin = extrude(length(c.xy) - 0.1, c.z - 0.08, 0.03);
+  float arm = sdSeg(p, vec3(0.42, -0.52, 0.11), vec3(0.08, 0.16, 0.11), 0.035);
+  arm = min(arm, extrude(length(p.xy - vec2(0.42, -0.52)) - 0.09, p.z - 0.1, 0.035));
+  return U(vec2(min(min(cas, spin), arm), 0.0), vec2(plat, 2.0));
+}
+
+// ethernet (RJ45) plug pointing up, latch on the front, lime contacts and a lime cable curling away
+vec2 rj45(vec3 p) {
+  vec3 b = p - vec3(0.0, 0.42, 0.0);
+  float plug = sdRBox(b, vec3(0.3, 0.32, 0.22), 0.03);
+  float latch = sdSeg(p, vec3(0.0, 0.2, 0.24), vec3(0.0, 0.62, 0.34), 0.07);
+  latch = max(latch, abs(p.x) - 0.12);
+  float boot = sdRBox(p - vec3(0.0, 0.0, 0.0), vec3(0.2, 0.14, 0.16), 0.06);
+  vec3 k = b - vec3(0.0, 0.3, -0.12);
+  k.x = mod(k.x + 0.035, 0.07) - 0.035;
+  float pins = max(sdBox(k, vec3(0.012, 0.04, 0.06)), abs(b.x) - 0.26);
+  float cab = sdSeg(p, vec3(0.0, -0.1, 0.0), vec3(0.0, -0.5, 0.0), 0.1);
+  cab = min(cab, sdSeg(p, vec3(0.0, -0.5, 0.0), vec3(0.3, -0.82, 0.1), 0.1));
+  cab = min(cab, sdSeg(p, vec3(0.3, -0.82, 0.1), vec3(0.7, -0.9, 0.2), 0.1));
+  return U(vec2(min(min(plug, latch), boot), 0.0), vec2(min(pins, cab), 2.0));
+}
+
 vec2 mapM(vec3 p) {
 #if SHAPE == 0
   return brain(p);
@@ -286,8 +442,26 @@ vec2 mapM(vec3 p) {
   return flag(p);
 #elif SHAPE == 6
   return server(p);
-#else
+#elif SHAPE == 7
   return keysword(p);
+#elif SHAPE == 8
+  return floppy(p);
+#elif SHAPE == 9
+  return wrench(p);
+#elif SHAPE == 10
+  return gear(p);
+#elif SHAPE == 11
+  return serverCables(p);
+#elif SHAPE == 12
+  return router(p);
+#elif SHAPE == 13
+  return netSwitch(p);
+#elif SHAPE == 14
+  return piBoard(p);
+#elif SHAPE == 15
+  return hdd(p);
+#else
+  return rj45(p);
 #endif
 }
 float map(vec3 p) { return mapM(p).x; }
@@ -363,6 +537,8 @@ vec3 shade(vec3 p, vec2 cell, float b, out float lum) {
     col = mix(vec3(0.05, 0.09, 0.03), LIME, step(b, glow));
   } else if (mat > 1.5 && mat < 2.5) {
     col = mix(vec3(0.05, 0.09, 0.03), LIME, step(b, 0.9));   // lit LED
+  } else if (mat > 3.5) {
+    col = mix(vec3(0.06), vec3(0.62), step(b, lum * 0.3));      // floppy shutter: dark metal, so the disk reads at icon size
   } else if (mat > 2.5) {
     float ck = step(b, lum * 0.45);                            // flag: dark checker squares
     col = mix(mix(vec3(0.08), vec3(0.84), ck), LIME * 0.9, step(b, rim * 0.5 + 0.08) * (1.0 - ck));
@@ -444,6 +620,15 @@ const SHAPES = {
   key:      { id: 4, color: [0.72, 0.56, 1.0], zoom: 1.0,  tilt: -0.2 },
   flag:     { id: 5, color: [1.0, 0.3, 0.3],   zoom: 1.1,  tilt: -0.2 },
   server:   { id: 6, color: [0.3, 0.62, 1.0],  zoom: 1.0,  tilt: -0.3 },
+  floppy:   { id: 8, color: [0.3, 0.62, 1.0],  zoom: 1.0,  tilt: -0.25, ease: true },
+  wrench:   { id: 9, color: [0.3, 0.62, 1.0],  zoom: 1.12,  tilt: -0.2,  ease: true },
+  gear:     { id: 10, color: [0.3, 0.62, 1.0], zoom: 1.1,   tilt: -0.25, ease: true },
+  serverCables: { id: 11, color: [0.3, 0.62, 1.0], zoom: 1.08, tilt: -0.3 },
+  router:   { id: 12, color: [0.3, 0.62, 1.0], zoom: 1.05,  tilt: -0.3, ease: true },   // Projects: lingers facing front so the antennas read
+  netSwitch: { id: 13, color: [0.3, 0.62, 1.0], zoom: 1.1,  tilt: -0.3 },
+  piBoard:  { id: 14, color: [0.3, 0.62, 1.0], zoom: 1.05,  tilt: -0.25, ease: true },
+  hdd:      { id: 15, color: [0.3, 0.62, 1.0], zoom: 1.05,  tilt: -0.25, ease: true },
+  rj45:     { id: 16, color: [0.3, 0.62, 1.0], zoom: 1.08,  tilt: -0.25 },
   keysword: { id: 7, color: [1.0, 0.27, 0.4], zoom: 1.0, tilt: -0.15, ease: true },   // key + sword keychain, colours per piece
 };
 

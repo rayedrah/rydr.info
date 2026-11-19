@@ -1,9 +1,9 @@
 // UI sounds, synthesised with Web Audio (no files to load).
 //
-//   glitchSound  one bit-crushed digital tick per glitch frame of an icon,
-//                started on the same animation frame the glitch is drawn, and
-//                shorter than the frame is held. Its pitch steps randomly like
-//                the frame's tear, and the tear direction sets the register.
+//   glitchSound  "radio squelch": per glitch frame of an icon, 2-3 tiny bursts
+//                of band-passed static that cut in and out, like a radio losing
+//                the channel. Started on the same animation frame the glitch is
+//                drawn; the tear direction sets the pitch of the static.
 //   navSound     a fixed two-step tick when a nav link is hovered.
 //   clickSound   a crisp glitch click for every link and button on the site.
 //
@@ -91,16 +91,31 @@ function grit(t, dur, peak, freq, q = 1.5) {
 
 const pick = (a, b) => a + Math.random() * (b - a);
 
+// a 9 ms burst of band-passed static with a 1 ms attack, straight to the output (no crusher)
+function squelch(t, peak, freq) {
+  const s = ctx.createBufferSource();
+  s.buffer = noise;
+  const f = ctx.createBiquadFilter();
+  f.type = 'bandpass';
+  f.frequency.value = freq;
+  f.Q.value = 0.8;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(peak, t + 0.001);
+  g.gain.setValueAtTime(peak, t + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.009);
+  s.connect(f).connect(g).connect(out);
+  s.start(t, Math.random() * 0.1, 0.03);
+}
+
 // g: glitch strength 0..1, holdMs: how long the frame stays up, dir: tear direction
 export function glitchSound(g, holdMs, dir) {
   if (!ready()) return;
   const t = ctx.currentTime;
-  const dur = Math.min(0.055, Math.max(0.022, (holdMs / 1000) * 0.55));
   // sideways tears sit in the middle, up/down higher, diagonals lower
-  const base = dir[0] && dir[1] ? 380 : dir[1] ? 1100 : 640;
-  const n = 3 + Math.floor(Math.random() * 3);
-  steps(t, dur, Array.from({ length: n }, () => base * pick(0.6, 2.2)), 0.05 + 0.05 * g);
-  grit(t, dur * 0.8, 0.08 + 0.08 * g, pick(2500, 7000));
+  const lo = dir[0] && dir[1] ? 1200 : dir[1] ? 2200 : 1500;
+  const n = 2 + Math.floor(Math.random() * 2);
+  for (let i = 0; i < n; i++) squelch(t + i * 0.014, 0.09 + 0.09 * g, pick(lo, lo + 1500));
 }
 
 export function navSound() {
