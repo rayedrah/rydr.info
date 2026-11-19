@@ -6,9 +6,11 @@ import { initCursor } from './cursor.js';
 import { initSfx } from './sfx.js';
 import { initObjects } from './objects.js';
 import { initTextGlitch } from './textglitch.js';
+import { initFavicon } from './favicon.js';
 
 initGrain();
 initCursor();
 initSfx();
 initTextGlitch();
 initObjects();
+initFavicon('brain');   // animated pixel brain in the tab
