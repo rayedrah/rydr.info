@@ -14,6 +14,7 @@ Usage:
 
 import argparse
 import datetime as dt
+import hashlib
 import html
 import json
 import math
@@ -309,7 +310,7 @@ class Builder:
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="{html.escape(SITE['title'])}" href="/rss.xml">
 <link rel="preload" href="/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/style.css?v={self.ver}">
 </head>
 <body>
 <header class="bar">
@@ -329,7 +330,7 @@ class Builder:
     <span class="foot-links">{"".join(f'<a href="{html.escape(l["href"])}">{html.escape(l["label"])}</a>' for l in SITE["footer"])}</span>
   </div>
 </footer>
-<script type="module" src="/theme.js"></script>
+<script type="module" src="/theme.js?v={self.ver}"></script>
 </body>
 </html>
 """
@@ -481,12 +482,31 @@ class Builder:
         site_scripts = ROOT.parent / "src" / "scripts"
         for name in ("grain.js", "cursor.js", "sfx.js", "objects.js", "textglitch.js"):
             shutil.copy2(site_scripts / name, self.out / name)
+        # every script imports the others with the same ?v= tag, so each module loads once
+        # (two different URLs would load two separate copies) and none comes from an old cache
+        for js in self.out.glob("*.js"):
+            code = js.read_text(encoding="utf-8")
+            js.write_text(re.sub(r"(from\s+'\./[\w-]+\.js)'", rf"\1?v={self.ver}'", code), encoding="utf-8")
         with open(self.out / "style.css", "a", encoding="utf-8") as fh:
             fh.write("\n/* syntax highlighting */\n" + HtmlFormatter(style="native").get_style_defs(".hl") + "\n")
         if SITE.get("domain"):
             (self.out / "CNAME").write_text(SITE["domain"] + "\n")
         (self.out / ".nojekyll").write_text("")
         print(f"Built {len(self.posts)} entries in {len(self.folders)} folder(s), {len(self.assets)} image(s) -> {self.out}")
+
+    @property
+    def ver(self):
+        """Short hash of the blog's CSS and scripts. It goes on their URLs (style.css?v=...),
+        so a browser fetches them again whenever they change instead of using an old cached copy."""
+        if not hasattr(self, "_ver"):
+            h = hashlib.sha1()
+            site_scripts = ROOT.parent / "src" / "scripts"
+            files = sorted((ROOT / "static").glob("*.css")) + sorted((ROOT / "static").glob("*.js"))
+            files += [site_scripts / n for n in ("grain.js", "cursor.js", "sfx.js", "objects.js", "textglitch.js")]
+            for f in files:
+                h.update(f.read_bytes())
+            self._ver = h.hexdigest()[:8]
+        return self._ver
 
     def asset_url(self, path):
         if path not in self.assets:

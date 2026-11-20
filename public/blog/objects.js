@@ -430,7 +430,7 @@ const SHAPES = {
 
 // sideways, up/down and the four diagonals
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]];
-import { glitchSound } from './sfx.js';
+import { glitchSound } from './sfx.js?v=2f59f300';
 
 const SPIN = 0.55;   // turntable speed, rad/s, the same with or without hover
 
