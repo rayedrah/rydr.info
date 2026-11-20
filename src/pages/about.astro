@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { EDUCATION, CERTS, SKILLS } from '../data/site.js';
+import { EDUCATION, CERTS, SKILLS, LINKS } from '../data/site.js';
 ---
 <Base title="About | Rayed Rahman" active="about">
 
@@ -24,6 +24,7 @@ import { EDUCATION, CERTS, SKILLS } from '../data/site.js';
       <p class="muted">
         Outside security I cofounded SYNQ, a sportswear brand. Same pattern: find what's missing, build the fix, see it through.
       </p>
+      <p class="about-cv"><a href={LINKS.resume} target="_blank" rel="noopener">resume.pdf ↗</a></p>
     </div>
   </section>
 

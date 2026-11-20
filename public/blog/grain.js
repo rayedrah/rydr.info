@@ -223,9 +223,12 @@ export function initGrain() {
     targetGain = Math.min(1.1, Math.max(0.7, targetGain));
   }
 
+  // sized from the canvas's own box: CSS gives it 100lvh, which does not change
+  // when a phone's URL bar slides in and out, so the buffer is not reallocated
+  // (and the screen does not flicker) on every scroll
   function resize() {
-    const w = Math.round(window.innerWidth * dpr);
-    const h = Math.round(window.innerHeight * dpr);
+    const w = Math.round((canvas.clientWidth || window.innerWidth) * dpr);
+    const h = Math.round((canvas.clientHeight || window.innerHeight) * dpr);
     if (canvas.width !== w || canvas.height !== h) {
       canvas.width = w;
       canvas.height = h;
@@ -239,11 +242,15 @@ export function initGrain() {
   gl.uniform1f(U.uTime, time());
   gl.uniform1f(U.uGain, 1);
 
+  // Every coverage() reads pixels back from the GPU, which stalls it, so keep
+  // them few: the seed and exposure are found once per visit and remembered
+  // across pages, and while running the exposure is re-checked every 2.5 s.
   // pick a seed: reuse this visit's, or try a few and keep one with a pleasant amount of smoke
   let seed = Number.isFinite(visit?.seed) ? visit.seed : null;
+  const save = () => { try { sessionStorage.setItem(STORE, JSON.stringify({ seed, start: t0, gain: targetGain })); } catch {} };
   if (seed === null) {
     let best = { seed: 0, miss: Infinity };
-    for (let k = 0; k < 12; k++) {
+    for (let k = 0; k < 4; k++) {
       const s = Math.floor(Math.random() * 10000);
       gl.uniform1f(U.uSeed, s);
       const c = coverage();
@@ -252,21 +259,22 @@ export function initGrain() {
       if (miss < best.miss) best = { seed: s, miss };
     }
     seed = best.seed;
-    try { sessionStorage.setItem(STORE, JSON.stringify({ seed, start: t0 })); } catch {}
   }
   gl.uniform1f(U.uSeed, seed);
-  for (let k = 0; k < 10; k++) { gl.uniform1f(U.uGain, targetGain); nudge(coverage(), 0.05); }
+  if (Number.isFinite(visit?.gain)) targetGain = visit.gain;
+  else for (let k = 0; k < 3; k++) { gl.uniform1f(U.uGain, targetGain); nudge(coverage(), 0.1); }
   gain = targetGain;
+  save();
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let raf = 0;
-  let lastProbe = 0;
+  let lastProbe = Date.now();   // the startup checks just ran: the next one is due in 2.5 s
 
   function frame() {
     resize();
     const now = Date.now();
     gl.uniform1f(U.uTime, time());
-    if (now - lastProbe > 500) { gl.uniform1f(U.uGain, gain); nudge(coverage(), 0.025); lastProbe = now; }
+    if (now - lastProbe > 2500) { gl.uniform1f(U.uGain, gain); nudge(coverage(), 0.05); lastProbe = now; save(); }
     gain += 0.05 * (targetGain - gain);
     gl.uniform1f(U.uGain, gain);
     gl.drawArrays(gl.TRIANGLES, 0, 3);

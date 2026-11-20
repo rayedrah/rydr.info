@@ -31,7 +31,7 @@ Add `data-tglitch` to any heading: it builds up through an ASCII density ramp on
 
 ## 3D icons
 
-`<canvas data-object="bolt">` (bolt, brain, computer, lock, key, flag, server, keysword, router, ...) draws a dithered, spinning object. The shapes are in `src/scripts/objects.js` (`SHAPES`). Put it inside an element with `data-object-host` and the links in that element trigger its glitch on hover.
+`<canvas data-object="bolt">` (bolt, brain, computer, lock, flag, keysword, router) draws a dithered, spinning object. The shapes are in `src/scripts/objects.js` (`SHAPES`). Put it inside an element with `data-object-host` and the links in that element trigger its glitch on hover.
 
 ## Resume
 

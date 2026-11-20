@@ -178,6 +178,6 @@ export function initSfx() {
     if (url.origin !== location.origin) return;
     if (url.pathname === location.pathname && url.hash) return;   // same-page jump
     e.preventDefault();
-    setTimeout(() => { location.href = url.href; }, 90);
+    setTimeout(() => { location.href = url.href; }, 40);   // just long enough for the click transient (8 ms) to be heard
   });
 }

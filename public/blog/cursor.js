@@ -1,12 +1,10 @@
-// Pixel lightning-bolt cursor. Replaces the system cursor on mouse devices:
-// the bolt's top-left tip is the hotspot, it follows the pointer exactly, and
-// it turns white over clickable things so it stays visible on lime links.
-// On touch devices nothing changes.
+// Pixel lightning-bolt cursor, as a real CSS cursor image.
+// The browser draws it like any system cursor, so it never lags behind the
+// mouse (the old version moved a page element on every mousemove, which always
+// trailed the pointer by a frame or more). Lime normally, white over links and
+// buttons, with a dark 1px edge so it stays visible on light grain.
+// The top-left tip is the hotspot. Touch devices keep their default.
 
-const INTERACTIVE = 'a, button, [role="button"], input, textarea, select, label, summary';
-
-// 7 x 8 bolt with its thin one-pixel tip at the top-left: that tip is the hotspot,
-// so it points like a normal arrow cursor
 const BOLT = [
   '#......',
   '.##....',
@@ -19,31 +17,23 @@ const BOLT = [
 ];
 const PX = 2;   // css px per pixel
 
-function boltSvg() {
-  const rects = [];
-  BOLT.forEach((row, y) => [...row].forEach((c, x) => {
-    if (c === '#') rects.push(`<rect x="${x}" y="${y}" width="1" height="1"/>`);
-  }));
-  const w = BOLT[0].length, h = BOLT.length;
-  return `<svg width="${w * PX}" height="${h * PX}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges">${rects.join('')}</svg>`;
+function cursorUrl(fill) {
+  const rects = (color, off) => BOLT.flatMap((row, y) => [...row].map((c, x) => (c === '#'
+    ? `<rect x='${x * PX + off}' y='${y * PX + off}' width='${PX}' height='${PX}' fill='${color}'/>` : ''))).join('');
+  const w = BOLT[0].length * PX + 1, h = BOLT.length * PX + 1;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' shape-rendering='crispEdges'>`
+    + rects('rgba(0,0,0,0.85)', 1) + rects(fill, 0) + '</svg>';
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0`;
 }
 
 export function initCursor() {
-  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
-  const bolt = document.createElement('div');
-  bolt.className = 'cursor-bolt';
-  bolt.setAttribute('aria-hidden', 'true');
-  bolt.innerHTML = boltSvg();
-  document.body.appendChild(bolt);
-  document.documentElement.classList.add('bolt-cursor');   // hides the system cursor (site.css)
-
-  document.addEventListener('mousemove', (e) => {
-    bolt.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-    bolt.classList.add('active');
-  });
-  document.documentElement.addEventListener('mouseleave', () => bolt.classList.remove('active'));
-  document.addEventListener('mouseover', (e) => {
-    bolt.classList.toggle('over-link', !!e.target.closest?.(INTERACTIVE));
-  });
+  if (document.getElementById('bolt-cursor')) return;
+  const INTERACTIVE = ':is(a, button, [role="button"], summary, label, select)';
+  const style = document.createElement('style');
+  style.id = 'bolt-cursor';
+  style.textContent = `@media (hover: hover) and (pointer: fine) {
+  html, html * { cursor: ${cursorUrl('#a5ff3f')}, auto !important; }
+  ${INTERACTIVE}, ${INTERACTIVE} * { cursor: ${cursorUrl('#fafafa')}, pointer !important; }
+}`;
+  document.head.appendChild(style);
 }

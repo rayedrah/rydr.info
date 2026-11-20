@@ -14,7 +14,7 @@
   --bg: #0a0a0a;              /* oklch(14.5% 0 0) */
   --text: #fafafa;            /* oklch(98.5% 0 0) */
   --muted: #a1a1a1;           /* oklch(70.8% 0 0) */
-  --nav: #6e6e6e;
+  --nav: #7a7a7a;            /* 4.6:1 on --bg, the lowest grey that is readable at 13px */
   --dim: #525252;
   --line: #262626;            /* oklch(26.9% 0 0) */
   --accent: #a5ff3f;
@@ -59,6 +59,7 @@ ul { list-style: none; }
   inset: 0;
   width: 100vw;
   height: 100vh;
+  height: 100lvh;                /* large viewport: stays put when a phone's URL bar moves */
   z-index: -1;
   pointer-events: none;
   display: block;
@@ -132,8 +133,7 @@ main {
 .row > .body { min-width: 0; }
 
 .label h1,
-.label h2,
-.h-label {
+.label h2 {
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 16px;
@@ -225,6 +225,7 @@ details.entry > summary:hover .name::before { color: var(--text); }
   max-width: 60ch;
 }
 .entry-body .org { color: var(--text); margin-bottom: 0.5rem; }
+.page-exp .entry-body .org { color: var(--accent); }   /* Experience: the organization line of an opened role is lime */
 .entry-body p { font-size: 14px; margin-bottom: 0.6rem; }
 .entry-body ul { display: grid; gap: 0.35rem; margin-bottom: 0.7rem; }
 .entry-body li { padding-left: 1rem; position: relative; }
@@ -306,26 +307,7 @@ details.entry[open] > .entry-body { animation: entry-in 0.18s ease-out; }
 .footer-inner .fine span { color: var(--accent); }
 .footer-links { display: flex; gap: 1rem; }
 
-/* ---------- pixel bolt cursor (scripts/cursor.js) ---------- */
-
-/* the system cursor is hidden only once the bolt is running, so it never disappears without a replacement */
-html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
-
-.cursor-bolt {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 100000;
-  opacity: 0;
-  fill: var(--accent);
-  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.85));   /* keeps it visible on light grain */
-  transition: opacity 0.15s;
-  will-change: transform;
-}
-.cursor-bolt svg { display: block; }
-.cursor-bolt.active { opacity: 1; }
-.cursor-bolt.over-link { fill: var(--text); }   /* white over links and buttons */
+/* ---------- pixel bolt cursor: a real CSS cursor image, set by scripts/cursor.js ---------- */
 
 /* ---------- ASCII wave on headings (scripts/textglitch.js) ---------- */
 
@@ -371,7 +353,6 @@ html.bolt-cursor, html.bolt-cursor * { cursor: none !important; }
 }
 
 @media (hover: none), (pointer: coarse) {
-  .cursor-bolt { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -410,22 +391,6 @@ body { text-shadow: 0 0 2px #000, 0 0 8px rgba(0, 0, 0, 0.85); }
 /* labels: never let the left column clip */
 .row > .label { min-width: 0; overflow-wrap: anywhere; }
 .item .lead { background-image: radial-gradient(circle, #8a8a8a 0.6px, transparent 0.8px); }
-
-/* ---------- text pixel art under the name (scripts/ascii-art.js) ---------- */
-
-.ascii-art {
-  margin-top: 2rem;
-  font-family: var(--font-mono);
-  font-size: 15px;
-  line-height: 1;
-  color: var(--text);
-  cursor: default;
-  user-select: none;
-  white-space: pre;
-  overflow: hidden;
-}
-.ascii-art .hot { color: var(--accent); }
-.ascii-art .flip { opacity: 0.6; }
 
 /* ---------- home intro (scripts/intro.js) ----------
    Copy of the live rydr.info intro: prompt types `whoami`, the name fades up,
@@ -634,10 +599,10 @@ button.txt.plain { background: none; border: 0; padding: 0; margin: 0; font: inh
 .sfx-toggle {
   background: none; border: 0; padding: 0; cursor: pointer;
   font-family: var(--font-mono, var(--mono)); font-size: 12px; text-transform: lowercase;
-  color: #6a6a6a; transition: color 0.2s linear;
+  color: #7a7a7a; transition: color 0.2s linear;
 }
 .sfx-toggle:hover { color: #fff; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 5px; }
-.sfx-toggle[aria-pressed='false'] { color: #444; text-decoration: line-through; }
+.sfx-toggle[aria-pressed='false'] { color: #5a5a5a; text-decoration: line-through; }
 .sfx-toggle:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
 
 /* ---------- progressive blur behind the sticky header ----------
@@ -691,3 +656,6 @@ button.txt.plain { background: none; border: 0; padding: 0; margin: 0; font: inh
 @media (hover: none), (pointer: coarse) {
   .term-input-row, .term-input-row .prompt, .term-input { font-size: 16px; }
 }
+
+/* about: resume link under the intro paragraphs */
+.about-text .about-cv { margin-top: 1.4rem; font-family: var(--font-mono); font-size: 13px; }

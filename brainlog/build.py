@@ -561,7 +561,15 @@ class Builder:
                 chunk = self.rewrite_obsidian(fix_block_spacing(chunk))
                 chunk = convert_callouts(chunk, self.md)
                 parts.append(chunk)
-        return self.md("".join(parts))
+        out = self.md("".join(parts))
+        # the post title is the page's only <h1>: a "# heading" inside a note becomes a section (<h2>)
+        out = re.sub(r"<(/?)h1([\s>])", r"<\1h2\2", out)
+        # images pasted from Google Docs and the like point at temporary blob: URLs that never load: drop them
+        dead = re.findall(r'<img[^>]*src="blob:[^"]*"[^>]*>', out)
+        if dead:
+            print(f"  note: dropped {len(dead)} image(s) with temporary blob: links")
+            out = re.sub(r'<p>\s*<img[^>]*src="blob:[^"]*"[^>]*>\s*</p>|<img[^>]*src="blob:[^"]*"[^>]*>', "", out)
+        return out
 
     def toc_html(self, tokens, depth=0):
         if not tokens:

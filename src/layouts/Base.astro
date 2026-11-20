@@ -19,6 +19,9 @@ const {
   description = 'Rayed Rahman, cybersecurity student at Purdue Honors College. CTF player, systems tinkerer, security researcher.',
 } = Astro.props;
 
+// link previews (LinkedIn, WhatsApp, iMessage...) and search engines use the public URL
+const canonical = new URL(Astro.url.pathname, 'https://rydr.info').href;
+
 const nav = [
   { key: 'about', href: 'about.html', label: 'about' },
   { key: 'experience', href: 'experience.html', label: 'experience' },
@@ -34,6 +37,16 @@ const nav = [
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <meta name="theme-color" content="#0a0a0a" />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="rydr.info" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content="https://rydr.info/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-touch-icon.png" />
   <link rel="icon" type="image/svg+xml" href="/icon/favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon-32x32.png" />
@@ -74,6 +87,7 @@ const nav = [
       <div class="footer-links">
         <a href={LINKS.github} target="_blank" rel="noopener">github</a>
         <a href={LINKS.linkedin} target="_blank" rel="noopener">linkedin</a>
+        <a href={LINKS.resume} target="_blank" rel="noopener">resume</a>
         <a href={`mailto:${LINKS.email}`}>↗ {LINKS.email}</a>
       </div>
     </div>
