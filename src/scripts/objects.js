@@ -520,7 +520,10 @@ function add(canvas, now) {
     still: canvas.hasAttribute('data-still'),   // posed: no spin, no glitch (used for exported images)
     next: auto ? now + rand(1000, 2500) : Infinity,   // next burst
     burstEnd: 0, tickAt: 0,                          // current burst / next glitch frame
-    g: 0, seed: 0, dir: DIRS[0], hold: false,
+    // a posed export can also freeze one glitch frame: data-glitch-frame="strength seed direction-index"
+    ...(canvas.dataset.glitchFrame
+      ? (([g, seed, d]) => ({ g: +g, seed: +seed, dir: DIRS[+d % DIRS.length], hold: true }))(canvas.dataset.glitchFrame.split(' '))
+      : { g: 0, seed: 0, dir: DIRS[0], hold: false }),
   };
   if (!start(o)) return;
   size(o);
