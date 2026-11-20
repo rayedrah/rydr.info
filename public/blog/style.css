@@ -48,8 +48,8 @@ img { max-width: 100%; height: auto; }
 /* top bar */
 .bar { position: relative; z-index: 2; }
 .bar-inner { max-width: var(--w); margin: 0 auto; padding: 22px 20px 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 15px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--text); }
-.brand-mark { width: 8px; height: 8px; background: #ff7db5; }   /* Brain Log pink, like its favicon */
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 15px var(--mono); text-transform: uppercase; color: var(--text); }   /* same as ~/RAYED on the main site */
+.brand-mark { width: 9px; height: 9px; border-radius: 50%; background: #ff7db5; }   /* round Brain Log pink dot, like its favicon */
 .navlinks { display: flex; gap: 1rem; font: 14px var(--sans); }
 .navlinks a { text-decoration: none; color: var(--muted); transition: color .2s; }
 .navlinks a:hover { color: var(--text); }
@@ -245,7 +245,7 @@ img { max-width: 100%; height: auto; }
 @media (max-width: 560px) {
   .bar-inner { flex-wrap: nowrap; align-items: flex-start; }
   .bar .hd-left { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .bar .sfx-toggle { padding-left: 18px; }      /* the pink square (8px) + its gap (10px) */
+  .bar .sfx-toggle { padding-left: 19px; }      /* the pink dot (9px) + its gap (10px) */
   .navlinks { margin-left: auto; line-height: 1; padding-top: 3px; white-space: nowrap; }
 }
 

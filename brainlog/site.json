@@ -8,10 +8,6 @@
   "url": "https://rydr.info/blog",
   "nav": [
     {
-      "label": "folders",
-      "href": "/"
-    },
-    {
       "label": "rydr.info",
       "href": "https://rydr.info"
     }
